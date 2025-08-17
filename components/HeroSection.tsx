@@ -65,7 +65,7 @@ const HeroSection = () => {
               href="https://twitch.tv/aimosthadme"
               target="_blank"
               rel="noopener noreferrer"
-              className="border border-purple-600 hover:border-purple-600 hover:text-purple-600 text-purple-600 font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg backdrop-blur-sm inline-block"
+              className="border border-purple-600 hover:border-purple-500 hover:text-purple-600 text-purple-500 font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg backdrop-blur-sm inline-block"
             >
               Watch Live Dev
             </a>
