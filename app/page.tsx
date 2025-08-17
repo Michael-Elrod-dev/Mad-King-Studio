@@ -1,3 +1,4 @@
+// app/page.tsx
 import FloatingNav from "@/components/layout/FloatingNav";
 import HeroSection from "@/components/HeroSection";
 

@@ -1,3 +1,4 @@
+// components/layout/SocialLinks.tsx
 "use client";
 
 import { useState, useEffect } from "react";

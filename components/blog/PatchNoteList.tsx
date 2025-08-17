@@ -1,3 +1,4 @@
+// components/blog/PatchNoteList.tsx
 "use client";
 
 import { useState } from "react";

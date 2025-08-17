@@ -1,3 +1,4 @@
+// components/blog/BlogContent.tsx
 "use client";
 
 import { BlogSection } from "@/lib/blogData";

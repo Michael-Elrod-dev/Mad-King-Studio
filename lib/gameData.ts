@@ -1,3 +1,4 @@
+// lib/gameData.ts
 export interface GameData {
   id: string;
   title: string;

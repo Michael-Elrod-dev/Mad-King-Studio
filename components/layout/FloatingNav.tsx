@@ -1,3 +1,4 @@
+// components/layout/FloatingNav.tsx
 "use client";
 
 import { useState, useEffect } from "react";

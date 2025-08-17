@@ -1,3 +1,4 @@
+// app/contact/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -149,13 +150,13 @@ export default function ContactPage() {
 
               {/* Success/Error Messages */}
               {formState.success && (
-                <div className="mb-6 p-4 bg-primary-500 text-white rounded-lg">
+                <div className="mb-6 p-4 bg-green-500 text-white rounded-lg">
                   {formState.success}
                 </div>
               )}
 
               {formState.error && (
-                <div className="mb-6 p-4 bg-red-600 text-white rounded-lg">
+                <div className="mb-6 p-4 bg-red-500 text-white rounded-lg">
                   {formState.error}
                 </div>
               )}

@@ -1,3 +1,4 @@
+// components/blog/BlogSelector.tsx
 "use client";
 
 import { BlogSection } from "@/lib/blogData";

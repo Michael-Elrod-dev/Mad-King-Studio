@@ -1,3 +1,4 @@
+// lib/github.ts
 export interface DevLog {
   name: string;
   path: string;

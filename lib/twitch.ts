@@ -1,3 +1,4 @@
+// lib/twitch.ts
 export interface TwitchStream {
   id: string;
   user_id: string;

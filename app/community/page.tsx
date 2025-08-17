@@ -1,3 +1,4 @@
+// app/community/page.tsx
 import FloatingNav from "@/components/layout/FloatingNav";
 import LiveStatus from "@/components/community/LiveStatus";
 import { FaTwitch, FaGithub, FaDiscord } from "react-icons/fa";

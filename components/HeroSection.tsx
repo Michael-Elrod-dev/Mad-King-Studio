@@ -1,3 +1,4 @@
+// components/HeroSection.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -18,15 +19,18 @@ const HeroSection = () => {
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
-        <h1 className="text-6xl md:text-8xl font-bold mb-6 leading-tight">
-          <span className="text-transparent bg-clip-text bg-red-600">
-            MAD KING
-          </span>
-          <br />
-          <span className="text-transparent bg-clip-text bg-white/90">
-            STUDIO
-          </span>
-        </h1>
+        <div className="text-center">
+          <h1 className="text-6xl md:text-8xl font-bold leading-tight">
+            <span className="text-transparent bg-clip-text bg-red-600">
+              MAD KING
+            </span>
+          </h1>
+          <h2 className="text-4xl md:text-6xl font-bold leading-none -mt-2">
+            <span className="text-transparent bg-clip-text bg-white/90">
+              STUDIO
+            </span>
+          </h2>
+        </div>
         <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
           An indie game developer building games in the open, sharing the entire
           development journey with the community.

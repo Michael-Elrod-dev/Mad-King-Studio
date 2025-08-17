@@ -1,3 +1,4 @@
+// app/api/twitch/stream/route.ts
 import { NextResponse } from "next/server";
 import { getTwitchStreamInfoServer } from "@/lib/twitch";
 

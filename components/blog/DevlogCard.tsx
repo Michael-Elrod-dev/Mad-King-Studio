@@ -1,3 +1,4 @@
+// components/blog/DevlogCard.tsx
 "use client";
 
 import { useState } from "react";

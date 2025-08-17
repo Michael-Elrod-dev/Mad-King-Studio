@@ -1,3 +1,4 @@
+// components/blog/PatchNoteCard.tsx
 "use client";
 
 import { useState } from "react";

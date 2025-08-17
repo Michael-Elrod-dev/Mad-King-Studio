@@ -1,3 +1,4 @@
+// lib/blogData.ts
 export interface BlogSection {
   id: string;
   title: string;

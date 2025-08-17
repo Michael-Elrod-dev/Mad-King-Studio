@@ -1,3 +1,4 @@
+// components/blog/DevlogList.tsx
 "use client";
 
 import { useState, useEffect } from "react";

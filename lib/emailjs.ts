@@ -1,3 +1,4 @@
+// lib/emailjs.ts
 import emailjs from "@emailjs/browser";
 
 // EmailJS configuration

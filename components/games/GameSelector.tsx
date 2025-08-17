@@ -1,3 +1,4 @@
+// components/games/GameSelector.tsx
 "use client";
 
 import { GameData } from "@/lib/gameData";
