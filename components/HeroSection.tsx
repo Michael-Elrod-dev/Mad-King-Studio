@@ -41,18 +41,17 @@ const HeroSection = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/games"
-            className="bg-red-600 hover:bg-red-500 text-white font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"
+            className="border border-red-500 hover:border-red-500 hover:bg-red-500 text-red-500 hover:text-white/90 font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"
           >
-            My Games →
+            My Games
           </Link>
 
-          {/* Updated Watch Live Dev button */}
           {isLive && !isLoading ? (
             <a
               href="https://twitch.tv/aimosthadme"
               target="_blank"
               rel="noopener noreferrer"
-              className="border-2 border-purple-600 text-purple-600 font-semibold py-3 px-8 rounded-full transition-all duration-200 text-lg backdrop-blur-sm inline-block"
+              className="border-2 border-purple-600 text-purple-600 hover:text-purple-500 font-semibold py-3 px-8 rounded-full transition-all duration-200 text-lg backdrop-blur-sm inline-block"
               style={{
                 animation:
                   "pulse-purple 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
@@ -65,7 +64,7 @@ const HeroSection = () => {
               href="https://twitch.tv/aimosthadme"
               target="_blank"
               rel="noopener noreferrer"
-              className="border border-purple-600 hover:border-purple-500 hover:text-purple-500 text-purple-500 font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg backdrop-blur-sm inline-block"
+              className="border border-purple-500 hover:border-purple-500 hover:bg-purple-500 text-purple-500 hover:text-white/90 font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"
             >
               Watch Live Dev
             </a>

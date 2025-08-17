@@ -59,7 +59,7 @@ export default function CommunityPage() {
                   href="https://twitch.tv/aimosthadme"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block bg-white text-purple-600 font-semibold py-2 px-6 rounded-full hover:bg-purple-100 transition-colors"
+                  className="border border-white/90 hover:border-purple-500 hover:bg-purple-500 text-white/90 hover:text-white font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"
                 >
                   Watch Live Now
                 </a>
@@ -68,7 +68,7 @@ export default function CommunityPage() {
                   href="https://twitch.tv/aimosthadme"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block bg-white text-purple-600 font-semibold py-2 px-6 rounded-full hover:bg-purple-100 transition-colors"
+                  className="border border-white/90 hover:border-purple-500 hover:bg-purple-500 text-white/90 hover:text-white font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"
                 >
                   Follow on Twitch
                 </a>
@@ -96,7 +96,7 @@ export default function CommunityPage() {
                 href="https://github.com/Michael-Elrod-dev/Path-to-Valhalla"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block bg-white text-neutral-800 font-semibold py-2 px-6 rounded-full hover:bg-neutral-100 transition-colors"
+                className="border border-white/90 hover:border-white hover:bg-white/70 text-white/90 hover:text-white font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"
               >
                 View on GitHub
               </a>
@@ -122,7 +122,7 @@ export default function CommunityPage() {
                 href="https://discord.gg/XEwUXAv"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block bg-white text-indigo-600 font-semibold py-2 px-6 rounded-full hover:bg-indigo-100 transition-colors"
+                className="border border-white/90 hover:border-indigo-500 hover:bg-indigo-500 text-white/90 hover:text-white font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"
               >
                 Join Discord
               </a>

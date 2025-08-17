@@ -2,6 +2,7 @@
 "use client";
 
 import { GameData } from "@/lib/gameData";
+import { useLiveStatus } from "@/contexts/LiveStatusContext";
 
 interface GameContentProps {
   games: GameData[];
@@ -10,6 +11,8 @@ interface GameContentProps {
 
 const GameContent = ({ games, selectedIndex }: GameContentProps) => {
   const currentGame = games[selectedIndex];
+  const { liveStatus } = useLiveStatus();
+  const { isLive, isLoading } = liveStatus;
 
   return (
     <div className="relative overflow-hidden">
@@ -75,7 +78,7 @@ const GameContent = ({ games, selectedIndex }: GameContentProps) => {
                       href={game.steamUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-neutral-800 hover:bg-neutral-700 text-white font-semibold py-3 px-8 rounded-full transition-colors"
+                      className="border border-blue-500 hover:border-blue-400 hover:bg-blue-400 hover:text-white/90 text-blue-500 font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg backdrop-blur-sm inline-flex items-center justify-center"
                     >
                       Wishlist on Steam
                     </a>
@@ -85,20 +88,37 @@ const GameContent = ({ games, selectedIndex }: GameContentProps) => {
                       href={game.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-neutral-800 hover:bg-neutral-700 text-white font-semibold py-3 px-8 rounded-full transition-colors"
+                      className="border border-white/90 hover:bg-white/70 text-white/90 hover:text-white/90 font-semibold py-3 px-8 rounded-full transition-colors inline-flex items-center justify-center"
                     >
                       View on GitHub
                     </a>
                   )}
                   {game.twitchUrl && (
-                    <a
-                      href={game.twitchUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="border border-white/30 hover:border-purple-600 hover:text-purple-500 text-white font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg backdrop-blur-sm inline-block"
-                    >
-                      Watch Development Live
-                    </a>
+                    <>
+                      {isLive && !isLoading ? (
+                        <a
+                          href={game.twitchUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="border-2 border-purple-600 text-purple-600 hover:text-purple-500 font-semibold py-3 px-8 rounded-full transition-all duration-200 text-lg backdrop-blur-sm inline-block"
+                          style={{
+                            animation:
+                              "pulse-purple 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                          }}
+                        >
+                          Watch Dev Live
+                        </a>
+                      ) : (
+                        <a
+                          href={game.twitchUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="border border-purple-500 hover:border-purple-500 hover:bg-purple-500 text-purple-500 hover:text-white/90 font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"
+                        >
+                          Watch Dev Live
+                        </a>
+                      )}
+                    </>
                   )}
                 </div>
               </div>

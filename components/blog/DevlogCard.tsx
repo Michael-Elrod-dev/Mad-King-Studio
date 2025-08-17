@@ -155,7 +155,7 @@ const DevlogCard = ({ post, isGitHubPost = false }: DevlogCardProps) => {
               a: ({ href, children }) => (
                 <a
                   href={href}
-                  className="text-red-500 hover:text-red-400 transition-colors"
+                  className="text-red-500 hover:text-red-400 underline transition-colors"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -228,7 +228,7 @@ const DevlogCard = ({ post, isGitHubPost = false }: DevlogCardProps) => {
                   a: ({ href, children }) => (
                     <a
                       href={href}
-                      className="text-red-500 hover:text-red-400 transition-colors"
+                      className="text-red-500 hover:text-red-400 underline transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -250,7 +250,6 @@ const DevlogCard = ({ post, isGitHubPost = false }: DevlogCardProps) => {
 
           {/* Combined action row */}
           <div className="flex items-center justify-between mt-4 pt-3">
-            {/* Show More/Less button - left side */}
             {hasMoreContent && (
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
@@ -282,13 +281,12 @@ const DevlogCard = ({ post, isGitHubPost = false }: DevlogCardProps) => {
               </button>
             )}
 
-            {/* View on GitHub button - right side */}
             {isGitHubPost && post.githubUrl && (
               <a
                 href={post.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded font-medium transition-colors"
+                className="border border-white/90 hover:bg-white/70 text-white/90 hover:text-white/90 font-semibold py-3 px-8 rounded-full transition-colors inline-flex items-center justify-center"
               >
                 View on GitHub
               </a>

@@ -93,7 +93,7 @@ const DevlogList = () => {
           href="https://github.com/Michael-Elrod-dev/Path-to-Valhalla/tree/main/docs/00-Development%20Logs/Logs"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-white hover:text-white/90 transition-colors"
+          className="border border-white/90 hover:bg-white/70 text-white/90 hover:text-white/90 font-semibold py-3 px-8 rounded-full transition-colors inline-flex items-center justify-center"
         >
           View on GitHub →
         </a>
@@ -114,7 +114,7 @@ const DevlogList = () => {
           <button
             onClick={handleLoadMore}
             disabled={isLoadingMore}
-            className="bg-red-600 hover:bg-red-500 disabled:bg-red-300 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-full transition-colors flex items-center justify-center mx-auto"
+            className="border border-red-500 hover:border-red-600 hover:bg-red-500 text-red-500 hover:text-white/90 disabled:bg-red-300 disabled:text-white/90 disabled:cursor-not-allowed font-semibold py-3 px-8 rounded-full transition-colors flex items-center justify-center mx-auto"
           >
             {isLoadingMore ? (
               <>

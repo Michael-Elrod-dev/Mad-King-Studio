@@ -4,6 +4,7 @@
 import { useState } from "react";
 import FloatingNav from "@/components/layout/FloatingNav";
 import { sendEmail, isEmailJSConfigured } from "@/lib/emailjs";
+import { useLiveStatus } from "@/contexts/LiveStatusContext";
 
 interface FormData {
   name: string;
@@ -20,6 +21,9 @@ interface FormState {
 }
 
 export default function ContactPage() {
+  const { liveStatus } = useLiveStatus();
+  const { isLive, isLoading } = liveStatus;
+
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -184,7 +188,7 @@ export default function ContactPage() {
                     value={formData.name}
                     onChange={handleChange}
                     disabled={formState.isSubmitting}
-                    className="w-full px-4 py-3 bg-neutral-700 text-white rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full px-4 py-3 bg-neutral-700 text-white rounded-lg focus:ring-2 focus:ring-red-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="Your name"
                   />
                 </div>
@@ -204,7 +208,7 @@ export default function ContactPage() {
                     value={formData.email}
                     onChange={handleChange}
                     disabled={formState.isSubmitting}
-                    className="w-full px-4 py-3 bg-neutral-700 text-white rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full px-4 py-3 bg-neutral-700 text-white rounded-lg focus:ring-2 focus:ring-red-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="your.email@example.com"
                   />
                 </div>
@@ -223,7 +227,7 @@ export default function ContactPage() {
                     value={formData.subject}
                     onChange={handleChange}
                     disabled={formState.isSubmitting}
-                    className="w-full px-4 py-3 bg-neutral-700 text-white rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full px-4 py-3 bg-neutral-700 text-white rounded-lg focus:ring-2 focus:ring-red-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <option value="">Select a subject</option>
                     <option value="collaboration">
@@ -251,7 +255,7 @@ export default function ContactPage() {
                     value={formData.message}
                     onChange={handleChange}
                     disabled={formState.isSubmitting}
-                    className="w-full px-4 py-3 bg-neutral-700 text-white rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none resize-vertical disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full px-4 py-3 bg-neutral-700 text-white rounded-lg focus:ring-2 focus:ring-red-600 focus:outline-none resize-vertical disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="Tell me about your inquiry..."
                   />
                 </div>
@@ -259,7 +263,7 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={formState.isSubmitting}
-                  className="w-full bg-red-600 hover:bg-red-500 disabled:bg-red-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-full transition-colors flex items-center justify-center"
+                  className="w-full border border-red-500 hover:bg-red-600 hover:bg-red-500 text-red-500 hover:text-white/90 disabled:bg-red-400 disabled:border-red-400 disabled:cursor-not-allowed font-semibold py-3 px-6 rounded-full transition-colors flex items-center justify-center"
                 >
                   {formState.isSubmitting ? (
                     <>
@@ -333,7 +337,7 @@ export default function ContactPage() {
                     href="https://discord.gg/XEwUXAv"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center text-white/90 hover:text-purple-300 transition-colors"
+                    className="flex items-center text-white/90 hover:text-indigo-600 transition-colors"
                   >
                     <svg
                       className="w-5 h-5 mr-3"
@@ -346,7 +350,7 @@ export default function ContactPage() {
                   </a>
                   <a
                     href="https://x.com/AlmostHadMe_"
-                    className="flex items-center text-white/90 hover:text-blue-400 transition-colors"
+                    className="flex items-center text-white/90 hover:text-blue-500 transition-colors"
                   >
                     <svg
                       className="w-5 h-5 mr-3"
@@ -379,12 +383,30 @@ export default function ContactPage() {
                   way to ask questions and get real-time answers about the game
                   development process.
                 </p>
-                <a
-                  href="/community"
-                  className="inline-block bg-red-600 hover:bg-red-500 text-white font-semibold py-2 px-6 rounded-full transition-colors"
-                >
-                  Check Stream
-                </a>
+
+                {isLive && !isLoading ? (
+                  <a
+                    href="https://twitch.tv/aimosthadme"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="border-2 border-purple-600 text-purple-600 hover:text-purple-500 font-semibold py-3 px-8 rounded-full transition-all duration-200 text-lg backdrop-blur-sm inline-block"
+                    style={{
+                      animation:
+                        "pulse-purple 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                    }}
+                  >
+                    Live Now
+                  </a>
+                ) : (
+                  <a
+                    href="https://twitch.tv/aimosthadme"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="border border-purple-500 hover:border-purple-500 hover:bg-purple-500 text-purple-500 hover:text-white/90 font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"
+                  >
+                    Check Stream
+                  </a>
+                )}
               </div>
             </div>
           </div>
