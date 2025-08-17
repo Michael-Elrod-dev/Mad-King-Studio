@@ -20,33 +20,33 @@ export default function GamePage() {
           <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
             <div className="space-y-6">
               <h2 className="text-3xl font-bold text-white">Path to Valhalla</h2>
-              <p className="text-dark-300 text-lg leading-relaxed">
+              <p className="text-white/90 text-lg leading-relaxed">
                 A 2D, top down, segmented rougelite game built around Norse Mythology.
                 You play as a fallen Viking who must fight his way through the 9 
                 Realms to prove himself to Odin and be granted everlasting life as one 
                 of Odin&apos;s warriors in Valhalla.
               </p>
               <div className="space-y-4">
-                <div className="flex items-center space-x-3 text-dark-300">
-                  <span className="w-2 h-2 bg-primary-500 rounded-full"></span>
+                <div className="flex items-center space-x-3 text-white/90">
+                  <span className="w-2 h-2 bg-white/90 rounded-full"></span>
                   <span>Genre: Action / Rougelite</span>
                 </div>
-                <div className="flex items-center space-x-3 text-dark-300">
-                  <span className="w-2 h-2 bg-primary-500 rounded-full"></span>
+                <div className="flex items-center space-x-3 text-white/90">
+                  <span className="w-2 h-2 bg-white/90 rounded-full"></span>
                   <span>Platform: PC (Steam)</span>
                 </div>
-                <div className="flex items-center space-x-3 text-dark-300">
-                  <span className="w-2 h-2 bg-primary-500 rounded-full"></span>
+                <div className="flex items-center space-x-3 text-white/90">
+                  <span className="w-2 h-2 bg-white/90 rounded-full"></span>
                   <span>Status: In Development</span>
                 </div>
-                <div className="flex items-center space-x-3 text-dark-300">
-                  <span className="w-2 h-2 bg-primary-500 rounded-full"></span>
+                <div className="flex items-center space-x-3 text-white/90">
+                  <span className="w-2 h-2 bg-white/90 rounded-full"></span>
                   <span>Open Source: Code available on GitHub</span>
                 </div>
               </div>
             </div>
             <div className="bg-neutral-900 rounded-lg aspect-video flex items-center justify-center">
-              <span className="text-dark-400 text-lg">Game Screenshot Placeholder</span>
+              <span className="text-white/70 text-lg">Game Screenshot Placeholder</span>
             </div>
           </div>
 
@@ -57,7 +57,7 @@ export default function GamePage() {
                 href="#"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 px-8 rounded-full transition-colors"
+                className="bg-neutral-800 hover:bg-neutral-700 text-white font-semibold py-3 px-8 rounded-full transition-colors"
               >
                 Wishlist on Steam
               </a>
@@ -65,7 +65,7 @@ export default function GamePage() {
                 href="https://github.com/Michael-Elrod-dev/Path-to-Valhalla"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-dark-800 hover:bg-dark-700 text-white font-semibold py-3 px-8 rounded-full transition-colors"
+                className="bg-neutral-800 hover:bg-neutral-700 text-white font-semibold py-3 px-8 rounded-full transition-colors"
               >
                 View on GitHub
               </a>
@@ -73,7 +73,7 @@ export default function GamePage() {
                 href="https://www.twitch.tv/aimosthadme"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-white font-semibold py-3 px-8 rounded-full transition-colors"
+                className="border border-white/30 hover:border-purple-600 hover:text-purple-500 text-white font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg backdrop-blur-sm inline-block"
               >
                 Watch Development Live
               </a>
