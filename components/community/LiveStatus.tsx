@@ -98,7 +98,7 @@ const LiveStatus = () => {
         href="https://twitch.tv/aimosthadme"
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-block bg-purple-600 hover:bg-purple-500 text-white font-semibold py-3 px-8 rounded-full transition-colors"
+        className="inline-block bg-red-600 hover:bg-red-500 text-white font-semibold py-3 px-8 rounded-full transition-colors"
       >
         Follow for Notifications
       </a>

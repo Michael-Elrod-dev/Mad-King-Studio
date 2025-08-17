@@ -21,21 +21,21 @@ export interface TwitchStreamResponse {
   };
 }
 
-const TWITCH_CLIENT_ID = process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID || '';
-const TWITCH_USERNAME = 'aimosthadme'; // Your Twitch username
+const TWITCH_CLIENT_ID = process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID || "";
+const TWITCH_USERNAME = "aimosthadme"; // Your Twitch username
 
 // Get App Access Token (for public API calls)
 async function getTwitchAppToken(): Promise<string | null> {
   try {
-    const response = await fetch('https://id.twitch.tv/oauth2/token', {
-      method: 'POST',
+    const response = await fetch("https://id.twitch.tv/oauth2/token", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
         client_id: TWITCH_CLIENT_ID,
-        client_secret: process.env.TWITCH_CLIENT_SECRET || '',
-        grant_type: 'client_credentials',
+        client_secret: process.env.TWITCH_CLIENT_SECRET || "",
+        grant_type: "client_credentials",
       }),
     });
 
@@ -46,7 +46,7 @@ async function getTwitchAppToken(): Promise<string | null> {
     const data = await response.json();
     return data.access_token;
   } catch (error) {
-    console.error('Error getting Twitch token:', error);
+    console.error("Error getting Twitch token:", error);
     return null;
   }
 }
@@ -60,8 +60,8 @@ export async function getTwitchStreamInfo(): Promise<{
 } | null> {
   try {
     // For client-side calls, we'll use a Next.js API route
-    const response = await fetch('/api/twitch/stream', {
-      next: { revalidate: 60 } // Cache for 1 minute
+    const response = await fetch("/api/twitch/stream", {
+      next: { revalidate: 60 }, // Cache for 1 minute
     });
 
     if (!response.ok) {
@@ -70,7 +70,7 @@ export async function getTwitchStreamInfo(): Promise<{
 
     return await response.json();
   } catch (error) {
-    console.error('Error fetching Twitch stream info:', error);
+    console.error("Error fetching Twitch stream info:", error);
     return null;
   }
 }
@@ -85,15 +85,15 @@ export async function getTwitchStreamInfoServer(): Promise<{
   try {
     const token = await getTwitchAppToken();
     if (!token) {
-      throw new Error('Failed to get Twitch token');
+      throw new Error("Failed to get Twitch token");
     }
 
     const response = await fetch(
       `https://api.twitch.tv/helix/streams?user_login=${TWITCH_USERNAME}`,
       {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Client-Id': TWITCH_CLIENT_ID,
+          Authorization: `Bearer ${token}`,
+          "Client-Id": TWITCH_CLIENT_ID,
         },
       }
     );
@@ -107,17 +107,17 @@ export async function getTwitchStreamInfoServer(): Promise<{
 
     return {
       isLive: !!stream,
-      streamTitle: stream?.title || '',
-      gameName: stream?.game_name || '',
+      streamTitle: stream?.title || "",
+      gameName: stream?.game_name || "",
       startedAt: stream?.started_at || null,
     };
   } catch (error) {
-    console.error('Error fetching Twitch stream info:', error);
+    console.error("Error fetching Twitch stream info:", error);
     // Return fallback data
     return {
       isLive: false,
-      streamTitle: '',
-      gameName: '',
+      streamTitle: "",
+      gameName: "",
       startedAt: null,
     };
   }

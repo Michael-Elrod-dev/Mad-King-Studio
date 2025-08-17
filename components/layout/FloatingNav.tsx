@@ -10,7 +10,11 @@ const FloatingNav = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const pathname = usePathname();
 
+  const isHomePage = pathname === "/";
+
   useEffect(() => {
+    if (!isHomePage) return;
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
@@ -25,12 +29,12 @@ const FloatingNav = () => {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, [lastScrollY, isHomePage]);
 
   const navItems = [
     { href: "/", label: "Home" },
     { href: "/games", label: "Games" },
-    { href: "/devlog", label: "Devlog" },
+    { href: "/blog", label: "Blog" },
     { href: "/community", label: "Community" },
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
@@ -38,8 +42,10 @@ const FloatingNav = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${
-        isVisible ? "translate-y-0" : "-translate-y-full"
+      className={`top-0 left-0 right-0 z-50 transition-transform duration-300 ${
+        isHomePage
+          ? `fixed ${isVisible ? "translate-y-0" : "-translate-y-full"}`
+          : "relative"
       }`}
     >
       <div className="flex items-center justify-between px-6 py-4">
@@ -59,8 +65,10 @@ const FloatingNav = () => {
             <Link
               key={item.href}
               href={item.href}
-              className={`hover:text-white transition-colors duration-200 text-sm font-medium ${
-                pathname === item.href ? "text-red-500" : "text-white/90"
+              className={`hover:text-white transition-colors duration-200 text-sm font-medium border-b-2 pb-1 ${
+                pathname === item.href
+                  ? "text-red-500 border-red-500"
+                  : "text-white/90 border-transparent hover:border-white/30"
               }`}
             >
               {item.label}
