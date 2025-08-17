@@ -1,38 +1,11 @@
 // components/layout/SocialLinks.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useLiveStatus } from "@/contexts/LiveStatusContext";
 
 const SocialLinks = () => {
-  const [isLive, setIsLive] = useState(false);
-  const [isLoading, setIsLoading] = useState(true); // Add loading state
-
-  useEffect(() => {
-    const fetchStreamStatus = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch("/api/twitch/stream");
-        if (response.ok) {
-          const streamInfo = await response.json();
-          setIsLive(streamInfo.isLive);
-        } else {
-          setIsLive(false);
-        }
-      } catch (error) {
-        console.error("Error fetching stream status:", error);
-        setIsLive(false);
-      } finally {
-        setIsLoading(false); // Always stop loading
-      }
-    };
-
-    fetchStreamStatus();
-
-    // Check every 30 minutes (1,800,000 milliseconds)
-    const interval = setInterval(fetchStreamStatus, 1800000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const { liveStatus } = useLiveStatus();
+  const { isLive, isLoading } = liveStatus;
 
   const socialLinks = [
     {
@@ -88,8 +61,9 @@ const SocialLinks = () => {
           title={`${link.label}${link.isLive ? " (LIVE)" : ""}`}
         >
           {link.icon}
+          {/* Live dot positioned on top-left */}
           {link.isLive && !isLoading && (
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+            <div className="absolute -top-1 -left-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
           )}
         </a>
       ))}

@@ -1,43 +1,11 @@
 // components/community/LiveStatus.tsx
 "use client";
 
-import { useState, useEffect } from "react";
-import { getTwitchStreamInfo } from "@/lib/twitch";
+import { useLiveStatus } from "@/contexts/LiveStatusContext";
 
 const LiveStatus = () => {
-  const [isLive, setIsLive] = useState(false);
-  const [streamTitle, setStreamTitle] = useState("");
-  const [gameName, setGameName] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchStreamStatus = async () => {
-      try {
-        setIsLoading(true);
-        const streamInfo = await getTwitchStreamInfo();
-
-        if (streamInfo) {
-          setIsLive(streamInfo.isLive);
-          setStreamTitle(streamInfo.streamTitle);
-          setGameName(streamInfo.gameName);
-          setError(null);
-        }
-      } catch (err) {
-        console.error("Error fetching stream status:", err);
-        setError("Failed to load stream status");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchStreamStatus();
-
-    // Refresh every 30 minutes (1,800,000 milliseconds)
-    const interval = setInterval(fetchStreamStatus, 1800000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const { liveStatus } = useLiveStatus();
+  const { isLive, streamTitle, gameName, isLoading, error } = liveStatus;
 
   if (isLoading) {
     return (
@@ -80,11 +48,16 @@ const LiveStatus = () => {
         {gameName && (
           <p className="text-white/90 text-sm mb-4">Playing: {gameName}</p>
         )}
+
+        {/* Purple pulsing button when live */}
         <a
           href="https://twitch.tv/aimosthadme"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block bg-red-600 hover:bg-red-500 text-white font-bold py-3 px-8 rounded-full transition-colors text-lg"
+          className="inline-block border-2 border-purple-600 text-purple-600 font-bold py-3 px-8 rounded-full transition-all duration-1000 hover:bg-purple-600 hover:text-white text-lg"
+          style={{
+            animation: "pulse-purple 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+          }}
         >
           Watch Stream Now
         </a>

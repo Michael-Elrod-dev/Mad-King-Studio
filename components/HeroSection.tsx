@@ -3,9 +3,12 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useLiveStatus } from "@/contexts/LiveStatusContext";
 
 const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const { liveStatus } = useLiveStatus();
+  const { isLive, isLoading } = liveStatus;
 
   useEffect(() => {
     setIsVisible(true);
@@ -42,14 +45,31 @@ const HeroSection = () => {
           >
             My Games →
           </Link>
-          <a
-            href="https://twitch.tv/aimosthadme"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border border-white/30 hover:border-purple-600 hover:text-purple-600 text-white font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg backdrop-blur-sm inline-block"
-          >
-            Watch Live Dev
-          </a>
+
+          {/* Updated Watch Live Dev button */}
+          {isLive && !isLoading ? (
+            <a
+              href="https://twitch.tv/aimosthadme"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border-2 border-purple-600 text-purple-600 font-semibold py-3 px-8 rounded-full transition-all duration-200 text-lg backdrop-blur-sm inline-block"
+              style={{
+                animation:
+                  "pulse-purple 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+              }}
+            >
+              Watch Live Dev
+            </a>
+          ) : (
+            <a
+              href="https://twitch.tv/aimosthadme"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border border-purple-600 hover:border-purple-600 hover:text-purple-600 text-purple-600 font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg backdrop-blur-sm inline-block"
+            >
+              Watch Live Dev
+            </a>
+          )}
         </div>
       </div>
     </section>

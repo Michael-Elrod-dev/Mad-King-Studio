@@ -35,7 +35,6 @@ export const sendEmail = async (data: EmailData): Promise<boolean> => {
       templateParams
     );
 
-    console.log("Email sent successfully:", response);
     return true;
   } catch (error) {
     console.error("Failed to send email:", error);

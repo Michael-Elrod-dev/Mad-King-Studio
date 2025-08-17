@@ -29,25 +29,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Rate limiting check (basic implementation)
-    // In production, you might want to use a more robust rate limiting solution
-    const userAgent = request.headers.get("user-agent") || "";
-    const ip = request.headers.get("x-forwarded-for") || "unknown";
-
-    // Here you could implement more sophisticated rate limiting
-    // For now, we'll just log the submission
-    console.log(
-      `Contact form submission from IP: ${ip}, User-Agent: ${userAgent}`
-    );
-
-    // In a real application, you might want to:
-    // 1. Save to database
-    // 2. Send email notification
-    // 3. Add to CRM system
-
-    // For now, we'll just return success
-    // The actual email sending will be handled by EmailJS on the client side
-
     return NextResponse.json(
       {
         message: "Message sent successfully",

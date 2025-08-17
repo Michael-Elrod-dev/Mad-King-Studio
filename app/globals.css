@@ -48,3 +48,16 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: #dc2626;
 }
+
+@keyframes pulse-purple {
+  0%, 100% {
+    background-color: transparent;
+    border-color: rgb(147 51 234);
+    color: rgb(147 51 234);
+  }
+  50% {
+    background-color: rgb(147 51 234);
+    border-color: rgb(147 51 234);
+    color: white;
+  }
+}
