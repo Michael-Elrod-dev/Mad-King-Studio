@@ -4,7 +4,7 @@ import { getTwitchStreamInfoServer } from "@/lib/twitch";
 
 export async function GET() {
   // MOCK DATA FOR TESTING
-  const MOCK_LIVE = true;
+  const MOCK_LIVE = false;
 
   if (MOCK_LIVE) {
     const mockData = {
