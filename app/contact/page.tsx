@@ -49,7 +49,6 @@ export default function ContactPage() {
     });
 
     try {
-      // First, validate and submit to our API
       const apiResponse = await fetch("/api/contact", {
         method: "POST",
         headers: {
@@ -63,30 +62,14 @@ export default function ContactPage() {
         throw new Error(errorData.error || "Failed to submit form");
       }
 
-      // If EmailJS is configured, send the actual email
-      if (isEmailJSConfigured()) {
-        const emailSent = await sendEmail(formData);
+      const result = await apiResponse.json();
 
-        if (!emailSent) {
-          throw new Error("Failed to send email notification");
-        }
-
-        setFormState({
-          isSubmitting: false,
-          isSubmitted: true,
-          error: null,
-          success: "Message sent successfully!",
-        });
-      } else {
-        // Fallback if EmailJS is not configured
-        setFormState({
-          isSubmitting: false,
-          isSubmitted: true,
-          error: null,
-          success:
-            "Form submitted successfully! However, email notifications are not configured yet.",
-        });
-      }
+      setFormState({
+        isSubmitting: false,
+        isSubmitted: true,
+        error: null,
+        success: result.message,
+      });
 
       // Reset form
       setFormData({
@@ -119,7 +102,6 @@ export default function ContactPage() {
       [e.target.name]: e.target.value,
     });
 
-    // Clear any previous errors when user starts typing
     if (formState.error || formState.success) {
       setFormState({
         ...formState,

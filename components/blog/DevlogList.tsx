@@ -3,7 +3,17 @@
 
 import { useState, useEffect } from "react";
 import DevlogCard from "./DevlogCard";
-import { fetchDevLogs, processDevLogs, ProcessedDevLog } from "@/lib/github";
+
+interface ProcessedDevLog {
+  id: string;
+  title: string;
+  date: string;
+  dayNumber: number;
+  excerpt: string;
+  content: string;
+  githubUrl: string;
+  downloadUrl: string;
+}
 
 const POSTS_PER_PAGE = 5;
 
@@ -14,13 +24,18 @@ const DevlogList = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch dev logs on component mount
+  // Fetch dev logs from our API route
   useEffect(() => {
     const loadDevLogs = async () => {
       try {
         setIsLoading(true);
-        const rawLogs = await fetchDevLogs();
-        const processedLogs = await processDevLogs(rawLogs);
+        const response = await fetch("/api/devlogs");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch dev logs");
+        }
+
+        const processedLogs = await response.json();
         setDevLogs(processedLogs);
         setError(null);
       } catch (err) {
@@ -36,10 +51,7 @@ const DevlogList = () => {
 
   const handleLoadMore = async () => {
     setIsLoadingMore(true);
-
-    // Simulate loading delay for better UX
     await new Promise((resolve) => setTimeout(resolve, 300));
-
     setVisiblePosts((prev) => Math.min(prev + POSTS_PER_PAGE, devLogs.length));
     setIsLoadingMore(false);
   };

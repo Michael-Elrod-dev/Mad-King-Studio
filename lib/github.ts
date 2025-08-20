@@ -38,8 +38,8 @@ export async function fetchDevLogs(): Promise<DevLog[]> {
       {
         headers: {
           Accept: "application/vnd.github.v3+json",
+          Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
         },
-        // Cache for 5 minutes
         next: { revalidate: 86400 },
       }
     );
@@ -49,8 +49,6 @@ export async function fetchDevLogs(): Promise<DevLog[]> {
     }
 
     const files: DevLog[] = await response.json();
-
-    // Filter only .md files from the Logs directory
     return files.filter((file) => file.name.endsWith(".md"));
   } catch (error) {
     console.error("Error fetching dev logs:", error);
@@ -61,6 +59,9 @@ export async function fetchDevLogs(): Promise<DevLog[]> {
 export async function fetchDevLogContent(downloadUrl: string): Promise<string> {
   try {
     const response = await fetch(downloadUrl, {
+      headers: {
+        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+      },
       next: { revalidate: 86400 },
     });
 

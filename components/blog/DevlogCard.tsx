@@ -262,7 +262,7 @@ const DevlogCard = ({ post, isGitHubPost = false }: DevlogCardProps) => {
               href={`/devlog/${post.id}`}
               className="inline-block text-red-500 hover:text-red-400 font-medium transition-colors"
             >
-              Read more →
+              Read more
             </Link>
           </div>
         </div>

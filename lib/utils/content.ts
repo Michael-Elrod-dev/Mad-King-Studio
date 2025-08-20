@@ -1,3 +1,21 @@
+// lib/utils/content.ts
+
+/**
+ * Replace Obsidian wiki links with their display text
+ * Handles both simple links [[filename]] and aliased links [[path/file|alias]]
+ * 
+ * Examples:
+ * - [[00-Home]] → 00-Home
+ * - [[02-Game Art/Levels/01-Midgard|01-Midgard]] → 01-Midgard
+ */
+function replaceObsidianLinks(content: string): string {
+  const obsidianLinkRegex = /\[\[(?:(.+?)\|)?(.+?)\]\]/g;
+  
+  return content.replace(obsidianLinkRegex, (match, pathOrAlias, displayText) => {
+    return displayText;
+  });
+}
+
 /**
  * Extract date from markdown content in ### Date section
  */
@@ -17,10 +35,11 @@ export function extractDateFromContent(content: string): string {
 }
 
 /**
- * Remove metadata sections from markdown content
+ * Remove metadata sections from markdown content and replace Obsidian links
  */
 export function removeMetadataFromContent(content: string): string {
-  return content.replace(/###\s*Date\s*[\s\S]*$/i, '').trim();
+  const withoutMetadata = content.replace(/###\s*Date\s*[\s\S]*$/i, '').trim();
+  return replaceObsidianLinks(withoutMetadata);
 }
 
 /**
