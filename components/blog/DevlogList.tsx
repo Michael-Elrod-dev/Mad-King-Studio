@@ -65,11 +65,11 @@ const DevlogList = () => {
   // Error state
   if (error) {
     return (
-      <div className="bg-red-900/20 border border-red-700 rounded-lg p-6 text-center">
-        <h3 className="text-red-400 font-semibold mb-2">
+      <div className="bg-red-600 border border-red-600 rounded-lg p-6 text-center">
+        <h3 className="text-white/90 font-semibold mb-2">
           Error Loading Dev Logs
         </h3>
-        <p className="text-red-300 mb-4">{error}</p>
+        <p className="text-white/90 mb-4">{error}</p>
         <button
           onClick={() => window.location.reload()}
           className="bg-red-600 hover:bg-red-500 text-white font-medium py-2 px-4 rounded transition-colors"
@@ -114,7 +114,7 @@ const DevlogList = () => {
           <button
             onClick={handleLoadMore}
             disabled={isLoadingMore}
-            className="border border-red-500 hover:border-red-600 hover:bg-red-500 text-red-500 hover:text-white/90 disabled:bg-red-300 disabled:text-white/90 disabled:cursor-not-allowed font-semibold py-3 px-8 rounded-full transition-colors flex items-center justify-center mx-auto"
+            className="border border-red-500 hover:border-red-600 hover:bg-red-500 text-red-500 hover:text-white/90 disabled:bg-red-400 disabled:text-white/90 disabled:cursor-not-allowed font-semibold py-3 px-8 rounded-full transition-colors flex items-center justify-center mx-auto"
           >
             {isLoadingMore ? (
               <>
