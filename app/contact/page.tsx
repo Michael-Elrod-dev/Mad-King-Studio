@@ -1,9 +1,11 @@
 // app/contact/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FloatingNav from "@/components/layout/FloatingNav";
 import { useLiveStatus } from "@/contexts/LiveStatusContext";
+import { sendContactEmail, isEmailJSConfigured } from "@/lib/emailjs";
+import { validateContactForm } from "@/lib/utils";
 
 interface FormData {
   name: string;
@@ -37,6 +39,12 @@ export default function ContactPage() {
     success: null,
   });
 
+  const [emailConfigured, setEmailConfigured] = useState(false);
+
+  useEffect(() => {
+    setEmailConfigured(isEmailJSConfigured());
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -48,26 +56,29 @@ export default function ContactPage() {
     });
 
     try {
-      const apiResponse = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!apiResponse.ok) {
-        const errorData = await apiResponse.json();
-        throw new Error(errorData.error || "Failed to submit form");
+      // Client-side validation
+      const validation = validateContactForm(formData);
+      
+      if (!validation.isValid) {
+        throw new Error(validation.errors.join(", "));
       }
 
-      const result = await apiResponse.json();
+      if (!emailConfigured) {
+        throw new Error("Email service is not configured");
+      }
+
+      // Send email using EmailJS
+      const emailResult = await sendContactEmail(formData);
+
+      if (!emailResult.success) {
+        throw new Error(emailResult.message);
+      }
 
       setFormState({
         isSubmitting: false,
         isSubmitted: true,
         error: null,
-        success: result.message,
+        success: "Message sent!",
       });
 
       // Reset form
@@ -92,7 +103,7 @@ export default function ContactPage() {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<
+    e: React.ChangeEvent <
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
@@ -132,6 +143,15 @@ export default function ContactPage() {
               <h2 className="text-2xl font-bold text-white mb-6">
                 Send a Message
               </h2>
+
+              {/* Email configuration warning */}
+              {!emailConfigured && (
+                <div className="mb-6 p-4 bg-yellow-600 text-white rounded-lg">
+                  <p className="text-sm">
+                    Email service is not fully configured. Form submission will be limited.
+                  </p>
+                </div>
+              )}
 
               {/* Success/Error Messages */}
               {formState.success && (
@@ -236,7 +256,7 @@ export default function ContactPage() {
 
                 <button
                   type="submit"
-                  disabled={formState.isSubmitting}
+                  disabled={formState.isSubmitting || !emailConfigured}
                   className="w-full border border-red-500 hover:bg-red-600 hover:bg-red-500 text-red-500 hover:text-white/90 disabled:bg-red-400 disabled:border-red-400 disabled:cursor-not-allowed font-semibold py-3 px-6 rounded-full transition-colors flex items-center justify-center"
                 >
                   {formState.isSubmitting ? (
@@ -270,7 +290,7 @@ export default function ContactPage() {
               </form>
             </div>
 
-            {/* Contact Information */}
+            {/* Rest of your contact information component stays the same */}
             <div className="space-y-8">
               <div className="bg-neutral-800 rounded-lg p-6">
                 <h3 className="text-xl font-bold text-white mb-4">
