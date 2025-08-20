@@ -3,7 +3,6 @@
 
 import { useState } from "react";
 import FloatingNav from "@/components/layout/FloatingNav";
-import { sendEmail, isEmailJSConfigured } from "@/lib/emailjs";
 import { useLiveStatus } from "@/contexts/LiveStatusContext";
 
 interface FormData {
@@ -144,13 +143,6 @@ export default function ContactPage() {
               {formState.error && (
                 <div className="mb-6 p-4 bg-red-500 text-white rounded-lg">
                   {formState.error}
-                </div>
-              )}
-
-              {!isEmailJSConfigured() && !formState.isSubmitted && (
-                <div className="mb-6 p-4 bg-yellow-600 text-white rounded-lg text-sm">
-                  Email notifications are not configured yet. Form submissions
-                  will be logged but no email will be sent.
                 </div>
               )}
 
