@@ -23,9 +23,8 @@ export interface TwitchStreamResponse {
 }
 
 const TWITCH_CLIENT_ID = process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID || "";
-const TWITCH_USERNAME = "aimosthadme"; // Your Twitch username
+const TWITCH_USERNAME = "aimosthadme";
 
-// Get App Access Token (for public API calls)
 async function getTwitchAppToken(): Promise<string | null> {
   try {
     const response = await fetch("https://id.twitch.tv/oauth2/token", {
@@ -52,7 +51,6 @@ async function getTwitchAppToken(): Promise<string | null> {
   }
 }
 
-// Get stream information for a user
 export async function getTwitchStreamInfo(): Promise<{
   isLive: boolean;
   streamTitle: string;
@@ -60,7 +58,6 @@ export async function getTwitchStreamInfo(): Promise<{
   startedAt: string | null;
 } | null> {
   try {
-    // For client-side calls, we'll use a Next.js API route
     const response = await fetch("/api/twitch/stream", {
       next: { revalidate: 60 }, // Cache for 1 minute
     });
@@ -76,7 +73,6 @@ export async function getTwitchStreamInfo(): Promise<{
   }
 }
 
-// Server-side function for API route
 export async function getTwitchStreamInfoServer(): Promise<{
   isLive: boolean;
   streamTitle: string;
@@ -104,7 +100,7 @@ export async function getTwitchStreamInfoServer(): Promise<{
     }
 
     const data: TwitchStreamResponse = await response.json();
-    const stream = data.data[0]; // Get first stream (should be only one for a user)
+    const stream = data.data[0];
 
     return {
       isLive: !!stream,
@@ -114,7 +110,6 @@ export async function getTwitchStreamInfoServer(): Promise<{
     };
   } catch (error) {
     console.error("Error fetching Twitch stream info:", error);
-    // Return fallback data
     return {
       isLive: false,
       streamTitle: "",

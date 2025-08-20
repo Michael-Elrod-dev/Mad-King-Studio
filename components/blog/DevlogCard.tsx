@@ -5,6 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { formatDate, getRemainingContent, getFirstSection } from '@/lib/utils';
 
 interface DevlogPost {
   id: string;
@@ -14,7 +15,6 @@ interface DevlogPost {
   date: string;
   dayNumber?: number;
   githubUrl?: string;
-  readTime?: string;
   tags?: string[];
 }
 
@@ -25,56 +25,6 @@ interface DevlogCardProps {
 
 const DevlogCard = ({ post, isGitHubPost = false }: DevlogCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
-
-  const formatDate = (dateString: string) => {
-    // Parse the date components to avoid timezone conversion
-    const [year, month, day] = dateString.split("-");
-    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  // Function to extract first section from markdown content
-  const getFirstSection = (content: string): string => {
-    if (!content) return "";
-
-    // Split by headers (###, ##, #)
-    const sections = content.split(/(?=^#{1,3}\s)/m);
-
-    // Find the first section that starts with a header
-    const firstHeaderIndex = sections.findIndex((section) =>
-      section.trim().startsWith("#")
-    );
-
-    if (firstHeaderIndex !== -1) {
-      return sections[firstHeaderIndex] || "";
-    }
-
-    // If no headers found, return first 500 characters
-    return content.length > 500 ? content.substring(0, 500) + "..." : content;
-  };
-
-  const getRemainingContent = (content: string): string => {
-    if (!content) return "";
-
-    const sections = content.split(/(?=^#{1,3}\s)/m);
-
-    // Find the first section that starts with a header
-    const firstHeaderIndex = sections.findIndex((section) =>
-      section.trim().startsWith("#")
-    );
-
-    if (firstHeaderIndex !== -1 && sections.length > firstHeaderIndex + 1) {
-      // Return everything after the first header section
-      return sections.slice(firstHeaderIndex + 1).join("");
-    }
-
-    return "";
-  };
 
   const firstSection =
     isGitHubPost && post.content ? getFirstSection(post.content) : "";
@@ -304,7 +254,6 @@ const DevlogCard = ({ post, isGitHubPost = false }: DevlogCardProps) => {
           {/* Date for non-GitHub posts */}
           <div className="flex items-center justify-between text-sm text-white/40 mb-4">
             <time dateTime={post.date}>{formatDate(post.date)}</time>
-            {post.readTime && <span>{post.readTime}</span>}
           </div>
 
           {/* Action for non-GitHub posts */}

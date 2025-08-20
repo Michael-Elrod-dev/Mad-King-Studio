@@ -1,5 +1,6 @@
 // app/api/contact/route.ts
 import { NextRequest, NextResponse } from "next/server";
+import { validateEmail } from "@/lib/utils";
 
 interface ContactFormData {
   name: string;
@@ -20,9 +21,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(body.email)) {
+    if (!validateEmail(body.email)) {
       return NextResponse.json(
         { error: "Invalid email address" },
         { status: 400 }

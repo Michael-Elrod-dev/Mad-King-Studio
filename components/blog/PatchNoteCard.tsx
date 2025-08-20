@@ -2,6 +2,11 @@
 "use client";
 
 import { useState } from "react";
+import {
+  formatDate,
+  getChangeTypeColor,
+  getChangeTypeLabel,
+} from "@/lib/utils";
 
 interface PatchNote {
   id: string;
@@ -22,48 +27,6 @@ interface PatchNoteCardProps {
 
 const PatchNoteCard = ({ patchNote }: PatchNoteCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
-
-  const formatDate = (dateString: string) => {
-    // Parse the date components to avoid timezone conversion
-    const [year, month, day] = dateString.split("-");
-    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  const getChangeTypeColor = (type: string) => {
-    switch (type) {
-      case "feature":
-        return "text-green-400";
-      case "bugfix":
-        return "text-red-400";
-      case "improvement":
-        return "text-blue-400";
-      case "balance":
-        return "text-yellow-400";
-      default:
-        return "text-white/90";
-    }
-  };
-
-  const getChangeTypeLabel = (type: string) => {
-    switch (type) {
-      case "feature":
-        return "NEW";
-      case "bugfix":
-        return "FIX";
-      case "improvement":
-        return "IMPROVED";
-      case "balance":
-        return "BALANCE";
-      default:
-        return type.toUpperCase();
-    }
-  };
 
   const visibleChanges = isExpanded
     ? patchNote.changes
