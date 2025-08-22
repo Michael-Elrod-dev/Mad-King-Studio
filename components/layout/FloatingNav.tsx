@@ -38,16 +38,16 @@ const FloatingNav = () => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
-      if (isMobileMenuOpen && !target.closest('.mobile-nav-container')) {
+      if (isMobileMenuOpen && !target.closest(".mobile-nav-container")) {
         setIsMobileMenuOpen(false);
       }
     };
 
     if (isMobileMenuOpen) {
-      document.addEventListener('click', handleClickOutside);
+      document.addEventListener("click", handleClickOutside);
     }
-    
-    return () => document.removeEventListener('click', handleClickOutside);
+
+    return () => document.removeEventListener("click", handleClickOutside);
   }, [isMobileMenuOpen]);
 
   // Close mobile menu on route change
@@ -85,16 +85,13 @@ const FloatingNav = () => {
         <div className="flex items-center justify-between px-6 py-4">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 z-60">
-            <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-red-600 rounded-md flex items-center justify-center">
               <span className="text-white text-sm">MKS</span>
             </div>
-            <span className="text-white text-lg hidden sm:block">
-              Mad King Studio
-            </span>
           </Link>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -111,31 +108,35 @@ const FloatingNav = () => {
           </div>
 
           {/* Desktop Social Links */}
-          <div className="hidden lg:block">
+          <div className="hidden md:block">
             <SocialLinks />
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="lg:hidden mobile-nav-container relative">
+          <div className="md:hidden mobile-nav-container relative">
             <button
               onClick={toggleMobileMenu}
-              className="text-white p-2 focus:outline-none focus:ring-2 focus:ring-red-500 rounded-lg relative z-50"
+              className="text-white p-2 focus:outline-none focus:ring-2 focus:ring-red-500 rounded-md relative z-50"
               aria-label="Toggle mobile menu"
             >
               <div className="w-6 h-6 flex flex-col justify-center items-center">
                 <span
                   className={`bg-white block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${
-                    isMobileMenuOpen ? 'rotate-45 translate-y-1' : '-translate-y-0.5'
+                    isMobileMenuOpen
+                      ? "rotate-45 translate-y-1"
+                      : "-translate-y-0.5"
                   }`}
                 ></span>
                 <span
                   className={`bg-white block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm my-0.5 ${
-                    isMobileMenuOpen ? 'opacity-0' : 'opacity-100'
+                    isMobileMenuOpen ? "opacity-0" : "opacity-100"
                   }`}
                 ></span>
                 <span
                   className={`bg-white block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${
-                    isMobileMenuOpen ? '-rotate-45 -translate-y-1' : 'translate-y-0.5'
+                    isMobileMenuOpen
+                      ? "-rotate-45 -translate-y-1"
+                      : "translate-y-0.5"
                   }`}
                 ></span>
               </div>
@@ -143,7 +144,7 @@ const FloatingNav = () => {
 
             {/* Mobile Dropdown Menu */}
             {isMobileMenuOpen && (
-              <div className="absolute right-0 top-full mt-2 w-64 bg-neutral-900 border border-neutral-700 rounded-lg shadow-xl z-50">
+              <div className="absolute right-0 top-full mt-2 w-64 bg-neutral-900 border border-neutral-700 rounded-md shadow-xl z-50">
                 {/* Navigation Links */}
                 <div className="py-2">
                   {navItems.map((item) => (
@@ -180,7 +181,7 @@ const FloatingNav = () => {
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black/20 lg:hidden z-40"
+          className="fixed inset-0 bg-black/20 md:hidden z-40"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
