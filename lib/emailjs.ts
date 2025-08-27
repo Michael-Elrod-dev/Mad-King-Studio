@@ -34,7 +34,7 @@ export const sendContactEmail = async (data: EmailData): Promise<{ success: bool
       from_email: data.email,
       subject: data.subject,
       message: data.message,
-      to_email: "michaelelrod.dev@gmail.com",
+      to_email: "madkingstudiollc@gmail.com",
       reply_to: data.email,
     };
 
