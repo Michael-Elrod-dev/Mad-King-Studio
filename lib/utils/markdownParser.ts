@@ -17,7 +17,7 @@ export function getFirstSection(content: string): string {
 }
 
 /**
- * Get remaining content after the first section
+ * Get remaining content after the first section, excluding internal sections
  */
 export function getRemainingContent(content: string): string {
   if (!content) return "";
@@ -28,7 +28,15 @@ export function getRemainingContent(content: string): string {
   );
 
   if (firstHeaderIndex !== -1 && sections.length > firstHeaderIndex + 1) {
-    return sections.slice(firstHeaderIndex + 1).join("");
+    // Filter out internal/dataview sections
+    const filteredSections = sections.slice(firstHeaderIndex + 1).filter((section) => {
+      const trimmedSection = section.trim();
+      return !trimmedSection.startsWith("### Active Tasks") && 
+             !trimmedSection.startsWith("## Active Tasks") &&
+             !trimmedSection.includes("```dataview");
+    });
+    
+    return filteredSections.join("");
   }
 
   return "";
