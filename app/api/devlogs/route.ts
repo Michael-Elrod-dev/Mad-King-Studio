@@ -1,8 +1,21 @@
 // app/api/devlogs/route.ts
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { fetchDevLogs, processDevLogs } from '@/lib/github';
+import { rateLimit, getClientIP } from '@/lib/rateLimit';
 
-export async function GET() {
+// 10 requests per minute
+const devLogsLimiter = rateLimit(10, 60 * 1000);
+
+export async function GET(request: NextRequest) {
+  const ip = getClientIP(request);
+  
+  if (!devLogsLimiter(ip)) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   try {
     const rawLogs = await fetchDevLogs();
     const processedLogs = await processDevLogs(rawLogs);

@@ -1,6 +1,7 @@
 // app/api/contact/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { validateContactForm } from "@/lib/utils";
+import { rateLimit, getClientIP } from "@/lib/rateLimit";
 
 interface ContactFormData {
   name: string;
@@ -9,11 +10,21 @@ interface ContactFormData {
   message: string;
 }
 
+// 3 submissions per 15 minutes
+const contactLimiter = rateLimit(3, 15 * 60 * 1000);
+
 export async function POST(request: NextRequest) {
   try {
-    const body: ContactFormData = await request.json();
+    const ip = getClientIP(request);
+    
+    if (!contactLimiter(ip)) {
+      return NextResponse.json(
+        { error: "Too many contact form submissions. Please try again in 15 minutes." },
+        { status: 429 }
+      );
+    }
 
-    // Validate the form data
+    const body: ContactFormData = await request.json();
     const validation = validateContactForm(body);
     
     if (!validation.isValid) {

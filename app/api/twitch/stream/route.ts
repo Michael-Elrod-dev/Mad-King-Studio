@@ -1,8 +1,21 @@
 // app/api/twitch/stream/route.ts
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getTwitchStreamInfoServer } from "@/lib/twitch";
+import { rateLimit, getClientIP } from "@/lib/rateLimit";
 
-export async function GET() {
+// 10 requests per minute
+const twitchLimiter = rateLimit(10, 60 * 1000);
+
+export async function GET(request: NextRequest) {
+  const ip = getClientIP(request);
+  
+  if (!twitchLimiter(ip)) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   // MOCK DATA FOR TESTING
   const MOCK_LIVE = false;
 
@@ -44,7 +57,7 @@ export async function GET() {
       },
       {
         headers: {
-          "Cache-Control": "public, max-age=10", // Shorter cache for errors
+          "Cache-Control": "public, max-age=10",
           "X-Data-Source": "error",
         },
       }

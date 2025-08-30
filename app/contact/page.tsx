@@ -58,7 +58,7 @@ export default function ContactPage() {
     try {
       // Client-side validation
       const validation = validateContactForm(formData);
-      
+
       if (!validation.isValid) {
         throw new Error(validation.errors.join(", "));
       }
@@ -90,20 +90,30 @@ export default function ContactPage() {
       });
     } catch (error) {
       console.error("Form submission error:", error);
+
+      let errorMessage = "An unexpected error occurred";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
+      // Check if it's a rate limit error
+      if (errorMessage.includes("Too many")) {
+        errorMessage =
+          "You've submitted too many forms recently. Please wait 15 minutes before trying again.";
+      }
+
       setFormState({
         isSubmitting: false,
         isSubmitted: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "An unexpected error occurred",
+        error: errorMessage,
         success: null,
       });
     }
   };
 
   const handleChange = (
-    e: React.ChangeEvent <
+    e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
@@ -148,7 +158,8 @@ export default function ContactPage() {
               {!emailConfigured && (
                 <div className="mb-6 p-4 bg-yellow-600 text-white rounded-lg">
                   <p className="text-sm">
-                    Email service is not fully configured. Form submission will be limited.
+                    Email service is not fully configured. Form submission will
+                    be limited.
                   </p>
                 </div>
               )}
