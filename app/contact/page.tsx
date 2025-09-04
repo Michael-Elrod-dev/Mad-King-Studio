@@ -354,7 +354,7 @@ export default function ContactPage() {
                     Discord Server
                   </a>
                   <a
-                    href="https://x.com/AlmostHadMe_"
+                    href="https://x.com/MadKingStudio"
                     className="flex items-center text-white/90 hover:text-blue-500 transition-colors"
                   >
                     <svg

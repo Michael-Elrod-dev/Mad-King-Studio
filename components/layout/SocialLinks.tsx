@@ -37,7 +37,7 @@ const SocialLinks = () => {
       ),
     },
     {
-      href: "https://x.com/AlmostHadMe_",
+      href: "https://x.com/MadKingStudio",
       label: "X",
       icon: (
         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
