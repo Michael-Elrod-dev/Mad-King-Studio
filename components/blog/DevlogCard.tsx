@@ -235,16 +235,6 @@ const DevlogCard = ({ post, isGitHubPost = false }: DevlogCardProps) => {
               </button>
             )}
 
-            {isGitHubPost && post.githubUrl && (
-              <a
-                href={post.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border border-white/90 hover:bg-white/70 text-white/90 hover:text-white/90 font-semibold py-3 px-8 rounded-full transition-colors inline-flex items-center justify-center"
-              >
-                View on GitHub
-              </a>
-            )}
           </div>
         </div>
       ) : (

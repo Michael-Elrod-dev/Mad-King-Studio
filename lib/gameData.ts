@@ -6,9 +6,7 @@ export interface GameData {
   genre: string;
   platform: string;
   status: string;
-  openSource: boolean;
   steamUrl?: string;
-  githubUrl?: string;
   twitchUrl?: string;
   progress: {
     feature: string;
@@ -25,9 +23,7 @@ export const games: GameData[] = [
     genre: "Action / Rougelite",
     platform: "PC (Steam)",
     status: "In Development",
-    openSource: true,
     steamUrl: "#",
-    githubUrl: "https://github.com/Michael-Elrod-dev/Path-to-Valhalla",
     twitchUrl: "https://www.twitch.tv/aimosthadme",
     progress: [
       { feature: "Core Game Mechanics", progress: 30 },

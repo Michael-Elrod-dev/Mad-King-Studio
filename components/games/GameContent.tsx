@@ -28,8 +28,8 @@ const GameContent = ({ games, selectedIndex }: GameContentProps) => {
                   Current Project
                 </h1>
                 <p className="text-xl text-white/90 max-w-3xl mx-auto">
-                  Follow the development of my upcoming indie game, built live
-                  on Twitch and available as open source.
+                  Follow the development of my upcoming indie game, through Twitch 
+                  or other social media.
                 </p>
               </div>
 
@@ -55,12 +55,6 @@ const GameContent = ({ games, selectedIndex }: GameContentProps) => {
                       <span className="w-2 h-2 bg-white/90 rounded-full"></span>
                       <span>Status: {game.status}</span>
                     </div>
-                    {game.openSource && (
-                      <div className="flex items-center space-x-3 text-white/90">
-                        <span className="w-2 h-2 bg-white/90 rounded-full"></span>
-                        <span>Open Source: Code available on GitHub</span>
-                      </div>
-                    )}
                   </div>
                 </div>
                 <div className="bg-neutral-900 rounded-lg aspect-video flex items-center justify-center">
@@ -81,16 +75,6 @@ const GameContent = ({ games, selectedIndex }: GameContentProps) => {
                       className="border border-blue-600 hover:border-blue-500 hover:bg-blue-500 hover:text-white/90 text-blue-600 font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg backdrop-blur-sm inline-flex items-center justify-center"
                     >
                       Wishlist on Steam
-                    </a>
-                  )}
-                  {game.githubUrl && (
-                    <a
-                      href={game.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="border border-white/90 hover:bg-white/70 text-white/90 hover:text-white/90 font-semibold py-3 px-8 rounded-full transition-colors inline-flex items-center justify-center"
-                    >
-                      View on GitHub
                     </a>
                   )}
                   {game.twitchUrl && (

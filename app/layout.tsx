@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Mad King Studio - Indie Game Development",
   description: "Solo indie game developer. Watch live development on Twitch.",
-  keywords: ["indie games", "game development", "twitch", "open source"],
+  keywords: ["indie games", "game development", "twitch"],
 };
 
 export default function RootLayout({

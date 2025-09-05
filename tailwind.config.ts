@@ -34,10 +34,6 @@ const config: Config = {
           primary: '#3b82f6',    // blue-600
           hover: '#60a5fa',      // blue-500
         },
-        github: {
-          primary: 'rgba(255, 255, 255, 0.9)',   // white/90
-          hover: 'rgba(250, 250, 250, 0.7)',     // white/70
-        },
         steam: {
           primary: '#3b82f6',    // blue-600
           hover: '#60a5fa',      // blue-500

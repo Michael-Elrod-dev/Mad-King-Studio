@@ -98,17 +98,8 @@ const DevlogList = () => {
       <div className="bg-neutral-800 rounded-lg p-8 text-center">
         <h3 className="text-white font-semibold mb-2">No Dev Logs Yet</h3>
         <p className="text-neutral-50 mb-4">
-          Development logs will appear here as they&apos;re added to the GitHub
-          repository.
+          Development logs will appear here as they&apos;re created.
         </p>
-        <a
-          href="https://github.com/Michael-Elrod-dev/Path-to-Valhalla/tree/main/docs/00-Development%20Logs/Logs"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="border border-white/90 hover:bg-white/70 text-white/90 hover:text-white/90 font-semibold py-3 px-8 rounded-full transition-colors inline-flex items-center justify-center"
-        >
-          View on GitHub →
-        </a>
       </div>
     );
   }
