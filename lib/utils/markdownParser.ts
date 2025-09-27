@@ -1,5 +1,5 @@
 /**
- * Extract the first section from markdown content
+ * Extract the first section from markdown content with limited text after headers
  */
 export function getFirstSection(content: string): string {
   if (!content) return "";
@@ -10,10 +10,33 @@ export function getFirstSection(content: string): string {
   );
 
   if (firstHeaderIndex !== -1) {
-    return sections[firstHeaderIndex] || "";
+    const firstSection = sections[firstHeaderIndex] || "";
+    
+    // Limit text after headers to approximately 3 lines (around 200-250 characters)
+    const lines = firstSection.split('\n');
+    let result = '';
+    let lineCount = 0;
+    let charCount = 0;
+    
+    for (const line of lines) {
+      result += line + '\n';
+      
+      // Count non-header lines
+      if (!line.trim().startsWith('#') && line.trim().length > 0) {
+        lineCount++;
+        charCount += line.length;
+        
+        // Stop after about 3 lines of content or 250 characters
+        if (lineCount >= 3 || charCount >= 250) {
+          break;
+        }
+      }
+    }
+    
+    return result.trim();
   }
 
-  return content.length > 500 ? content.substring(0, 500) + "..." : content;
+  return content.length > 250 ? content.substring(0, 250) + "..." : content;
 }
 
 /**

@@ -31,6 +31,39 @@ const MediaCarousel = ({ assets }: MediaCarouselProps) => {
     setImageErrors(prev => ({ ...prev, [asset]: true }));
   };
 
+  const getMediaTypeLabel = (asset: string) => {
+    const type = getMediaType(asset);
+    switch (type) {
+      case 'video':
+        return (
+          <div className="flex items-center gap-1">
+            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+            Video
+          </div>
+        );
+      case 'gif':
+        return (
+          <div className="flex items-center gap-1">
+            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+            </svg>
+            GIF
+          </div>
+        );
+      default:
+        return (
+          <div className="flex items-center gap-1">
+            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+            </svg>
+            Image
+          </div>
+        );
+    }
+  };
+
   return (
     <div className="relative bg-neutral-900 rounded-lg overflow-hidden mb-6">
       {/* Main Media Display */}
@@ -48,7 +81,8 @@ const MediaCarousel = ({ assets }: MediaCarouselProps) => {
                 controls
                 muted
                 playsInline
-                poster={asset.replace(/\.(mp4|webm|mov)$/i, '.jpg')} // Try to find a poster image
+                preload="metadata"
+                poster=""
               >
                 <source src={asset} type="video/mp4" />
                 Your browser does not support the video tag.
@@ -62,17 +96,17 @@ const MediaCarousel = ({ assets }: MediaCarouselProps) => {
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                    priority={index === 0} // Prioritize loading the first image
+                    priority={index === 0}
                     onError={() => handleImageError(asset)}
+                    unoptimized={getMediaType(asset) === 'gif'}
                   />
                 ) : (
-                  // Fallback for broken images
                   <div className="w-full h-full flex items-center justify-center bg-neutral-800 text-white/60">
                     <div className="text-center">
                       <svg className="w-12 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
                       </svg>
-                      <p className="text-sm">Image failed to load</p>
+                      <p className="text-sm">Media failed to load</p>
                     </div>
                   </div>
                 )}
@@ -107,21 +141,7 @@ const MediaCarousel = ({ assets }: MediaCarouselProps) => {
 
         {/* Media Type Indicator */}
         <div className="absolute top-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded backdrop-blur-sm z-10">
-          {getMediaType(assets[currentIndex]) === 'video' ? (
-            <div className="flex items-center gap-1">
-              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-              Video
-            </div>
-          ) : (
-            <div className="flex items-center gap-1">
-              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
-              </svg>
-              Image
-            </div>
-          )}
+          {getMediaTypeLabel(assets[currentIndex])}
         </div>
 
         {/* Counter */}

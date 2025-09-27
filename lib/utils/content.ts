@@ -81,10 +81,13 @@ export function extractAssetsFromContent(content: string): string[] {
 }
 
 /**
- * Determine media type from URL
+ * Determine media type from URL with GIF support
  */
-export function getMediaType(url: string): 'image' | 'video' {
+export function getMediaType(url: string): 'image' | 'video' | 'gif' {
   const videoExtensions = ['mp4', 'webm', 'mov', 'avi'];
   const extension = url.split('.').pop()?.toLowerCase();
-  return videoExtensions.includes(extension || '') ? 'video' : 'image';
+  
+  if (extension === 'gif') return 'gif';
+  if (videoExtensions.includes(extension || '')) return 'video';
+  return 'image';
 }
