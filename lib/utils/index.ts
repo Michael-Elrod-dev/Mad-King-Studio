@@ -2,7 +2,7 @@
 export { formatDate } from './date';
 
 // Markdown utilities
-export { getFirstSection, getRemainingContent } from './markdownParser';
+export { getFirstSection, getRemainingContent, getCompleteFirstSection } from './markdownParser';
 
 // Validation utilities
 export { validateEmail, validateContactForm } from './validation';

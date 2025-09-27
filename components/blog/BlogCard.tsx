@@ -5,8 +5,8 @@ import { useState } from "react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { formatDate, getRemainingContent, getFirstSection, getCompleteFirstSection } from '@/lib/utils';
 import MediaCarousel from './MediaCarousel';
-import { formatDate, getRemainingContent, getFirstSection } from '@/lib/utils';
 
 interface BlogPost {
   id: string;
@@ -30,10 +30,9 @@ interface BlogCardProps {
 const BlogCard = ({ post, isGitHubPost = false, isPatchNote = false }: BlogCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const firstSection =
-    isGitHubPost && post.content ? getFirstSection(post.content) : "";
-  const remainingContent =
-    isGitHubPost && post.content ? getRemainingContent(post.content) : "";
+  const firstSection = isGitHubPost && post.content ? getFirstSection(post.content) : "";
+  const remainingContent = isGitHubPost && post.content ? getRemainingContent(post.content) : "";
+  const completeFirstSection = isGitHubPost && post.content ? getCompleteFirstSection(post.content) : "";
   const hasMoreContent = remainingContent.trim().length > 0;
 
   // Dynamic styling based on whether it's a patch note
@@ -77,14 +76,15 @@ const BlogCard = ({ post, isGitHubPost = false, isPatchNote = false }: BlogCardP
 
       <h2 className={`text-2xl font-bold mb-3 ${titleColor}`}>{post.title}</h2>
 
+      {/* Add MediaCarousel here - between title and content */}
       {isGitHubPost && post.assets && post.assets.length > 0 && (
         <MediaCarousel assets={post.assets} />
       )}
-      
+
       {/* Render markdown content */}
       {isGitHubPost && post.content ? (
         <div className="max-w-none mb-4">
-          {/* First section - always visible */}
+          {/* Show either truncated or complete first section based on expanded state */}
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
@@ -150,12 +150,12 @@ const BlogCard = ({ post, isGitHubPost = false, isPatchNote = false }: BlogCardP
               ),
             }}
           >
-            {firstSection}
+            {isExpanded ? completeFirstSection : firstSection}
           </ReactMarkdown>
 
-          {/* Expanded content - conditionally visible */}
+          {/* Expanded content - only remaining sections, not the first section */}
           {isExpanded && remainingContent && (
-            <div className="pt-4 mt-4">
+            <div className="mt-4">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
@@ -228,9 +228,9 @@ const BlogCard = ({ post, isGitHubPost = false, isPatchNote = false }: BlogCardP
             </div>
           )}
 
-          {/* Combined action row */}
-          <div className="flex items-center justify-between mt-4 pt-3">
-            {hasMoreContent && (
+          {/* Show More/Less button */}
+          {hasMoreContent && (
+            <div className="flex items-center justify-between mt-4 pt-3">
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
                 className={`font-medium transition-colors flex items-center ${isPatchNote ? 'text-red-400 hover:text-red-300' : 'text-red-500 hover:text-red-400'}`}
@@ -259,8 +259,8 @@ const BlogCard = ({ post, isGitHubPost = false, isPatchNote = false }: BlogCardP
                   </>
                 )}
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       ) : (
         <div>

@@ -38,6 +38,24 @@ export function getFirstSection(content: string): string {
 }
 
 /**
+ * Get the complete first section without truncation
+ */
+export function getCompleteFirstSection(content: string): string {
+  if (!content) return "";
+
+  const sections = content.split(/(?=^#{1,3}\s)/m);
+  const firstHeaderIndex = sections.findIndex((section) =>
+    section.trim().startsWith("#")
+  );
+
+  if (firstHeaderIndex !== -1) {
+    return sections[firstHeaderIndex] || "";
+  }
+
+  return content;
+}
+
+/**
  * Get remaining content after the first section, excluding internal sections
  */
 export function getRemainingContent(content: string): string {
@@ -48,42 +66,16 @@ export function getRemainingContent(content: string): string {
     section.trim().startsWith("#")
   );
 
-  if (firstHeaderIndex !== -1) {
-    const firstSection = sections[firstHeaderIndex] || "";
-    
-    const lines = firstSection.split('\n');
-    let lineCount = 0;
-    let charCount = 0;
-    let truncatedAtLine = 0;
-    
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      
-      if (!line.trim().startsWith('#') && line.trim().length > 0) {
-        lineCount++;
-        charCount += line.length;
-        
-        if (lineCount >= 3 || charCount >= 250) {
-          truncatedAtLine = i;
-          break;
-        }
-      }
-    }
-    
-    const remainingFirstSection = lines.slice(truncatedAtLine + 1).join('\n').trim();
-    
-    const subsequentSections = sections.slice(firstHeaderIndex + 1).filter((section) => {
+  if (firstHeaderIndex !== -1 && sections.length > firstHeaderIndex + 1) {
+    // Only get subsequent sections, not the remaining part of the first section
+    const filteredSections = sections.slice(firstHeaderIndex + 1).filter((section) => {
       const trimmedSection = section.trim();
       return !trimmedSection.startsWith("### Active Tasks") && 
              !trimmedSection.startsWith("## Active Tasks") &&
              !trimmedSection.includes("```dataview");
     });
     
-    const allRemainingContent = [remainingFirstSection, ...subsequentSections]
-      .filter(section => section.trim().length > 0)
-      .join("\n\n");
-    
-    return allRemainingContent;
+    return filteredSections.join("");
   }
 
   return "";
