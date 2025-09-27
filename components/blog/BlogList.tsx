@@ -1,10 +1,10 @@
-// components/blog/DevlogList.tsx
+// components/blog/BlogList.tsx
 "use client";
 
 import { useState, useEffect } from "react";
-import DevlogCard from "./DevlogCard";
+import BlogCard from "./BlogCard";
 
-interface ProcessedDevLog {
+interface ProcessedBlog {
   id: string;
   title: string;
   date: string;
@@ -13,51 +13,92 @@ interface ProcessedDevLog {
   content: string;
   githubUrl: string;
   downloadUrl: string;
+  type: "devlog" | "patch-note";
+  gameId: string;
+}
+
+interface BlogListProps {
+  gameId: string;
+  filter: "all" | "devlog" | "patch-note";
 }
 
 const POSTS_PER_PAGE = 5;
 
-const DevlogList = () => {
-  const [devLogs, setDevLogs] = useState<ProcessedDevLog[]>([]);
+const BlogList = ({ gameId, filter }: BlogListProps) => {
+  const [allBlogs, setAllBlogs] = useState<ProcessedBlog[]>([]);
   const [visiblePosts, setVisiblePosts] = useState(POSTS_PER_PAGE);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch dev logs from our API route
+  // Filter the logs based on the current filter
+  const filteredBlogs = allBlogs.filter((blog) => {
+    if (filter === "all") return true;
+    return blog.type === filter;
+  });
+
+  // Reset visible posts when filter changes
   useEffect(() => {
-    const loadDevLogs = async () => {
+    setVisiblePosts(POSTS_PER_PAGE);
+  }, [filter]);
+
+  // Fetch blog posts from our API route
+  useEffect(() => {
+    const loadBlogs = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("/api/devlogs");
+        const response = await fetch(`/api/blog?gameId=${gameId}`);
 
         if (!response.ok) {
-          throw new Error("Failed to fetch dev logs");
+          throw new Error("Failed to fetch blog posts");
         }
 
-        const processedLogs = await response.json();
-        setDevLogs(processedLogs);
+        const processedBlogs = await response.json();
+        setAllBlogs(processedBlogs);
         setError(null);
       } catch (err) {
-        console.error("Error loading dev logs:", err);
-        setError("Failed to load development logs");
+        console.error("Error loading blog posts:", err);
+        setError("Failed to load blog posts");
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadDevLogs();
-  }, []);
+    loadBlogs();
+  }, [gameId]);
 
   const handleLoadMore = async () => {
     setIsLoadingMore(true);
     await new Promise((resolve) => setTimeout(resolve, 300));
-    setVisiblePosts((prev) => Math.min(prev + POSTS_PER_PAGE, devLogs.length));
+    setVisiblePosts((prev) =>
+      Math.min(prev + POSTS_PER_PAGE, filteredBlogs.length)
+    );
     setIsLoadingMore(false);
   };
 
-  const hasMorePosts = visiblePosts < devLogs.length;
-  const displayedPosts = devLogs.slice(0, visiblePosts);
+  const hasMorePosts = visiblePosts < filteredBlogs.length;
+  const displayedPosts = filteredBlogs.slice(0, visiblePosts);
+
+  // Count different types for display
+  const totalDevLogCount = allBlogs.filter(
+    (blog) => blog.type === "devlog"
+  ).length;
+  const totalPatchNoteCount = allBlogs.filter(
+    (blog) => blog.type === "patch-note"
+  ).length;
+  const filteredCount = filteredBlogs.length;
+
+  // Get filter display text
+  const getFilterText = () => {
+    switch (filter) {
+      case "devlog":
+        return "dev logs";
+      case "patch-note":
+        return "patch notes";
+      default:
+        return "entries";
+    }
+  };
 
   // Loading state
   if (isLoading) {
@@ -79,7 +120,7 @@ const DevlogList = () => {
     return (
       <div className="bg-red-600 border border-red-600 rounded-lg p-6 text-center">
         <h3 className="text-white/90 font-semibold mb-2">
-          Error Loading Dev Logs
+          Error Loading Blog Posts
         </h3>
         <p className="text-white/90 mb-4">{error}</p>
         <button
@@ -92,14 +133,33 @@ const DevlogList = () => {
     );
   }
 
-  // Empty state
-  if (devLogs.length === 0) {
+  // Empty state - check if no posts at all vs no posts for current filter
+  if (allBlogs.length === 0) {
     return (
       <div className="bg-neutral-800 rounded-lg p-8 text-center">
-        <h3 className="text-white font-semibold mb-2">No Dev Logs Yet</h3>
+        <h3 className="text-white font-semibold mb-2">No Blog Posts Yet</h3>
         <p className="text-neutral-50 mb-4">
-          Development logs will appear here as they&apos;re created.
+          Blog posts will appear here as they&apos;re created for this game.
         </p>
+      </div>
+    );
+  }
+
+  // No results for current filter
+  if (filteredBlogs.length === 0) {
+    return (
+      <div className="bg-neutral-800 rounded-lg p-8 text-center">
+        <h3 className="text-white font-semibold mb-2">
+          No {getFilterText()} Found
+        </h3>
+        <p className="text-neutral-50 mb-4">
+          No {getFilterText()} available for this game yet. Try changing the
+          filter or check back later.
+        </p>
+        <div className="text-neutral-400 text-sm">
+          Total available: {totalDevLogCount} dev logs, {totalPatchNoteCount}{" "}
+          patch notes
+        </div>
       </div>
     );
   }
@@ -108,7 +168,12 @@ const DevlogList = () => {
     <div className="space-y-8">
       {/* Posts List */}
       {displayedPosts.map((post) => (
-        <DevlogCard key={post.id} post={post} isGitHubPost={true} />
+        <BlogCard
+          key={post.id}
+          post={post}
+          isGitHubPost={true}
+          isPatchNote={post.type === "patch-note"}
+        />
       ))}
 
       {/* Load More Button */}
@@ -144,9 +209,12 @@ const DevlogList = () => {
                 Loading...
               </>
             ) : (
-              `Load More Posts (${Math.min(
+              `Load More ${
+                getFilterText().charAt(0).toUpperCase() +
+                getFilterText().slice(1)
+              } (${Math.min(
                 POSTS_PER_PAGE,
-                devLogs.length - visiblePosts
+                filteredBlogs.length - visiblePosts
               )} more)`
             )}
           </button>
@@ -154,23 +222,34 @@ const DevlogList = () => {
       )}
 
       {/* End of Posts Message */}
-      {!hasMorePosts && devLogs.length > POSTS_PER_PAGE && (
+      {!hasMorePosts && filteredBlogs.length > POSTS_PER_PAGE && (
         <div className="text-center pt-8">
           <p className="text-neutral-400 text-sm">
-            You&apos;ve reached the end. All {devLogs.length} development logs
+            You&apos;ve reached the end. All {filteredCount} {getFilterText()}{" "}
             are now visible.
           </p>
         </div>
       )}
 
-      {/* Posts Counter */}
+      {/* Posts Counter with type breakdown */}
       <div className="text-center pt-4">
         <p className="text-neutral-500 text-sm">
-          Showing {visiblePosts} of {devLogs.length} development logs
+          {filter === "all" ? (
+            <>
+              Showing {Math.min(visiblePosts, filteredCount)} of {filteredCount}{" "}
+              entries ({totalDevLogCount} dev logs, {totalPatchNoteCount} patch
+              notes)
+            </>
+          ) : (
+            <>
+              Showing {Math.min(visiblePosts, filteredCount)} of {filteredCount}{" "}
+              {getFilterText()}
+            </>
+          )}
         </p>
       </div>
     </div>
   );
 };
 
-export default DevlogList;
+export default BlogList;

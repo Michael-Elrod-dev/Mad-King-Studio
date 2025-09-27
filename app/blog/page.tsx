@@ -3,24 +3,24 @@
 
 import { useState } from "react";
 import FloatingNav from "@/components/layout/FloatingNav";
-import BlogSelector from "@/components/blog/BlogSelector";
+import GameSelector from "@/components/games/GameSelector";
 import BlogContent from "@/components/blog/BlogContent";
-import { blogSections } from "@/lib/blogData";
+import { blogGames } from "@/lib/blogData";
 
 export default function BlogPage() {
-  const [selectedSectionIndex, setSelectedSectionIndex] = useState(0);
+  const [selectedGameIndex, setSelectedGameIndex] = useState(0);
 
   return (
     <div className="min-h-screen pb-12">
       <FloatingNav />
-      <BlogSelector
-        sections={blogSections}
-        selectedIndex={selectedSectionIndex}
-        onSectionSelect={setSelectedSectionIndex}
+      <GameSelector
+        games={blogGames}
+        selectedIndex={selectedGameIndex}
+        onGameSelect={setSelectedGameIndex}
       />
       <BlogContent
-        sections={blogSections}
-        selectedIndex={selectedSectionIndex}
+        games={blogGames}
+        selectedIndex={selectedGameIndex}
       />
     </div>
   );
