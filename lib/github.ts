@@ -1,8 +1,9 @@
 // lib/github.ts
 import { 
-  extractDateFromContent, 
-  removeMetadataFromContent, 
-  extractDayNumberFromContent 
+  extractDateFromContent,
+  removeMetadataFromContent,
+  extractDayNumberFromContent,
+  extractAssetsFromContent
 } from '@/lib/utils';
 
 export interface BlogPost {
@@ -22,6 +23,7 @@ export interface ProcessedBlog {
   dayNumber: number;
   excerpt: string;
   content: string;
+  assets: string[];
   githubUrl: string;
   downloadUrl: string;
   type: 'devlog' | 'patch-note';
@@ -126,6 +128,7 @@ export async function processBlogs(
     try {
       const fullContent = await fetchBlogContent(blog.download_url);
       const date = extractDateFromContent(fullContent);
+      const assets = extractAssetsFromContent(fullContent);
       const content = removeMetadataFromContent(fullContent);
       const dayNumber = extractDayNumberFromContent(fullContent, blog.name);
       const type = determineTypeFromPath(blog.path);
@@ -143,6 +146,7 @@ export async function processBlogs(
         dayNumber,
         excerpt,
         content,
+        assets,
         githubUrl: blog.html_url,
         downloadUrl: blog.download_url,
         type,

@@ -23,7 +23,7 @@ const BlogContent = ({ games, selectedIndex }: BlogContentProps) => {
       >
         {games.map((game, index) => (
           <div key={game.id} className="w-full flex-shrink-0 px-6 py-12">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-6xl mx-auto">
               <div className="text-center mb-12">
                 <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
                   {game.title} Development

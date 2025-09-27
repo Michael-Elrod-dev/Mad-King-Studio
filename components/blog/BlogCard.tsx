@@ -5,6 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import MediaCarousel from './MediaCarousel';
 import { formatDate, getRemainingContent, getFirstSection } from '@/lib/utils';
 
 interface BlogPost {
@@ -15,6 +16,7 @@ interface BlogPost {
   date: string;
   dayNumber?: number;
   githubUrl?: string;
+  assets?: string[];
   tags?: string[];
   type?: 'devlog' | 'patch-note';
 }
@@ -75,6 +77,10 @@ const BlogCard = ({ post, isGitHubPost = false, isPatchNote = false }: BlogCardP
 
       <h2 className={`text-2xl font-bold mb-3 ${titleColor}`}>{post.title}</h2>
 
+      {isGitHubPost && post.assets && post.assets.length > 0 && (
+        <MediaCarousel assets={post.assets} />
+      )}
+      
       {/* Render markdown content */}
       {isGitHubPost && post.content ? (
         <div className="max-w-none mb-4">

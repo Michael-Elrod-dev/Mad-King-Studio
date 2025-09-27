@@ -15,5 +15,7 @@ export type { ChangeType } from './patchNotes';
 export { 
   extractDateFromContent, 
   removeMetadataFromContent, 
-  extractDayNumberFromContent 
+  extractDayNumberFromContent,
+  extractAssetsFromContent, 
+  getMediaType
 } from './content';

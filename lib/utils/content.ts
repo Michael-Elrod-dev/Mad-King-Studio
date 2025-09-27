@@ -38,7 +38,11 @@ export function extractDateFromContent(content: string): string {
  * Remove metadata sections from markdown content and replace Obsidian links
  */
 export function removeMetadataFromContent(content: string): string {
-  const withoutMetadata = content.replace(/###\s*Date\s*[\s\S]*$/i, '').trim();
+  const withoutMetadata = content
+    .replace(/###\s*Date\s*[\s\S]*?(?=\n###|\n##|$)/gi, '')
+    .replace(/###\s*Assets\s*[\s\S]*?(?=\n###|\n##|$)/gi, '')
+    .trim();
+  
   return replaceObsidianLinks(withoutMetadata);
 }
 
@@ -59,4 +63,28 @@ export function extractDayNumberFromContent(content: string, filename: string): 
     hash = hash & hash;
   }
   return Math.abs(hash) % 1000;
+}
+
+/**
+ * Extract assets from the ### Assets section of markdown content
+ */
+export function extractAssetsFromContent(content: string): string[] {
+  const assetsMatch = content.match(/###\s*Assets\s*\n([\s\S]*?)(?=\n###|\n##|$)/i);
+  
+  if (!assetsMatch) return [];
+  
+  const assetsSection = assetsMatch[1];
+  const urlRegex = /https?:\/\/[^\s\)]+\.(jpg|jpeg|png|gif|webp|mp4|webm|mov)/gi;
+  const urls = assetsSection.match(urlRegex) || [];
+  
+  return urls.map(url => url.trim());
+}
+
+/**
+ * Determine media type from URL
+ */
+export function getMediaType(url: string): 'image' | 'video' {
+  const videoExtensions = ['mp4', 'webm', 'mov', 'avi'];
+  const extension = url.split('.').pop()?.toLowerCase();
+  return videoExtensions.includes(extension || '') ? 'video' : 'image';
 }
