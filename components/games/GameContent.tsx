@@ -2,7 +2,8 @@
 "use client";
 
 import { GameData } from "@/lib/gameData";
-import { useLiveStatus } from "@/contexts/LiveStatusContext";
+import ActionButtons from "./ActionButtons";
+import MediaCarousel from "@/components/shared/MediaCarousel";
 
 interface GameContentProps {
   games: GameData[];
@@ -10,9 +11,10 @@ interface GameContentProps {
 }
 
 const GameContent = ({ games, selectedIndex }: GameContentProps) => {
-  const currentGame = games[selectedIndex];
-  const { liveStatus } = useLiveStatus();
-  const { isLive, isLoading } = liveStatus;
+  // Helper function to get media by section ID
+  const getMediaSection = (game: GameData, sectionId: string) => {
+    return game.media?.find(section => section.id === sectionId);
+  };
 
   return (
     <div className="relative overflow-hidden">
@@ -23,18 +25,21 @@ const GameContent = ({ games, selectedIndex }: GameContentProps) => {
         {games.map((game, index) => (
           <div key={game.id} className="w-full flex-shrink-0 px-6 py-12">
             <div className="max-w-6xl mx-auto">
+              {/* Header Section */}
               <div className="text-center mb-12">
                 <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
                   Current Project
                 </h1>
-                <p className="text-xl text-white/90 max-w-3xl mx-auto">
+                <p className="text-xl text-white/90 max-w-3xl mx-auto mb-8">
                   Follow the development of my upcoming indie game, through Twitch 
                   or other social media.
                 </p>
+                
+                <ActionButtons game={game} />
               </div>
 
-              {/* Game Showcase */}
-              <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
+              {/* Main Title Section */}
+              <div className="grid md:grid-cols-2 gap-12 items-start mb-20">
                 <div className="space-y-6">
                   <h2 className="text-3xl font-bold text-white">
                     {game.title}
@@ -57,78 +62,164 @@ const GameContent = ({ games, selectedIndex }: GameContentProps) => {
                     </div>
                   </div>
                 </div>
-                <div className="bg-neutral-900 rounded-lg aspect-video flex items-center justify-center">
-                  <span className="text-white/70 text-lg">
-                    Game Screenshot Placeholder
-                  </span>
-                </div>
+                
+                {/* Title Media */}
+                <MediaCarousel 
+                  assets={getMediaSection(game, 'title')?.assets || []} 
+                  showPlaceholder={true}
+                  placeholderText="Game Trailer Placeholder"
+                />
               </div>
 
-              {/* Action Buttons */}
-              <div className="text-center space-y-6">
-                <div className="flex flex-wrap justify-center gap-4">
-                  {game.steamUrl && (
-                    <a
-                      href={game.steamUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="border border-blue-600 hover:border-blue-500 hover:bg-blue-500 hover:text-white/90 text-blue-600 font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg backdrop-blur-sm inline-flex items-center justify-center"
-                    >
-                      Wishlist on Steam
-                    </a>
-                  )}
-                  {game.twitchUrl && (
-                    <>
-                      {isLive && !isLoading ? (
-                        <a
-                          href={game.twitchUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="border-2 border-purple-600 text-purple-600 hover:text-purple-500 font-semibold py-3 px-8 rounded-full transition-all duration-200 text-lg backdrop-blur-sm inline-block"
-                          style={{
-                            animation:
-                              "pulse-purple 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                          }}
-                        >
-                          Watch Dev Live
-                        </a>
-                      ) : (
-                        <a
-                          href={game.twitchUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="border border-purple-500 hover:border-purple-500 hover:bg-purple-500 text-purple-500 hover:text-white/90 font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"
-                        >
-                          Watch Dev Live
-                        </a>
-                      )}
-                    </>
-                  )}
+              {/* Environments Section */}
+              {getMediaSection(game, 'environments') && (
+                <div className="mb-20">
+                  <div className="text-center mb-8">
+                    <h3 className="text-3xl font-bold text-white mb-4">
+                      {getMediaSection(game, 'environments')?.title}
+                    </h3>
+                    <p className="text-white/90 text-lg max-w-4xl mx-auto">
+                      {getMediaSection(game, 'environments')?.description}
+                    </p>
+                  </div>
+                  <MediaCarousel 
+                    assets={getMediaSection(game, 'environments')?.assets || []} 
+                    showPlaceholder={true}
+                    placeholderText="Environments Placeholder"
+                  />
                 </div>
-              </div>
+              )}
 
-              {/* Development Progress */}
-              <div className="mt-16 bg-neutral-900 rounded-lg p-8">
-                <h3 className="text-2xl font-bold text-white mb-6">
-                  Development Progress
-                </h3>
-                <div className="space-y-4">
-                  {game.progress.map((item) => (
-                    <div key={item.feature} className="space-y-2">
-                      <div className="flex justify-between text-white/90">
-                        <span>{item.feature}</span>
-                        <span>{item.progress}%</span>
-                      </div>
-                      <div className="w-full bg-neutral-950 rounded-full h-2">
-                        <div
-                          className="bg-red-500 h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${item.progress}%` }}
-                        ></div>
-                      </div>
+              {/* Player Section */}
+              {getMediaSection(game, 'player') && (
+                <div className="mb-20">
+                  <div className="grid md:grid-cols-2 gap-12 items-center">
+                    {/* Text Content */}
+                    <div className="space-y-6 md:col-start-2">
+                      <h3 className="text-3xl font-bold text-white">
+                        {getMediaSection(game, 'player')?.title}
+                      </h3>
+                      <p className="text-white/90 text-lg leading-relaxed">
+                        {getMediaSection(game, 'player')?.description}
+                      </p>
                     </div>
-                  ))}
+                    
+                    {/* Media Content */}
+                    <div className="md:col-start-1 md:row-start-1">
+                      <MediaCarousel 
+                        assets={getMediaSection(game, 'player')?.assets || []} 
+                        showPlaceholder={true}
+                        placeholderText="Player Placeholder"
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Enemies Section */}
+              {getMediaSection(game, 'enemies') && (
+                <div className="mb-20">
+                  <div className="grid md:grid-cols-2 gap-12 items-center">
+                    {/* Text Content */}
+                    <div className="space-y-6">
+                      <h3 className="text-3xl font-bold text-white">
+                        {getMediaSection(game, 'enemies')?.title}
+                      </h3>
+                      <p className="text-white/90 text-lg leading-relaxed">
+                        {getMediaSection(game, 'enemies')?.description}
+                      </p>
+                    </div>
+                    
+                    {/* Media Content */}
+                    <div>
+                      <MediaCarousel 
+                        assets={getMediaSection(game, 'enemies')?.assets || []} 
+                        showPlaceholder={true}
+                        placeholderText="Enemies Placeholder"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Weapons Section */}
+              {getMediaSection(game, 'weapons') && (
+                <div className="mb-20">
+                  <div className="grid md:grid-cols-2 gap-12 items-center">
+                    {/* Text Content */}
+                    <div className="space-y-6 md:col-start-2">
+                      <h3 className="text-3xl font-bold text-white">
+                        {getMediaSection(game, 'weapons')?.title}
+                      </h3>
+                      <p className="text-white/90 text-lg leading-relaxed">
+                        {getMediaSection(game, 'weapons')?.description}
+                      </p>
+                    </div>
+                    
+                    {/* Media Content */}
+                    <div className="md:col-start-1 md:row-start-1">
+                      <MediaCarousel 
+                        assets={getMediaSection(game, 'weapons')?.assets || []} 
+                        showPlaceholder={true}
+                        placeholderText="Weapons Placeholder"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Bosses Section */}
+              {getMediaSection(game, 'bosses') && (
+                <div className="mb-20">
+                  <div className="grid md:grid-cols-2 gap-12 items-center">
+                    {/* Text Content */}
+                    <div className="space-y-6">
+                      <h3 className="text-3xl font-bold text-white">
+                        {getMediaSection(game, 'bosses')?.title}
+                      </h3>
+                      <p className="text-white/90 text-lg leading-relaxed">
+                        {getMediaSection(game, 'bosses')?.description}
+                      </p>
+                    </div>
+                    
+                    {/* Media Content */}
+                    <div>
+                      <MediaCarousel 
+                        assets={getMediaSection(game, 'bosses')?.assets || []} 
+                        showPlaceholder={true}
+                        placeholderText="Bosses Placeholder"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Abilities Section */}
+              {getMediaSection(game, 'abilities') && (
+                <div className="mb-20">
+                  <div className="grid md:grid-cols-2 gap-12 items-center">
+                    {/* Text Content */}
+                    <div className="space-y-6 md:col-start-2">
+                      <h3 className="text-3xl font-bold text-white">
+                        {getMediaSection(game, 'abilities')?.title}
+                      </h3>
+                      <p className="text-white/90 text-lg leading-relaxed">
+                        {getMediaSection(game, 'abilities')?.description}
+                      </p>
+                    </div>
+                    
+                    {/* Media Content */}
+                    <div className="md:col-start-1 md:row-start-1">
+                      <MediaCarousel 
+                        assets={getMediaSection(game, 'abilities')?.assets || []} 
+                        showPlaceholder={true}
+                        placeholderText="Abilities Placeholder"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
             </div>
           </div>
         ))}

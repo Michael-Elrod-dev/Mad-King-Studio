@@ -4,6 +4,7 @@
 import FloatingNav from "@/components/layout/FloatingNav";
 import LiveStatus from "@/components/community/LiveStatus";
 import { useLiveStatus } from "@/contexts/LiveStatusContext";
+import { SOCIAL_LINKS } from "@/lib/constants";
 
 export default function CommunityPage() {
   const { liveStatus } = useLiveStatus();
@@ -55,7 +56,7 @@ export default function CommunityPage() {
               {/* Dynamic button based on live status */}
               {isLive && !isLoading ? (
                 <a
-                  href="https://twitch.tv/aimosthadme"
+                  href={SOCIAL_LINKS.TWITCH}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="border border-white/90 hover:border-purple-500 hover:bg-purple-500 text-white/90 hover:text-white font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"
@@ -64,7 +65,7 @@ export default function CommunityPage() {
                 </a>
               ) : (
                 <a
-                  href="https://twitch.tv/aimosthadme"
+                  href={SOCIAL_LINKS.TWITCH}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="border border-white/90 hover:border-purple-500 hover:bg-purple-500 text-white/90 hover:text-white font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"
@@ -91,7 +92,7 @@ export default function CommunityPage() {
                 Chat with other community members and post memes
               </p>
               <a
-                href="https://discord.gg/XEwUXAv"
+                href={SOCIAL_LINKS.DISCORD}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="border border-white/90 hover:border-indigo-500 hover:bg-indigo-500 text-white/90 hover:text-white font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"

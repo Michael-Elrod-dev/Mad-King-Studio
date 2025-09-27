@@ -1,4 +1,4 @@
-// components/blog/MediaCarousel.tsx
+// components/shared/MediaCarousel.tsx
 "use client";
 
 import { useState } from "react";
@@ -7,12 +7,32 @@ import { getMediaType } from "@/lib/utils";
 
 interface MediaCarouselProps {
   assets: string[];
+  showPlaceholder?: boolean;
+  placeholderText?: string;
+  className?: string;
 }
 
-const MediaCarousel = ({ assets }: MediaCarouselProps) => {
+const MediaCarousel = ({ 
+  assets, 
+  showPlaceholder = false, 
+  placeholderText = "Media Placeholder",
+  className = ""
+}: MediaCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>({});
 
+  // Show placeholder if no assets and showPlaceholder is true
+  if ((!assets || assets.length === 0) && showPlaceholder) {
+    return (
+      <div className={`bg-neutral-900 rounded-lg aspect-video flex items-center justify-center ${className}`}>
+        <span className="text-white/70 text-lg">
+          {placeholderText}
+        </span>
+      </div>
+    );
+  }
+
+  // Don't render anything if no assets and no placeholder
   if (!assets || assets.length === 0) return null;
 
   const nextSlide = () => {
@@ -65,7 +85,7 @@ const MediaCarousel = ({ assets }: MediaCarouselProps) => {
   };
 
   return (
-    <div className="relative bg-neutral-900 rounded-lg overflow-hidden mb-6">
+    <div className={`relative bg-neutral-900 rounded-lg overflow-hidden ${className}`}>
       {/* Main Media Display */}
       <div className="relative aspect-video">
         {assets.map((asset, index) => (

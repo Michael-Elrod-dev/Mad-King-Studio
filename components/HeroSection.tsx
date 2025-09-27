@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useLiveStatus } from "@/contexts/LiveStatusContext";
+import { SOCIAL_LINKS } from "@/lib/constants";
 
 const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -48,7 +49,7 @@ const HeroSection = () => {
 
           {isLive && !isLoading ? (
             <a
-              href="https://twitch.tv/aimosthadme"
+              href={SOCIAL_LINKS.TWITCH}
               target="_blank"
               rel="noopener noreferrer"
               className="border-2 border-purple-600 text-purple-600 hover:text-purple-500 font-semibold py-3 px-8 rounded-full transition-all duration-200 text-lg backdrop-blur-sm inline-block"
@@ -61,7 +62,7 @@ const HeroSection = () => {
             </a>
           ) : (
             <a
-              href="https://twitch.tv/aimosthadme"
+              href={SOCIAL_LINKS.TWITCH}
               target="_blank"
               rel="noopener noreferrer"
               className="border border-purple-500 hover:border-purple-500 hover:bg-purple-500 text-purple-500 hover:text-white/90 font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"

@@ -6,7 +6,7 @@ import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { formatDate, getRemainingContent, getFirstSection, getCompleteFirstSection } from '@/lib/utils';
-import MediaCarousel from './MediaCarousel';
+import MediaCarousel from '@/components/shared/MediaCarousel';
 
 interface BlogPost {
   id: string;
@@ -76,9 +76,9 @@ const BlogCard = ({ post, isGitHubPost = false, isPatchNote = false }: BlogCardP
 
       <h2 className={`text-2xl font-bold mb-3 ${titleColor}`}>{post.title}</h2>
 
-      {/* Add MediaCarousel here - between title and content */}
+      {/* MediaCarousel */}
       {isGitHubPost && post.assets && post.assets.length > 0 && (
-        <MediaCarousel assets={post.assets} />
+        <MediaCarousel assets={post.assets} className="mb-6" />
       )}
 
       {/* Render markdown content */}

@@ -6,6 +6,7 @@ import FloatingNav from "@/components/layout/FloatingNav";
 import { useLiveStatus } from "@/contexts/LiveStatusContext";
 import { sendContactEmail, isEmailJSConfigured } from "@/lib/emailjs";
 import { validateContactForm } from "@/lib/utils";
+import { SOCIAL_LINKS } from "@/lib/constants";
 
 interface FormData {
   name: string;
@@ -308,7 +309,7 @@ export default function ContactPage() {
                   Quick Links
                 </h3>
                 <a
-                  href="https://twitch.tv/aimosthadme"
+                  href={SOCIAL_LINKS.TWITCH}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center text-white/90 hover:text-purple-600 transition-colors"
@@ -323,7 +324,7 @@ export default function ContactPage() {
                   Twitch Channel
                 </a>
                 <a
-                  href="https://discord.gg/XEwUXAv"
+                  href={SOCIAL_LINKS.DISCORD}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center text-white/90 hover:text-indigo-600 transition-colors"
@@ -338,7 +339,7 @@ export default function ContactPage() {
                   Discord Server
                 </a>
                 <a
-                  href="https://x.com/MadKingStudio"
+                  href={SOCIAL_LINKS.X}
                   className="flex items-center text-white/90 hover:text-blue-500 transition-colors"
                 >
                   <svg
@@ -374,7 +375,7 @@ export default function ContactPage() {
 
                 {isLive && !isLoading ? (
                   <a
-                    href="https://twitch.tv/aimosthadme"
+                    href={SOCIAL_LINKS.TWITCH}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="border-2 border-purple-600 text-purple-600 hover:text-purple-500 font-semibold py-3 px-8 rounded-full transition-all duration-200 text-lg backdrop-blur-sm inline-block"
@@ -387,7 +388,7 @@ export default function ContactPage() {
                   </a>
                 ) : (
                   <a
-                    href="https://twitch.tv/aimosthadme"
+                    href={SOCIAL_LINKS.TWITCH}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="border border-purple-500 hover:border-purple-500 hover:bg-purple-500 text-purple-500 hover:text-white/90 font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"

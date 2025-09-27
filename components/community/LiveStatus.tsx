@@ -2,6 +2,7 @@
 "use client";
 
 import { useLiveStatus } from "@/contexts/LiveStatusContext";
+import { SOCIAL_LINKS } from "@/lib/constants";
 
 const LiveStatus = () => {
   const { liveStatus } = useLiveStatus();
@@ -26,7 +27,7 @@ const LiveStatus = () => {
           Unable to load stream status. Check back later!
         </p>
         <a
-          href="https://twitch.tv/aimosthadme"
+          href={SOCIAL_LINKS.TWITCH}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-full transition-colors"
@@ -51,7 +52,7 @@ const LiveStatus = () => {
 
         {/* Purple pulsing button when live */}
         <a
-          href="https://twitch.tv/aimosthadme"
+          href={SOCIAL_LINKS.TWITCH}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block border-2 border-purple-600 text-purple-600 font-bold py-3 px-8 rounded-full transition-all duration-1000 hover:bg-purple-600 hover:text-white text-lg"
@@ -69,7 +70,7 @@ const LiveStatus = () => {
     <div className="bg-neutral-800 rounded-lg p-6 mb-12 text-center">
       <h2 className="text-2xl font-bold text-white mb-4">Stream Offline</h2>
       <a
-        href="https://twitch.tv/aimosthadme"
+        href={SOCIAL_LINKS.TWITCH}
         target="_blank"
         rel="noopener noreferrer"
         className="border border-purple-500 hover:border-purple-500 hover:bg-purple-500 text-purple-500 hover:text-white/90 font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"

@@ -2,6 +2,7 @@
 "use client";
 
 import { useLiveStatus } from "@/contexts/LiveStatusContext";
+import { SOCIAL_LINKS } from "@/lib/constants";
 
 const SocialLinks = () => {
   const { liveStatus } = useLiveStatus();
@@ -9,7 +10,7 @@ const SocialLinks = () => {
 
   const socialLinks = [
     {
-      href: "https://twitch.tv/aimosthadme",
+      href: SOCIAL_LINKS.TWITCH,
       label: "Twitch",
       icon: (
         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -19,7 +20,7 @@ const SocialLinks = () => {
       isLive: isLive && !isLoading,
     },
     {
-      href: "https://discord.gg/XEwUXAv",
+      href: SOCIAL_LINKS.DISCORD,
       label: "Discord",
       icon: (
         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -28,7 +29,7 @@ const SocialLinks = () => {
       ),
     },
     {
-      href: "https://x.com/MadKingStudio",
+      href: SOCIAL_LINKS.X,
       label: "X",
       icon: (
         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
