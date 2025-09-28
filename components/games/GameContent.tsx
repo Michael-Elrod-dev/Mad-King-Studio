@@ -11,7 +11,6 @@ interface GameContentProps {
 }
 
 const GameContent = ({ games, selectedIndex }: GameContentProps) => {
-  // Helper function to get media by section ID
   const getMediaSection = (game: GameData, sectionId: string) => {
     return game.media?.find(section => section.id === sectionId);
   };

@@ -1,14 +1,22 @@
+// lib/utils/index.ts
 // Date utilities
 export { formatDate } from './date';
 
 // Markdown utilities
-export { getFirstSection, getRemainingContent, getCompleteFirstSection } from './markdownParser';
+export { getFirstSection,
+  getRemainingContent,
+  getCompleteFirstSection,
+} from './markdownParser';
 
 // Validation utilities
-export { validateEmail, validateContactForm } from './validation';
+export { validateEmail,
+  validateContactForm,
+} from './validation';
 
 // Patch note utilities
-export { getChangeTypeColor, getChangeTypeLabel } from './patchNotes';
+export { getChangeTypeColor,
+  getChangeTypeLabel,
+} from './patchNotes';
 export type { ChangeType } from './patchNotes';
 
 // GitHub content processing utilities
@@ -17,5 +25,5 @@ export {
   removeMetadataFromContent, 
   extractDayNumberFromContent,
   extractAssetsFromContent, 
-  getMediaType
+  getMediaType, 
 } from './content';

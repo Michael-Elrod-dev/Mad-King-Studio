@@ -1,3 +1,4 @@
+// app/about/page.tsx
 import FloatingNav from "@/components/layout/FloatingNav";
 
 export default function AboutPage() {
@@ -12,7 +13,6 @@ export default function AboutPage() {
             </h1>
           </div>
 
-          {/* Changed from grid to single column */}
           <div className="mb-16">
             <div className="space-y-6 text-center">
               <h2 className="text-3xl font-bold text-white">The Developer</h2>

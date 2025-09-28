@@ -13,7 +13,6 @@ const ActionButtons = ({ game }: ActionButtonsProps) => {
   const { liveStatus } = useLiveStatus();
   const { isLive, isLoading } = liveStatus;
 
-  // Dynamic button text based on game status
   const getSteamButtonText = (status: string) => {
     switch (status) {
       case 'In Development':

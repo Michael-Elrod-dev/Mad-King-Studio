@@ -115,7 +115,7 @@ function determineTypeFromPath(path: string): 'devlog' | 'patch-note' {
 }
 
 function determineGameId(path: string, content: string): string {
-  // For now, we'll default to 'path-to-valhalla' since that's our only game
+  // For now, we'll default to 'path-to-valhalla' since that's the only game
   return 'path-to-valhalla';
 }
 

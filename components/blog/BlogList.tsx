@@ -31,7 +31,7 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Filter the logs based on the current filter
+  // Filter the logs based on the selected filter
   const filteredBlogs = allBlogs.filter((blog) => {
     if (filter === "all") return true;
     return blog.type === filter;
@@ -42,7 +42,7 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
     setVisiblePosts(POSTS_PER_PAGE);
   }, [filter]);
 
-  // Fetch blog posts from our API route
+  // Fetch blog posts from API route
   useEffect(() => {
     const loadBlogs = async () => {
       try {

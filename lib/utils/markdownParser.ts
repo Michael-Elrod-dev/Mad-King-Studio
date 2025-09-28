@@ -1,3 +1,4 @@
+// lib/utils/markdownParser.ts
 /**
  * Extract the first section from markdown content with limited text after headers
  */
@@ -20,7 +21,6 @@ export function getFirstSection(content: string): string {
     for (const line of lines) {
       result += line + '\n';
       
-      // Count non-header lines
       if (!line.trim().startsWith('#') && line.trim().length > 0) {
         lineCount++;
         charCount += line.length;
@@ -67,7 +67,6 @@ export function getRemainingContent(content: string): string {
   );
 
   if (firstHeaderIndex !== -1 && sections.length > firstHeaderIndex + 1) {
-    // Only get subsequent sections, not the remaining part of the first section
     const filteredSections = sections.slice(firstHeaderIndex + 1).filter((section) => {
       const trimmedSection = section.trim();
       return !trimmedSection.startsWith("### Active Tasks") && 

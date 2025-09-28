@@ -22,7 +22,8 @@ const FloatingNav = () => {
 
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
         setIsVisible(false);
-        setIsMobileMenuOpen(false); // Close mobile menu on scroll
+        // Close mobile menu on scroll
+        setIsMobileMenuOpen(false);
       } else {
         setIsVisible(true);
       }

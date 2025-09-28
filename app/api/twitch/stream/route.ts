@@ -16,27 +16,6 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // MOCK DATA FOR TESTING
-  const MOCK_LIVE = false;
-
-  if (MOCK_LIVE) {
-    const mockData = {
-      isLive: true,
-      streamTitle: "Building Path to Valhalla - Live Game Development!",
-      gameName: "Software and Game Development",
-      startedAt: new Date().toISOString(),
-    };
-
-    return NextResponse.json(mockData, {
-      headers: {
-        // Cache for 30 seconds - shorter than our 1-minute fetch interval
-        // This ensures we get fresh data but reduces redundant Twitch API calls
-        "Cache-Control": "public, max-age=30",
-        "X-Data-Source": "mock",
-      },
-    });
-  }
-
   try {
     const streamInfo = await getTwitchStreamInfoServer();
 

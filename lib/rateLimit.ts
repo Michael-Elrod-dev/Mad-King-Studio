@@ -24,7 +24,6 @@ export function rateLimit(limit: number, windowMs: number) {
   };
 }
 
-// Helper function to get client IP
 export function getClientIP(request: Request): string {
   const forwarded = request.headers.get('x-forwarded-for');
   const realIp = request.headers.get('x-real-ip');

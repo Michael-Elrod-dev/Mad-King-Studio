@@ -57,7 +57,6 @@ export default function ContactPage() {
     });
 
     try {
-      // Client-side validation
       const validation = validateContactForm(formData);
 
       if (!validation.isValid) {
@@ -68,7 +67,6 @@ export default function ContactPage() {
         throw new Error("Email service is not configured");
       }
 
-      // Send email using EmailJS
       const emailResult = await sendContactEmail(formData);
 
       if (!emailResult.success) {
@@ -82,7 +80,6 @@ export default function ContactPage() {
         success: "Message sent!",
       });
 
-      // Reset form
       setFormData({
         name: "",
         email: "",

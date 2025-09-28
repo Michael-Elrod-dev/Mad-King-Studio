@@ -1,3 +1,4 @@
+// lib/utils/patchNotes.ts
 export type ChangeType = "feature" | "bugfix" | "improvement" | "balance";
 
 export function getChangeTypeColor(type: string): string {

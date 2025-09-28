@@ -26,17 +26,14 @@ interface LiveStatusContextType {
   refetch: () => void;
 }
 
-// Create the context with undefined as default
 const LiveStatusContext = createContext<LiveStatusContextType | undefined>(
   undefined
 );
 
-// Provider component props interface
 interface LiveStatusProviderProps {
   children: ReactNode;
 }
 
-// Provider component
 export function LiveStatusProvider({ children }: LiveStatusProviderProps) {
   const [liveStatus, setLiveStatus] = useState<LiveStatus>({
     isLive: false,
@@ -119,7 +116,6 @@ export function LiveStatusProvider({ children }: LiveStatusProviderProps) {
   }, [fetchStreamStatus]);
 
   useEffect(() => {
-    // Initial fetch
     fetchStreamStatus();
 
     // Set up interval to fetch every 1 minute (60,000ms)
@@ -127,7 +123,7 @@ export function LiveStatusProvider({ children }: LiveStatusProviderProps) {
       fetchStreamStatus();
     }, 60000);
 
-    // Cleanup function
+    // Cleanup
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -135,7 +131,6 @@ export function LiveStatusProvider({ children }: LiveStatusProviderProps) {
     };
   }, [fetchStreamStatus]);
 
-  // Create the context value
   const value: LiveStatusContextType = {
     liveStatus,
     refetch,
@@ -148,7 +143,6 @@ export function LiveStatusProvider({ children }: LiveStatusProviderProps) {
   );
 }
 
-// Custom hook to use the context
 export function useLiveStatus(): LiveStatusContextType {
   const context = useContext(LiveStatusContext);
   if (context === undefined) {

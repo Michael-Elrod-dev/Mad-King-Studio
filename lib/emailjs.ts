@@ -1,7 +1,7 @@
 // lib/emailjs.ts
 import emailjs from '@emailjs/browser';
+import { SOCIAL_LINKS } from "@/lib/constants";
 
-// EmailJS configuration
 const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "";
 const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "";
 const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "";
@@ -25,20 +25,17 @@ export const sendContactEmail = async (data: EmailData): Promise<{ success: bool
       throw new Error("EmailJS configuration is missing");
     }
 
-    // Initialize EmailJS
     initEmailJS();
 
-    // Prepare template parameters
     const templateParams = {
       from_name: data.name,
       from_email: data.email,
       subject: data.subject,
       message: data.message,
-      to_email: "madkingstudio.dev@gmail.com",
+      to_email: SOCIAL_LINKS.GMAIL,
       reply_to: data.email,
     };
 
-    // Send email
     const response = await emailjs.send(
       EMAILJS_SERVICE_ID,
       EMAILJS_TEMPLATE_ID,
