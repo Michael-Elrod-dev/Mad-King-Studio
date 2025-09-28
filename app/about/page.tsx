@@ -23,16 +23,17 @@ export default function AboutPage() {
                 To be honest, I&apos;m pretty much a beginner at this. Sure, I
                 tinkered with a few small projects back in college, but nothing
                 serious. Now that life has settled down a bit, I&apos;ve decided
-                to start actually creating completed games under the name Mad
+                to start actually developing games under the name Mad
                 King Studio.
               </p>
 
               <p className="text-white/90 text-lg leading-relaxed">
-                If you&apos;re at all interested you can follow my stuff on Twitch, 
-                X, Youtube, Discord, and maybe even Reddit. I&apos;ll be looking to do some live 
+                If you&apos;re at all interested, you can follow my stuff on Twitch, 
+                X, Youtube, Discord, and maybe even Reddit. I might be looking to do some live 
                 development on Twitch every once in a while so feel free to join in and 
                 ask me about anything I&apos;ve created or my process. I don&apos;t really 
-                know what I&apos;m doing, but I dont mind sharing.
+                know what I&apos;m doing, but I dont mind sharing. You can also share your 
+                own projects and ideas in the Discord.
               </p>
             </div>
           </div>
