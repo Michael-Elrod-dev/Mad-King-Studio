@@ -29,6 +29,7 @@ export {
   extractDayNumberFromContent,
   extractAssetsFromContent, 
   getMediaType, 
+  extractAndRemoveAssetsSection,
 } from './content';
 
 // Dataview utilities

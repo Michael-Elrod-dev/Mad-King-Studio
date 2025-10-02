@@ -127,3 +127,27 @@ export function getMediaType(url: string): 'image' | 'video' | 'gif' {
   if (videoExtensions.includes(extension || '')) return 'video';
   return 'image';
 }
+
+/**
+ * Extract and remove assets section, returning both the assets and cleaned content
+ */
+export function extractAndRemoveAssetsSection(content: string): {
+  assets: string[];
+  cleanedContent: string;
+} {
+  const assetsRegex = /###\s*Assets\s*\n([\s\S]*?)(?=\n###|\n##|$)/i;
+  const match = content.match(assetsRegex);
+  
+  if (!match) {
+    return { assets: [], cleanedContent: content };
+  }
+  
+  const assetsSection = match[1];
+  const urlRegex = /https?:\/\/[^\s\)]+\.(jpg|jpeg|png|gif|webp|mp4|webm|mov)/gi;
+  const assets = (assetsSection.match(urlRegex) || []).map(url => url.trim());
+  
+  // Remove the entire Assets section from content
+  const cleanedContent = content.replace(assetsRegex, '').trim();
+  
+  return { assets, cleanedContent };
+}

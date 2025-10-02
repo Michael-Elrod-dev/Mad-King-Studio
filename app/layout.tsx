@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { LiveStatusProvider } from "@/contexts/LiveStatusContext";
 import { DocsProvider } from "@/contexts/DocsContext";
+import { TasksProvider } from "@/contexts/TasksContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,7 +34,9 @@ export default function RootLayout({
       >
         <LiveStatusProvider>
           <DocsProvider>
-            {children}
+            <TasksProvider>
+              {children}
+            </TasksProvider>
           </DocsProvider>
         </LiveStatusProvider>
       </body>

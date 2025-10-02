@@ -1,15 +1,15 @@
 // components/docs/DocsContent.tsx
 "use client";
 
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { convertWikiLinksToRoutes } from "@/lib/utils/docsParser";
-import { convertLocalImagesToS3 } from "@/lib/utils/content";
+import { convertLocalImagesToS3, extractAndRemoveAssetsSection } from "@/lib/utils/content";
 import { extractDataviewBlocks } from "@/lib/utils/dataviewParser";
 import DataviewBlock from "./DataviewBlock";
-import type { ParsedTask } from "@/lib/utils/dataviewParser";
+import MediaCarousel from "@/components/shared/MediaCarousel";
+import { useTasks } from "@/contexts/TasksContext";
 
 interface DocsContentProps {
   content: string;
@@ -18,54 +18,26 @@ interface DocsContentProps {
 }
 
 const DocsContent = ({ content, path, title }: DocsContentProps) => {
-  const [allTasks, setAllTasks] = useState<ParsedTask[]>([]);
-  const [isLoadingTasks, setIsLoadingTasks] = useState(true);
-  const [tasksError, setTasksError] = useState<string | null>(null);
+  // Get tasks from context instead of fetching locally
+  const { tasks: allTasks, isLoading: isLoadingTasks, error: tasksError } = useTasks();
 
-  // First convert local images to S3 URLs
-  let processedContent = convertLocalImagesToS3(content, path);
+  // Extract assets first, before any other processing
+  const { assets, cleanedContent } = extractAndRemoveAssetsSection(content);
+  
+  // Then convert local images to S3 URLs
+  let processedContent = convertLocalImagesToS3(cleanedContent, path);
   
   // Then convert Obsidian wiki links to proper routes
   processedContent = convertWikiLinksToRoutes(processedContent, path);
 
-  // Extract dataview blocks BEFORE converting to markdown
+  // Extract dataview blocks AFTER all other content processing
   const dataviewBlocks = extractDataviewBlocks(processedContent);
-  
-  // Fetch all tasks once when component mounts (only if there are dataview blocks)
-  useEffect(() => {
-    if (dataviewBlocks.length === 0) {
-      setIsLoadingTasks(false);
-      return;
-    }
-
-    const fetchTasks = async () => {
-      try {
-        setIsLoadingTasks(true);
-        const response = await fetch('/api/docs/tasks');
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch tasks');
-        }
-        
-        const data = await response.json();
-        setAllTasks(data.tasks);
-      } catch (err) {
-        console.error('Error fetching tasks:', err);
-        setTasksError('Failed to load tasks');
-      } finally {
-        setIsLoadingTasks(false);
-      }
-    };
-
-    fetchTasks();
-  }, [dataviewBlocks.length]);
   
   // Split content by dataview blocks and create segments
   const segments: Array<{ type: 'markdown' | 'dataview'; content: string; blockIndex?: number }> = [];
   let lastIndex = 0;
   
   dataviewBlocks.forEach((block, index) => {
-    // Add markdown content before this dataview block
     if (block.startIndex > lastIndex) {
       segments.push({
         type: 'markdown',
@@ -73,7 +45,6 @@ const DocsContent = ({ content, path, title }: DocsContentProps) => {
       });
     }
     
-    // Add the dataview block
     segments.push({
       type: 'dataview',
       content: '',
@@ -83,7 +54,6 @@ const DocsContent = ({ content, path, title }: DocsContentProps) => {
     lastIndex = block.endIndex;
   });
   
-  // Add remaining markdown content after last dataview block
   if (lastIndex < processedContent.length) {
     segments.push({
       type: 'markdown',
@@ -94,6 +64,17 @@ const DocsContent = ({ content, path, title }: DocsContentProps) => {
   return (
     <article className="prose prose-invert max-w-none">
       <h1 className="text-4xl font-bold text-white mb-8">{title}</h1>
+
+      {/* Show assets carousel if assets exist */}
+      {assets.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-white mb-4">Assets</h2>
+          <MediaCarousel 
+            assets={assets}
+            className="mb-6"
+          />
+        </div>
+      )}
 
       {segments.map((segment, index) => {
         if (segment.type === 'dataview' && segment.blockIndex !== undefined) {
