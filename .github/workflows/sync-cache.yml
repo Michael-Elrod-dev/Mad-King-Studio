@@ -1,0 +1,55 @@
+name: Sync Docs Cache to S3
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'  # Every 30 minutes
+  
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+  
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  sync-cache:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Generate cache files
+        run: npx tsx scripts/generate-cache.ts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Upload to S3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks --cache-control "public,max-age=1800"
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'us-east-1'
+          SOURCE_DIR: 'cache-output'
+          DEST_DIR: 'cache'
+      
+      - name: Summary
+        run: |
+          echo "✅ Cache synced to S3!"
+          echo "📦 Location: s3://${{ secrets.AWS_S3_BUCKET }}/cache/"
+          echo ""
+          echo "📊 Metadata:"
+          cat cache-output/metadata.json

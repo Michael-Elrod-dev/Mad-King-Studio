@@ -5,3 +5,7 @@ export const SOCIAL_LINKS = {
   X: "https://x.com/MadKingStudio",
   GMAIL: "madkingstudio.dev@gmail.com"
 } as const;
+
+export const API_LINKS = {
+  S3_CACHE_URL: "https://mad-king-studio.s3.amazonaws.com/cache",
+}

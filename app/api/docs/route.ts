@@ -1,10 +1,9 @@
 // app/api/docs/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchDocsTree, buildDocsNavigation } from '@/lib/github';
 import { rateLimit, getClientIP } from '@/lib/rateLimit';
+import { API_LINKS } from '@/lib/constants';
 
-// 10 requests per minute
-const docsLimiter = rateLimit(10, 60 * 1000);
+const docsLimiter = rateLimit(20, 60 * 1000);
 
 export async function GET(request: NextRequest) {
   const ip = getClientIP(request);
@@ -17,17 +16,26 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const tree = await fetchDocsTree();
-    const navigation = buildDocsNavigation(tree);
+    const response = await fetch(`${API_LINKS.S3_CACHE_URL}/docs-tree.json`, {
+      next: { revalidate: 1800 }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`S3 fetch failed: ${response.status}`);
+    }
+    
+    const tree = await response.json();
     
     return NextResponse.json({
-      tree: navigation,
+      tree,
+      cached: true,
+      source: 's3',
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
     console.error('Docs API Error:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch documentation structure' },
+      { error: 'Failed to fetch documentation structure from cache' },
       { status: 500 }
     );
   }

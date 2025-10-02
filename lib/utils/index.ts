@@ -8,6 +8,17 @@ export { getFirstSection,
   getCompleteFirstSection,
 } from './markdownParser';
 
+// Dataview utilities
+export {
+  extractDataviewBlocks,
+  parseDataviewQuery,
+  parseTasksFromMarkdown,
+  filterTasks,
+  sortTasks,
+  executeDataviewQuery,
+} from './dataviewParser';
+export type { DataviewQuery, ParsedTask } from './dataviewParser';
+
 // Validation utilities
 export { validateEmail,
   validateContactForm,
