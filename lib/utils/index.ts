@@ -3,29 +3,21 @@
 export { formatDate } from './date';
 
 // Markdown utilities
-export { getFirstSection,
+export { 
+  getFirstSection,
   getRemainingContent,
   getCompleteFirstSection,
 } from './markdownParser';
 
-// Dataview utilities
-export {
-  extractDataviewBlocks,
-  parseDataviewQuery,
-  parseTasksFromMarkdown,
-  filterTasks,
-  sortTasks,
-  executeDataviewQuery,
-} from './dataviewParser';
-export type { DataviewQuery, ParsedTask } from './dataviewParser';
-
 // Validation utilities
-export { validateEmail,
+export { 
+  validateEmail,
   validateContactForm,
 } from './validation';
 
 // Patch note utilities
-export { getChangeTypeColor,
+export { 
+  getChangeTypeColor,
   getChangeTypeLabel,
 } from './patchNotes';
 export type { ChangeType } from './patchNotes';
@@ -38,3 +30,22 @@ export {
   extractAssetsFromContent, 
   getMediaType, 
 } from './content';
+
+// Dataview utilities
+export {
+  extractDataviewBlocks,
+  parseDataviewQuery,
+  parseTasksFromMarkdown,
+  filterTasks,
+  sortTasks,
+  executeDataviewQuery,
+  groupTasksByDocument,
+  executeTableQuery,
+  evaluateTableField,
+} from './dataviewParser';
+export type { 
+  DataviewQuery, 
+  ParsedTask, 
+  DocumentWithTasks, 
+  TableField 
+} from './dataviewParser';

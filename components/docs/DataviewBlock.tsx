@@ -3,7 +3,9 @@
 
 import { useMemo } from "react";
 import { 
-  executeDataviewQuery, 
+  executeDataviewQuery,
+  executeTableQuery,
+  evaluateTableField,
   type DataviewQuery, 
   type ParsedTask 
 } from "@/lib/utils/dataviewParser";
@@ -16,10 +18,16 @@ interface DataviewBlockProps {
 }
 
 const DataviewBlock = ({ query, allTasks, isLoading, error }: DataviewBlockProps) => {
-  // Execute query using memoization to avoid re-computing on every render
+  // Execute TASK query using memoization
   const tasks = useMemo(() => {
-    if (isLoading || error) return [];
+    if (isLoading || error || query.type !== 'TASK') return [];
     return executeDataviewQuery(query, allTasks);
+  }, [query, allTasks, isLoading, error]);
+
+  // Execute TABLE query using memoization
+  const documents = useMemo(() => {
+    if (isLoading || error || query.type !== 'TABLE') return [];
+    return executeTableQuery(query, allTasks);
   }, [query, allTasks, isLoading, error]);
 
   if (isLoading) {
@@ -41,33 +49,42 @@ const DataviewBlock = ({ query, allTasks, isLoading, error }: DataviewBlockProps
     );
   }
 
-  if (tasks.length === 0) {
-    return (
-      <div className="bg-neutral-900 rounded-lg p-6 my-4">
-        <p className="text-white/60 text-sm">No tasks found</p>
-      </div>
-    );
-  }
-
+  // TABLE type
   if (query.type === 'TABLE') {
+    if (documents.length === 0) {
+      return (
+        <div className="bg-neutral-900 rounded-lg p-6 my-4">
+          <p className="text-white/60 text-sm">No documents found</p>
+        </div>
+      );
+    }
+
     return (
       <div className="overflow-x-auto my-4">
         <table className="min-w-full border-collapse border border-neutral-700 bg-neutral-900 rounded-lg">
           <thead className="bg-neutral-800">
             <tr>
-              <th className="border border-neutral-700 px-4 py-2 text-left text-white font-semibold">File</th>
+              <th className="border border-neutral-700 px-4 py-2 text-left text-white font-semibold">
+                File
+              </th>
               {query.fields && query.fields.map((field, idx) => (
                 <th key={idx} className="border border-neutral-700 px-4 py-2 text-left text-white font-semibold">
-                  {field}
+                  {field.alias || field.expression}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {tasks.map((task, idx) => (
+            {documents.map((doc, idx) => (
               <tr key={idx} className="hover:bg-neutral-800/50">
-                <td className="border border-neutral-700 px-4 py-2 text-white/90">{task.file}</td>
-                {/* Add field rendering logic based on your needs */}
+                <td className="border border-neutral-700 px-4 py-2 text-white/90">
+                  {doc.name.replace('.md', '')}
+                </td>
+                {query.fields && query.fields.map((field, fieldIdx) => (
+                  <td key={fieldIdx} className="border border-neutral-700 px-4 py-2 text-white/90">
+                    {evaluateTableField(field, doc)}
+                  </td>
+                ))}
               </tr>
             ))}
           </tbody>
@@ -77,6 +94,14 @@ const DataviewBlock = ({ query, allTasks, isLoading, error }: DataviewBlockProps
   }
 
   // TASK or LIST type
+  if (tasks.length === 0) {
+    return (
+      <div className="bg-neutral-900 rounded-lg p-6 my-4">
+        <p className="text-white/60 text-sm">No tasks found</p>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-neutral-900 rounded-lg p-6 my-4 space-y-3">
       {tasks.map((task, idx) => (
