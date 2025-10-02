@@ -60,6 +60,7 @@ const FloatingNav = () => {
     { href: "/", label: "Home" },
     { href: "/games", label: "Games" },
     { href: "/blog", label: "Blog" },
+    { href: "/docs", label: "Docs" },
     { href: "/community", label: "Community" },
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },

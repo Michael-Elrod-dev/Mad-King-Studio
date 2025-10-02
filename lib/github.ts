@@ -1,4 +1,6 @@
 // lib/github.ts
+import { DOCS_CONFIG } from './docsData';
+import type { DocFile } from './docsData';
 import { 
   extractDateFromContent,
   removeMetadataFromContent,
@@ -164,4 +166,136 @@ export async function processBlogs(
     }
     return b.dayNumber - a.dayNumber;
   });
+}
+
+/**
+ * Recursively fetch directory tree structure from GitHub
+ */
+export async function fetchDocsTree(path: string = DOCS_CONFIG.DOCS_PATH): Promise<DocFile[]> {
+  try {
+    const response = await fetch(
+      `${GITHUB_API_BASE}/repos/${DOCS_CONFIG.REPO_OWNER}/${DOCS_CONFIG.REPO_NAME}/contents/${path}`,
+      {
+        headers: {
+          Accept: "application/vnd.github.v3+json",
+          Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+        },
+        next: { revalidate: 3600 }, // Cache for 1 hour
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`GitHub API error: ${response.status}`);
+    }
+
+    const items: DocFile[] = await response.json();
+    
+    // Filter out excluded folders at root level
+    const excludedFolders: string[] = [...DOCS_CONFIG.EXCLUDED_FOLDERS]; // Convert to string array
+    const filteredItems = items.filter(item => {
+      if (path === DOCS_CONFIG.DOCS_PATH && item.type === 'dir') {
+        return !excludedFolders.includes(item.name);
+      }
+      return true;
+    });
+
+    // Recursively fetch children for directories
+    const itemsWithChildren = await Promise.all(
+      filteredItems.map(async (item) => {
+        if (item.type === 'dir') {
+          const children = await fetchDocsTree(item.path);
+          return { ...item, children };
+        }
+        return item;
+      })
+    );
+
+    return itemsWithChildren;
+  } catch (error) {
+    console.error("Error fetching docs tree:", error);
+    return [];
+  }
+}
+
+/**
+ * Fetch a specific doc file by path
+ */
+export async function fetchDocByPath(path: string): Promise<{
+  content: string;
+  sha: string;
+} | null> {
+  try {
+    const response = await fetch(
+      `${GITHUB_API_BASE}/repos/${DOCS_CONFIG.REPO_OWNER}/${DOCS_CONFIG.REPO_NAME}/contents/${path}`,
+      {
+        headers: {
+          Accept: "application/vnd.github.v3+json",
+          Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+        },
+        next: { revalidate: 3600 },
+      }
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    
+    // GitHub returns base64 encoded content
+    if (data.content) {
+      const content = Buffer.from(data.content, 'base64').toString('utf-8');
+      return {
+        content,
+        sha: data.sha,
+      };
+    }
+
+    // If it's a file object with download_url
+    if (data.download_url) {
+      const contentResponse = await fetch(data.download_url, {
+        headers: {
+          Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+        },
+        next: { revalidate: 3600 },
+      });
+      
+      if (!contentResponse.ok) {
+        return null;
+      }
+
+      return {
+        content: await contentResponse.text(),
+        sha: data.sha,
+      };
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Error fetching doc by path:", error);
+    return null;
+  }
+}
+
+/**
+ * Build navigation structure from doc tree
+ */
+export function buildDocsNavigation(tree: DocFile[]): DocFile[] {
+  // Sort: directories first, then files. Within each group, sort alphabetically
+  return tree
+    .sort((a, b) => {
+      if (a.type === b.type) {
+        return a.name.localeCompare(b.name);
+      }
+      return a.type === 'dir' ? -1 : 1;
+    })
+    .map(item => {
+      if (item.children) {
+        return {
+          ...item,
+          children: buildDocsNavigation(item.children),
+        };
+      }
+      return item;
+    });
 }

@@ -1,4 +1,35 @@
 // lib/utils/content.ts
+const S3_BUCKET_URL = "https://mad-king-studio.s3.amazonaws.com/docs-images";
+
+/**
+ * Convert local/Obsidian image references to S3 URLs
+ * Handles: ![[image.png]], ![](./path/image.png), ![](../path/image.png)
+ */
+export function convertLocalImagesToS3(content: string, currentDocPath: string): string {
+  // Handle Obsidian-style image embeds: ![[image.png]]
+  content = content.replace(/!\[\[([^\]]+\.(jpg|jpeg|png|gif|webp|mp4|webm|mov))\]\]/gi, (match, filename) => {
+    const cleanFilename = filename.trim();
+    return `![${cleanFilename}](${S3_BUCKET_URL}/${cleanFilename})`;
+  });
+
+  // Handle markdown relative paths: ![alt](./images/image.png) or ![alt](../images/image.png)
+  content = content.replace(/!\[([^\]]*)\]\(\.\.?\/([^\)]+\.(jpg|jpeg|png|gif|webp|mp4|webm|mov))\)/gi, (match, alt, path) => {
+    // Extract just the filename from the path
+    const filename = path.split('/').pop();
+    return `![${alt}](${S3_BUCKET_URL}/${filename})`;
+  });
+
+  // Handle markdown same-directory references: ![alt](image.png)
+  content = content.replace(/!\[([^\]]*)\]\(([^\/\)]+\.(jpg|jpeg|png|gif|webp|mp4|webm|mov))\)/gi, (match, alt, filename) => {
+    // Skip if it's already a full URL
+    if (filename.startsWith('http')) {
+      return match;
+    }
+    return `![${alt}](${S3_BUCKET_URL}/${filename})`;
+  });
+
+  return content;
+}
 
 /**
  * Replace Obsidian wiki links with their display text
@@ -71,7 +102,12 @@ export function extractDayNumberFromContent(content: string, filename: string): 
 export function extractAssetsFromContent(content: string): string[] {
   const assetsMatch = content.match(/###\s*Assets\s*\n([\s\S]*?)(?=\n###|\n##|$)/i);
   
-  if (!assetsMatch) return [];
+  if (!assetsMatch) {
+    // Also look for any image URLs in the content
+    const urlRegex = /https?:\/\/[^\s\)]+\.(jpg|jpeg|png|gif|webp|mp4|webm|mov)/gi;
+    const urls = content.match(urlRegex) || [];
+    return urls.map(url => url.trim());
+  }
   
   const assetsSection = assetsMatch[1];
   const urlRegex = /https?:\/\/[^\s\)]+\.(jpg|jpeg|png|gif|webp|mp4|webm|mov)/gi;
