@@ -4,10 +4,10 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'mad-king-studio.s3.amazonaws.com',
-        port: '',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "mad-king-studio.s3.amazonaws.com",
+        port: "",
+        pathname: "/**",
       },
     ],
   },

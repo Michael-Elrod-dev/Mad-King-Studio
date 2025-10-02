@@ -1,5 +1,5 @@
 // lib/blogData.ts
-import { games } from './gameData';
+import { games } from "./gameData";
 
 export const blogGames = games;
 

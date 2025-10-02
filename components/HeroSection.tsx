@@ -36,8 +36,8 @@ const HeroSection = () => {
           </h2>
         </div>
         <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
-          An indie game developer building games, sharing the entire
-          development journey with the community.
+          An indie game developer building games, sharing the entire development
+          journey with the community.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link

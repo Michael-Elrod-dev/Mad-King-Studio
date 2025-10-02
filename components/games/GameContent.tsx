@@ -12,7 +12,7 @@ interface GameContentProps {
 
 const GameContent = ({ games, selectedIndex }: GameContentProps) => {
   const getMediaSection = (game: GameData, sectionId: string) => {
-    return game.media?.find(section => section.id === sectionId);
+    return game.media?.find((section) => section.id === sectionId);
   };
 
   return (
@@ -30,10 +30,10 @@ const GameContent = ({ games, selectedIndex }: GameContentProps) => {
                   Current Project
                 </h1>
                 <p className="text-xl text-white/90 max-w-3xl mx-auto mb-8">
-                  Follow the development of my upcoming indie game, through Twitch 
-                  or other social media.
+                  Follow the development of my upcoming indie game, through
+                  Twitch or other social media.
                 </p>
-                
+
                 <ActionButtons game={game} />
               </div>
 
@@ -61,28 +61,28 @@ const GameContent = ({ games, selectedIndex }: GameContentProps) => {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Title Media */}
-                <MediaCarousel 
-                  assets={getMediaSection(game, 'title')?.assets || []} 
+                <MediaCarousel
+                  assets={getMediaSection(game, "title")?.assets || []}
                   showPlaceholder={true}
                   placeholderText="Game Trailer Placeholder"
                 />
               </div>
 
               {/* Environments Section */}
-              {getMediaSection(game, 'environments') && (
+              {getMediaSection(game, "environments") && (
                 <div className="mb-20">
                   <div className="text-center mb-8">
                     <h3 className="text-3xl font-bold text-white mb-4">
-                      {getMediaSection(game, 'environments')?.title}
+                      {getMediaSection(game, "environments")?.title}
                     </h3>
                     <p className="text-white/90 text-lg max-w-4xl mx-auto">
-                      {getMediaSection(game, 'environments')?.description}
+                      {getMediaSection(game, "environments")?.description}
                     </p>
                   </div>
-                  <MediaCarousel 
-                    assets={getMediaSection(game, 'environments')?.assets || []} 
+                  <MediaCarousel
+                    assets={getMediaSection(game, "environments")?.assets || []}
                     showPlaceholder={true}
                     placeholderText="Environments Placeholder"
                   />
@@ -90,23 +90,23 @@ const GameContent = ({ games, selectedIndex }: GameContentProps) => {
               )}
 
               {/* Player Section */}
-              {getMediaSection(game, 'player') && (
+              {getMediaSection(game, "player") && (
                 <div className="mb-20">
                   <div className="grid md:grid-cols-2 gap-12 items-center">
                     {/* Text Content */}
                     <div className="space-y-6 md:col-start-2">
                       <h3 className="text-3xl font-bold text-white">
-                        {getMediaSection(game, 'player')?.title}
+                        {getMediaSection(game, "player")?.title}
                       </h3>
                       <p className="text-white/90 text-lg leading-relaxed">
-                        {getMediaSection(game, 'player')?.description}
+                        {getMediaSection(game, "player")?.description}
                       </p>
                     </div>
-                    
+
                     {/* Media Content */}
                     <div className="md:col-start-1 md:row-start-1">
-                      <MediaCarousel 
-                        assets={getMediaSection(game, 'player')?.assets || []} 
+                      <MediaCarousel
+                        assets={getMediaSection(game, "player")?.assets || []}
                         showPlaceholder={true}
                         placeholderText="Player Placeholder"
                       />
@@ -116,23 +116,23 @@ const GameContent = ({ games, selectedIndex }: GameContentProps) => {
               )}
 
               {/* Enemies Section */}
-              {getMediaSection(game, 'enemies') && (
+              {getMediaSection(game, "enemies") && (
                 <div className="mb-20">
                   <div className="grid md:grid-cols-2 gap-12 items-center">
                     {/* Text Content */}
                     <div className="space-y-6">
                       <h3 className="text-3xl font-bold text-white">
-                        {getMediaSection(game, 'enemies')?.title}
+                        {getMediaSection(game, "enemies")?.title}
                       </h3>
                       <p className="text-white/90 text-lg leading-relaxed">
-                        {getMediaSection(game, 'enemies')?.description}
+                        {getMediaSection(game, "enemies")?.description}
                       </p>
                     </div>
-                    
+
                     {/* Media Content */}
                     <div>
-                      <MediaCarousel 
-                        assets={getMediaSection(game, 'enemies')?.assets || []} 
+                      <MediaCarousel
+                        assets={getMediaSection(game, "enemies")?.assets || []}
                         showPlaceholder={true}
                         placeholderText="Enemies Placeholder"
                       />
@@ -142,23 +142,23 @@ const GameContent = ({ games, selectedIndex }: GameContentProps) => {
               )}
 
               {/* Weapons Section */}
-              {getMediaSection(game, 'weapons') && (
+              {getMediaSection(game, "weapons") && (
                 <div className="mb-20">
                   <div className="grid md:grid-cols-2 gap-12 items-center">
                     {/* Text Content */}
                     <div className="space-y-6 md:col-start-2">
                       <h3 className="text-3xl font-bold text-white">
-                        {getMediaSection(game, 'weapons')?.title}
+                        {getMediaSection(game, "weapons")?.title}
                       </h3>
                       <p className="text-white/90 text-lg leading-relaxed">
-                        {getMediaSection(game, 'weapons')?.description}
+                        {getMediaSection(game, "weapons")?.description}
                       </p>
                     </div>
-                    
+
                     {/* Media Content */}
                     <div className="md:col-start-1 md:row-start-1">
-                      <MediaCarousel 
-                        assets={getMediaSection(game, 'weapons')?.assets || []} 
+                      <MediaCarousel
+                        assets={getMediaSection(game, "weapons")?.assets || []}
                         showPlaceholder={true}
                         placeholderText="Weapons Placeholder"
                       />
@@ -168,23 +168,23 @@ const GameContent = ({ games, selectedIndex }: GameContentProps) => {
               )}
 
               {/* Bosses Section */}
-              {getMediaSection(game, 'bosses') && (
+              {getMediaSection(game, "bosses") && (
                 <div className="mb-20">
                   <div className="grid md:grid-cols-2 gap-12 items-center">
                     {/* Text Content */}
                     <div className="space-y-6">
                       <h3 className="text-3xl font-bold text-white">
-                        {getMediaSection(game, 'bosses')?.title}
+                        {getMediaSection(game, "bosses")?.title}
                       </h3>
                       <p className="text-white/90 text-lg leading-relaxed">
-                        {getMediaSection(game, 'bosses')?.description}
+                        {getMediaSection(game, "bosses")?.description}
                       </p>
                     </div>
-                    
+
                     {/* Media Content */}
                     <div>
-                      <MediaCarousel 
-                        assets={getMediaSection(game, 'bosses')?.assets || []} 
+                      <MediaCarousel
+                        assets={getMediaSection(game, "bosses")?.assets || []}
                         showPlaceholder={true}
                         placeholderText="Bosses Placeholder"
                       />
@@ -194,23 +194,25 @@ const GameContent = ({ games, selectedIndex }: GameContentProps) => {
               )}
 
               {/* Abilities Section */}
-              {getMediaSection(game, 'abilities') && (
+              {getMediaSection(game, "abilities") && (
                 <div className="mb-20">
                   <div className="grid md:grid-cols-2 gap-12 items-center">
                     {/* Text Content */}
                     <div className="space-y-6 md:col-start-2">
                       <h3 className="text-3xl font-bold text-white">
-                        {getMediaSection(game, 'abilities')?.title}
+                        {getMediaSection(game, "abilities")?.title}
                       </h3>
                       <p className="text-white/90 text-lg leading-relaxed">
-                        {getMediaSection(game, 'abilities')?.description}
+                        {getMediaSection(game, "abilities")?.description}
                       </p>
                     </div>
-                    
+
                     {/* Media Content */}
                     <div className="md:col-start-1 md:row-start-1">
-                      <MediaCarousel 
-                        assets={getMediaSection(game, 'abilities')?.assets || []} 
+                      <MediaCarousel
+                        assets={
+                          getMediaSection(game, "abilities")?.assets || []
+                        }
                         showPlaceholder={true}
                         placeholderText="Abilities Placeholder"
                       />
@@ -218,7 +220,6 @@ const GameContent = ({ games, selectedIndex }: GameContentProps) => {
                   </div>
                 </div>
               )}
-
             </div>
           </div>
         ))}

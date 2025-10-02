@@ -152,8 +152,9 @@ export default function ContactPage() {
                     Response Time
                   </h3>
                   <p className="text-white/90 mb-4">
-                    I typically respond to messages within 24-48 hours. For urgent
-                    stuff, you can reach out via Discord or check if im live.
+                    I typically respond to messages within 24-48 hours. For
+                    urgent stuff, you can reach out via Discord or check if im
+                    live.
                   </p>
                 </div>
 
@@ -163,8 +164,8 @@ export default function ContactPage() {
                   </h3>
                   <p className="text-white/90 mb-4">
                     Join me during live development streams! It&apos;s the best
-                    way to ask questions and get real-time answers about the game
-                    development process.
+                    way to ask questions and get real-time answers about the
+                    game development process.
                   </p>
 
                   {isLive && !isLoading ? (
@@ -266,7 +267,7 @@ export default function ContactPage() {
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     setFormData({
       ...formData,

@@ -41,13 +41,14 @@ export default function DocPage() {
         setContent(data.content);
 
         // Extract the actual filename from the returned path
-        const actualFileName = data.path.split('/').pop() || slug[slug.length - 1];
+        const actualFileName =
+          data.path.split("/").pop() || slug[slug.length - 1];
         const extractedTitle = extractTitle(data.content, actualFileName);
         setTitle(extractedTitle);
       } catch (err) {
         console.error("Error loading doc content:", err);
         setError(
-          err instanceof Error ? err.message : "Failed to load document"
+          err instanceof Error ? err.message : "Failed to load document",
         );
       } finally {
         setIsLoadingContent(false);
@@ -58,9 +59,7 @@ export default function DocPage() {
   }, [slug]);
 
   // Build breadcrumbs from slug
-  const breadcrumbs = slug
-    ? buildBreadcrumbs(`docs/${slug.join("/")}.md`)
-    : [];
+  const breadcrumbs = slug ? buildBreadcrumbs(`docs/${slug.join("/")}.md`) : [];
 
   const isLoading = isLoadingTree || isLoadingContent;
   const displayError = error || treeError;

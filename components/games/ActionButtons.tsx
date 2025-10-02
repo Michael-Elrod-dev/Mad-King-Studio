@@ -15,14 +15,14 @@ const ActionButtons = ({ game }: ActionButtonsProps) => {
 
   const getSteamButtonText = (status: string) => {
     switch (status) {
-      case 'In Development':
-        return 'Wishlist on Steam';
-      case 'Early Access':
-        return 'Get Early Access';
-      case 'Released':
-        return 'Buy on Steam';
+      case "In Development":
+        return "Wishlist on Steam";
+      case "Early Access":
+        return "Get Early Access";
+      case "Released":
+        return "Buy on Steam";
       default:
-        return 'View on Steam';
+        return "View on Steam";
     }
   };
 
@@ -38,7 +38,7 @@ const ActionButtons = ({ game }: ActionButtonsProps) => {
           {getSteamButtonText(game.status)}
         </a>
       )}
-      
+
       {/* Twitch button with hardcoded URL */}
       {isLive && !isLoading ? (
         <a
@@ -47,8 +47,7 @@ const ActionButtons = ({ game }: ActionButtonsProps) => {
           rel="noopener noreferrer"
           className="border-2 border-purple-600 text-purple-600 hover:text-purple-500 font-semibold py-3 px-8 rounded-full transition-all duration-200 text-lg backdrop-blur-sm inline-block"
           style={{
-            animation:
-              "pulse-purple 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+            animation: "pulse-purple 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
           }}
         >
           Watch Dev Live

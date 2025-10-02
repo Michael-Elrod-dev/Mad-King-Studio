@@ -20,7 +20,8 @@ export default function CommunityPage() {
               Community
             </h1>
             <p className="text-xl text-white/90 max-w-3xl mx-auto">
-              Join the community on Twitch. Watch live coding and be part of the development journey.
+              Join the community on Twitch. Watch live coding and be part of the
+              development journey.
             </p>
           </div>
 

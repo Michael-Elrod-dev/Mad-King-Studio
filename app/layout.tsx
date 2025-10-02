@@ -34,9 +34,7 @@ export default function RootLayout({
       >
         <LiveStatusProvider>
           <DocsProvider>
-            <TasksProvider>
-              {children}
-            </TasksProvider>
+            <TasksProvider>{children}</TasksProvider>
           </DocsProvider>
         </LiveStatusProvider>
       </body>

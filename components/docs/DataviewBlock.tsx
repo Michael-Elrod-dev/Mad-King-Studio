@@ -2,12 +2,12 @@
 "use client";
 
 import { useMemo } from "react";
-import { 
+import {
   executeDataviewQuery,
   executeTableQuery,
   evaluateTableField,
-  type DataviewQuery, 
-  type ParsedTask 
+  type DataviewQuery,
+  type ParsedTask,
 } from "@/lib/utils/dataviewParser";
 
 interface DataviewBlockProps {
@@ -17,16 +17,21 @@ interface DataviewBlockProps {
   error: string | null;
 }
 
-const DataviewBlock = ({ query, allTasks, isLoading, error }: DataviewBlockProps) => {
+const DataviewBlock = ({
+  query,
+  allTasks,
+  isLoading,
+  error,
+}: DataviewBlockProps) => {
   // Execute TASK query using memoization
   const tasks = useMemo(() => {
-    if (isLoading || error || query.type !== 'TASK') return [];
+    if (isLoading || error || query.type !== "TASK") return [];
     return executeDataviewQuery(query, allTasks);
   }, [query, allTasks, isLoading, error]);
 
   // Execute TABLE query using memoization
   const documents = useMemo(() => {
-    if (isLoading || error || query.type !== 'TABLE') return [];
+    if (isLoading || error || query.type !== "TABLE") return [];
     return executeTableQuery(query, allTasks);
   }, [query, allTasks, isLoading, error]);
 
@@ -50,7 +55,7 @@ const DataviewBlock = ({ query, allTasks, isLoading, error }: DataviewBlockProps
   }
 
   // TABLE type
-  if (query.type === 'TABLE') {
+  if (query.type === "TABLE") {
     if (documents.length === 0) {
       return (
         <div className="bg-neutral-900 rounded-lg p-6 my-4">
@@ -67,24 +72,32 @@ const DataviewBlock = ({ query, allTasks, isLoading, error }: DataviewBlockProps
               <th className="border border-neutral-700 px-4 py-2 text-left text-white font-semibold">
                 File
               </th>
-              {query.fields && query.fields.map((field, idx) => (
-                <th key={idx} className="border border-neutral-700 px-4 py-2 text-left text-white font-semibold">
-                  {field.alias || field.expression}
-                </th>
-              ))}
+              {query.fields &&
+                query.fields.map((field, idx) => (
+                  <th
+                    key={idx}
+                    className="border border-neutral-700 px-4 py-2 text-left text-white font-semibold"
+                  >
+                    {field.alias || field.expression}
+                  </th>
+                ))}
             </tr>
           </thead>
           <tbody>
             {documents.map((doc, idx) => (
               <tr key={idx} className="hover:bg-neutral-800/50">
                 <td className="border border-neutral-700 px-4 py-2 text-white/90">
-                  {doc.name.replace('.md', '')}
+                  {doc.name.replace(".md", "")}
                 </td>
-                {query.fields && query.fields.map((field, fieldIdx) => (
-                  <td key={fieldIdx} className="border border-neutral-700 px-4 py-2 text-white/90">
-                    {evaluateTableField(field, doc)}
-                  </td>
-                ))}
+                {query.fields &&
+                  query.fields.map((field, fieldIdx) => (
+                    <td
+                      key={fieldIdx}
+                      className="border border-neutral-700 px-4 py-2 text-white/90"
+                    >
+                      {evaluateTableField(field, doc)}
+                    </td>
+                  ))}
               </tr>
             ))}
           </tbody>
@@ -113,17 +126,25 @@ const DataviewBlock = ({ query, allTasks, isLoading, error }: DataviewBlockProps
             className="mt-1 rounded border-neutral-600 bg-neutral-800 text-red-500 focus:ring-red-500 cursor-default"
           />
           <div className="flex-1">
-            <p className={`text-white/90 ${task.completed ? 'line-through text-white/50' : ''}`}>
+            <p
+              className={`text-white/90 ${
+                task.completed ? "line-through text-white/50" : ""
+              }`}
+            >
               {task.text}
             </p>
             <div className="flex items-center space-x-3 mt-1">
               <span className="text-xs text-white/40">{task.file}</span>
               {task.priority && (
-                <span className={`text-xs px-2 py-0.5 rounded ${
-                  task.priority === 'high' ? 'bg-red-900/30 text-red-400' :
-                  task.priority === 'medium' ? 'bg-yellow-900/30 text-yellow-400' :
-                  'bg-blue-900/30 text-blue-400'
-                }`}>
+                <span
+                  className={`text-xs px-2 py-0.5 rounded ${
+                    task.priority === "high"
+                      ? "bg-red-900/30 text-red-400"
+                      : task.priority === "medium"
+                        ? "bg-yellow-900/30 text-yellow-400"
+                        : "bg-blue-900/30 text-blue-400"
+                  }`}
+                >
                   {task.priority}
                 </span>
               )}

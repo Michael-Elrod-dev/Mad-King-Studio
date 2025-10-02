@@ -27,7 +27,7 @@ interface LiveStatusContextType {
 }
 
 const LiveStatusContext = createContext<LiveStatusContextType | undefined>(
-  undefined
+  undefined,
 );
 
 interface LiveStatusProviderProps {

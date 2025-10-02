@@ -12,22 +12,24 @@ interface MediaCarouselProps {
   className?: string;
 }
 
-const MediaCarousel = ({ 
-  assets, 
-  showPlaceholder = false, 
+const MediaCarousel = ({
+  assets,
+  showPlaceholder = false,
   placeholderText = "Media Placeholder",
-  className = ""
+  className = "",
 }: MediaCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>({});
+  const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>(
+    {},
+  );
 
   // Show placeholder if no assets and showPlaceholder is true
   if ((!assets || assets.length === 0) && showPlaceholder) {
     return (
-      <div className={`bg-neutral-900 rounded-lg aspect-video flex items-center justify-center ${className}`}>
-        <span className="text-white/70 text-lg">
-          {placeholderText}
-        </span>
+      <div
+        className={`bg-neutral-900 rounded-lg aspect-video flex items-center justify-center ${className}`}
+      >
+        <span className="text-white/70 text-lg">{placeholderText}</span>
       </div>
     );
   }
@@ -48,13 +50,13 @@ const MediaCarousel = ({
   };
 
   const handleImageError = (asset: string) => {
-    setImageErrors(prev => ({ ...prev, [asset]: true }));
+    setImageErrors((prev) => ({ ...prev, [asset]: true }));
   };
 
   const getMediaTypeLabel = (asset: string) => {
     const type = getMediaType(asset);
     switch (type) {
-      case 'video':
+      case "video":
         return (
           <div className="flex items-center gap-1">
             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
@@ -63,7 +65,7 @@ const MediaCarousel = ({
             Video
           </div>
         );
-      case 'gif':
+      case "gif":
         return (
           <div className="flex items-center gap-1">
             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
@@ -85,7 +87,9 @@ const MediaCarousel = ({
   };
 
   return (
-    <div className={`relative bg-neutral-900 rounded-lg overflow-hidden ${className}`}>
+    <div
+      className={`relative bg-neutral-900 rounded-lg overflow-hidden ${className}`}
+    >
       {/* Main Media Display */}
       <div className="relative aspect-video">
         {assets.map((asset, index) => (
@@ -95,7 +99,7 @@ const MediaCarousel = ({
               index === currentIndex ? "opacity-100" : "opacity-0"
             }`}
           >
-            {getMediaType(asset) === 'video' ? (
+            {getMediaType(asset) === "video" ? (
               <video
                 className="w-full h-full object-cover"
                 controls
@@ -118,12 +122,16 @@ const MediaCarousel = ({
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
                     priority={index === 0}
                     onError={() => handleImageError(asset)}
-                    unoptimized={getMediaType(asset) === 'gif'}
+                    unoptimized={getMediaType(asset) === "gif"}
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-neutral-800 text-white/60">
                     <div className="text-center">
-                      <svg className="w-12 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 24 24">
+                      <svg
+                        className="w-12 h-12 mx-auto mb-2"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
                         <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
                       </svg>
                       <p className="text-sm">Media failed to load</p>
@@ -180,7 +188,9 @@ const MediaCarousel = ({
               key={index}
               onClick={() => goToSlide(index)}
               className={`w-2 h-2 rounded-full transition-colors duration-200 ${
-                index === currentIndex ? "bg-red-500" : "bg-white/30 hover:bg-white/50"
+                index === currentIndex
+                  ? "bg-red-500"
+                  : "bg-white/30 hover:bg-white/50"
               }`}
               aria-label={`Go to media ${index + 1}`}
             />

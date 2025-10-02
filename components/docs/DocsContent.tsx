@@ -5,7 +5,10 @@ import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { convertWikiLinksToRoutes } from "@/lib/utils/docsParser";
-import { convertLocalImagesToS3, extractAndRemoveAssetsSection } from "@/lib/utils/content";
+import {
+  convertLocalImagesToS3,
+  extractAndRemoveAssetsSection,
+} from "@/lib/utils/content";
 import { extractDataviewBlocks } from "@/lib/utils/dataviewParser";
 import DataviewBlock from "./DataviewBlock";
 import MediaCarousel from "@/components/shared/MediaCarousel";
@@ -19,45 +22,53 @@ interface DocsContentProps {
 
 const DocsContent = ({ content, path, title }: DocsContentProps) => {
   // Get tasks from context instead of fetching locally
-  const { tasks: allTasks, isLoading: isLoadingTasks, error: tasksError } = useTasks();
+  const {
+    tasks: allTasks,
+    isLoading: isLoadingTasks,
+    error: tasksError,
+  } = useTasks();
 
   // Extract assets first, before any other processing
   const { assets, cleanedContent } = extractAndRemoveAssetsSection(content);
-  
+
   // Then convert local images to S3 URLs
   let processedContent = convertLocalImagesToS3(cleanedContent, path);
-  
+
   // Then convert Obsidian wiki links to proper routes
   processedContent = convertWikiLinksToRoutes(processedContent, path);
 
   // Extract dataview blocks AFTER all other content processing
   const dataviewBlocks = extractDataviewBlocks(processedContent);
-  
+
   // Split content by dataview blocks and create segments
-  const segments: Array<{ type: 'markdown' | 'dataview'; content: string; blockIndex?: number }> = [];
+  const segments: Array<{
+    type: "markdown" | "dataview";
+    content: string;
+    blockIndex?: number;
+  }> = [];
   let lastIndex = 0;
-  
+
   dataviewBlocks.forEach((block, index) => {
     if (block.startIndex > lastIndex) {
       segments.push({
-        type: 'markdown',
-        content: processedContent.substring(lastIndex, block.startIndex)
+        type: "markdown",
+        content: processedContent.substring(lastIndex, block.startIndex),
       });
     }
-    
+
     segments.push({
-      type: 'dataview',
-      content: '',
-      blockIndex: index
+      type: "dataview",
+      content: "",
+      blockIndex: index,
     });
-    
+
     lastIndex = block.endIndex;
   });
-  
+
   if (lastIndex < processedContent.length) {
     segments.push({
-      type: 'markdown',
-      content: processedContent.substring(lastIndex)
+      type: "markdown",
+      content: processedContent.substring(lastIndex),
     });
   }
 
@@ -69,19 +80,16 @@ const DocsContent = ({ content, path, title }: DocsContentProps) => {
       {assets.length > 0 && (
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-white mb-4">Assets</h2>
-          <MediaCarousel 
-            assets={assets}
-            className="mb-6"
-          />
+          <MediaCarousel assets={assets} className="mb-6" />
         </div>
       )}
 
       {segments.map((segment, index) => {
-        if (segment.type === 'dataview' && segment.blockIndex !== undefined) {
+        if (segment.type === "dataview" && segment.blockIndex !== undefined) {
           const block = dataviewBlocks[segment.blockIndex];
           return (
-            <DataviewBlock 
-              key={`dataview-${index}`} 
+            <DataviewBlock
+              key={`dataview-${index}`}
               query={block.query}
               allTasks={allTasks}
               isLoading={isLoadingTasks}
@@ -89,7 +97,7 @@ const DocsContent = ({ content, path, title }: DocsContentProps) => {
             />
           );
         }
-        
+
         return (
           <div key={`markdown-${index}`}>
             <ReactMarkdown
@@ -116,7 +124,9 @@ const DocsContent = ({ content, path, title }: DocsContentProps) => {
                   </h4>
                 ),
                 p: ({ children }) => (
-                  <p className="mb-4 leading-relaxed text-white/90">{children}</p>
+                  <p className="mb-4 leading-relaxed text-white/90">
+                    {children}
+                  </p>
                 ),
                 ul: ({ children }) => (
                   <ul className="mb-4 ml-6 list-disc text-white/90 space-y-2">
@@ -128,7 +138,9 @@ const DocsContent = ({ content, path, title }: DocsContentProps) => {
                     {children}
                   </ol>
                 ),
-                li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                li: ({ children }) => (
+                  <li className="leading-relaxed">{children}</li>
+                ),
                 blockquote: ({ children }) => (
                   <blockquote className="border-l-4 border-red-500 pl-4 italic mb-4 text-white/70">
                     {children}
@@ -153,8 +165,12 @@ const DocsContent = ({ content, path, title }: DocsContentProps) => {
                   <a
                     href={href}
                     className="text-red-500 hover:text-red-400 underline transition-colors"
-                    target={href?.startsWith('http') ? '_blank' : undefined}
-                    rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    target={href?.startsWith("http") ? "_blank" : undefined}
+                    rel={
+                      href?.startsWith("http")
+                        ? "noopener noreferrer"
+                        : undefined
+                    }
                   >
                     {children}
                   </a>
@@ -187,17 +203,17 @@ const DocsContent = ({ content, path, title }: DocsContentProps) => {
                   <em className="italic text-white/90">{children}</em>
                 ),
                 img: ({ src, alt }) => {
-                  if (!src || typeof src !== 'string') return null;
-                  
+                  if (!src || typeof src !== "string") return null;
+
                   return (
                     <span className="block my-4">
                       <Image
                         src={src}
-                        alt={alt || ''}
+                        alt={alt || ""}
                         width={800}
                         height={600}
                         className="rounded-lg w-full h-auto"
-                        unoptimized={src.includes('.gif')}
+                        unoptimized={src.includes(".gif")}
                       />
                     </span>
                   );

@@ -15,7 +15,7 @@ export default function DocsLayout({
   return (
     <div className="min-h-screen">
       <FloatingNav />
-      
+
       <div className="flex">
         {/* Sidebar - rendered once at layout level, never re-renders */}
         {!isLoading && <DocsSidebar tree={tree} />}

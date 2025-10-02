@@ -7,30 +7,30 @@ export function getFirstSection(content: string): string {
 
   const sections = content.split(/(?=^#{1,3}\s)/m);
   const firstHeaderIndex = sections.findIndex((section) =>
-    section.trim().startsWith("#")
+    section.trim().startsWith("#"),
   );
 
   if (firstHeaderIndex !== -1) {
     const firstSection = sections[firstHeaderIndex] || "";
-    
-    const lines = firstSection.split('\n');
-    let result = '';
+
+    const lines = firstSection.split("\n");
+    let result = "";
     let lineCount = 0;
     let charCount = 0;
-    
+
     for (const line of lines) {
-      result += line + '\n';
-      
-      if (!line.trim().startsWith('#') && line.trim().length > 0) {
+      result += line + "\n";
+
+      if (!line.trim().startsWith("#") && line.trim().length > 0) {
         lineCount++;
         charCount += line.length;
-        
+
         if (lineCount >= 3 || charCount >= 250) {
           break;
         }
       }
     }
-    
+
     return result.trim();
   }
 
@@ -45,7 +45,7 @@ export function getCompleteFirstSection(content: string): string {
 
   const sections = content.split(/(?=^#{1,3}\s)/m);
   const firstHeaderIndex = sections.findIndex((section) =>
-    section.trim().startsWith("#")
+    section.trim().startsWith("#"),
   );
 
   if (firstHeaderIndex !== -1) {
@@ -63,17 +63,21 @@ export function getRemainingContent(content: string): string {
 
   const sections = content.split(/(?=^#{1,3}\s)/m);
   const firstHeaderIndex = sections.findIndex((section) =>
-    section.trim().startsWith("#")
+    section.trim().startsWith("#"),
   );
 
   if (firstHeaderIndex !== -1 && sections.length > firstHeaderIndex + 1) {
-    const filteredSections = sections.slice(firstHeaderIndex + 1).filter((section) => {
-      const trimmedSection = section.trim();
-      return !trimmedSection.startsWith("### Active Tasks") && 
-             !trimmedSection.startsWith("## Active Tasks") &&
-             !trimmedSection.includes("```dataview");
-    });
-    
+    const filteredSections = sections
+      .slice(firstHeaderIndex + 1)
+      .filter((section) => {
+        const trimmedSection = section.trim();
+        return (
+          !trimmedSection.startsWith("### Active Tasks") &&
+          !trimmedSection.startsWith("## Active Tasks") &&
+          !trimmedSection.includes("```dataview")
+        );
+      });
+
     return filteredSections.join("");
   }
 

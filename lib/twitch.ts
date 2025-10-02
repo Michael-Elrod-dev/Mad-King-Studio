@@ -92,7 +92,7 @@ export async function getTwitchStreamInfoServer(): Promise<{
           Authorization: `Bearer ${token}`,
           "Client-Id": TWITCH_CLIENT_ID,
         },
-      }
+      },
     );
 
     if (!response.ok) {

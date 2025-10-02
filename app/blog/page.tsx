@@ -18,10 +18,7 @@ export default function BlogPage() {
         selectedIndex={selectedGameIndex}
         onGameSelect={setSelectedGameIndex}
       />
-      <BlogContent
-        games={blogGames}
-        selectedIndex={selectedGameIndex}
-      />
+      <BlogContent games={blogGames} selectedIndex={selectedGameIndex} />
     </div>
   );
 }

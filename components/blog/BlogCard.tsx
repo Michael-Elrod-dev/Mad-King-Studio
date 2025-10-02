@@ -5,8 +5,13 @@ import { useState } from "react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { formatDate, getRemainingContent, getFirstSection, getCompleteFirstSection } from '@/lib/utils';
-import MediaCarousel from '@/components/shared/MediaCarousel';
+import {
+  formatDate,
+  getRemainingContent,
+  getFirstSection,
+  getCompleteFirstSection,
+} from "@/lib/utils";
+import MediaCarousel from "@/components/shared/MediaCarousel";
 
 interface BlogPost {
   id: string;
@@ -18,7 +23,7 @@ interface BlogPost {
   githubUrl?: string;
   assets?: string[];
   tags?: string[];
-  type?: 'devlog' | 'patch-note';
+  type?: "devlog" | "patch-note";
 }
 
 interface BlogCardProps {
@@ -27,16 +32,25 @@ interface BlogCardProps {
   isPatchNote?: boolean;
 }
 
-const BlogCard = ({ post, isGitHubPost = false, isPatchNote = false }: BlogCardProps) => {
+const BlogCard = ({
+  post,
+  isGitHubPost = false,
+  isPatchNote = false,
+}: BlogCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const firstSection = isGitHubPost && post.content ? getFirstSection(post.content) : "";
-  const remainingContent = isGitHubPost && post.content ? getRemainingContent(post.content) : "";
-  const completeFirstSection = isGitHubPost && post.content ? getCompleteFirstSection(post.content) : "";
+  const firstSection =
+    isGitHubPost && post.content ? getFirstSection(post.content) : "";
+  const remainingContent =
+    isGitHubPost && post.content ? getRemainingContent(post.content) : "";
+  const completeFirstSection =
+    isGitHubPost && post.content ? getCompleteFirstSection(post.content) : "";
   const hasMoreContent = remainingContent.trim().length > 0;
 
   // Dynamic styling based on whether it's a patch note
-  const cardBgColor = isPatchNote ? "bg-red-900/30 border border-red-800/50" : "bg-neutral-800";
+  const cardBgColor = isPatchNote
+    ? "bg-red-900/30 border border-red-800/50"
+    : "bg-neutral-800";
   const indicatorColor = isPatchNote ? "text-red-400" : "text-white/40";
   const indicatorText = isPatchNote ? "Patch Notes" : "Development Log Entry";
   const titleColor = isPatchNote ? "text-red-100" : "text-white";
@@ -54,7 +68,7 @@ const BlogCard = ({ post, isGitHubPost = false, isPatchNote = false }: BlogCardP
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
               </svg>
             ) : (
               // Dev log icon (existing GitHub icon)
@@ -89,53 +103,99 @@ const BlogCard = ({ post, isGitHubPost = false, isPatchNote = false }: BlogCardP
             remarkPlugins={[remarkGfm]}
             components={{
               h1: ({ children }) => (
-                <h1 className={`text-xl font-bold mb-3 ${isPatchNote ? 'text-red-100' : 'text-white/90'}`}>
+                <h1
+                  className={`text-xl font-bold mb-3 ${
+                    isPatchNote ? "text-red-100" : "text-white/90"
+                  }`}
+                >
                   {children}
                 </h1>
               ),
               h2: ({ children }) => (
-                <h2 className={`text-lg font-bold mb-2 ${isPatchNote ? 'text-red-100' : 'text-white/90'}`}>
+                <h2
+                  className={`text-lg font-bold mb-2 ${
+                    isPatchNote ? "text-red-100" : "text-white/90"
+                  }`}
+                >
                   {children}
                 </h2>
               ),
               h3: ({ children }) => (
-                <h3 className={`text-md font-bold mb-2 ${isPatchNote ? 'text-red-100' : 'text-white/90'}`}>
+                <h3
+                  className={`text-md font-bold mb-2 ${
+                    isPatchNote ? "text-red-100" : "text-white/90"
+                  }`}
+                >
                   {children}
                 </h3>
               ),
               p: ({ children }) => (
-                <p className={`mb-3 leading-relaxed ${isPatchNote ? 'text-red-50' : 'text-white/90'}`}>{children}</p>
+                <p
+                  className={`mb-3 leading-relaxed ${
+                    isPatchNote ? "text-red-50" : "text-white/90"
+                  }`}
+                >
+                  {children}
+                </p>
               ),
               ul: ({ children }) => (
-                <ul className={`mb-3 ml-4 list-disc ${isPatchNote ? 'text-red-50' : 'text-white/90'}`}>
+                <ul
+                  className={`mb-3 ml-4 list-disc ${
+                    isPatchNote ? "text-red-50" : "text-white/90"
+                  }`}
+                >
                   {children}
                 </ul>
               ),
               ol: ({ children }) => (
-                <ol className={`mb-3 ml-4 list-decimal ${isPatchNote ? 'text-red-50' : 'text-white/90'}`}>
+                <ol
+                  className={`mb-3 ml-4 list-decimal ${
+                    isPatchNote ? "text-red-50" : "text-white/90"
+                  }`}
+                >
                   {children}
                 </ol>
               ),
               li: ({ children }) => <li className="mb-1">{children}</li>,
               blockquote: ({ children }) => (
-                <blockquote className={`border-l-4 pl-4 italic mb-3 ${isPatchNote ? 'border-red-500 text-red-300' : 'border-neutral-500 text-white/40'}`}>
+                <blockquote
+                  className={`border-l-4 pl-4 italic mb-3 ${
+                    isPatchNote
+                      ? "border-red-500 text-red-300"
+                      : "border-neutral-500 text-white/40"
+                  }`}
+                >
                   {children}
                 </blockquote>
               ),
               code: ({ children }) => (
-                <code className={`px-1 py-0.5 rounded text-sm ${isPatchNote ? 'bg-red-950 text-red-100' : 'bg-neutral-950 text-white/90'}`}>
+                <code
+                  className={`px-1 py-0.5 rounded text-sm ${
+                    isPatchNote
+                      ? "bg-red-950 text-red-100"
+                      : "bg-neutral-950 text-white/90"
+                  }`}
+                >
                   {children}
                 </code>
               ),
               pre: ({ children }) => (
-                <pre className={`p-4 rounded mb-3 overflow-x-auto ${isPatchNote ? 'bg-red-950' : 'bg-neutral-950'}`}>
+                <pre
+                  className={`p-4 rounded mb-3 overflow-x-auto ${
+                    isPatchNote ? "bg-red-950" : "bg-neutral-950"
+                  }`}
+                >
                   {children}
                 </pre>
               ),
               a: ({ href, children }) => (
                 <a
                   href={href}
-                  className={`underline transition-colors ${isPatchNote ? 'text-red-400 hover:text-red-300' : 'text-red-500 hover:text-red-400'}`}
+                  className={`underline transition-colors ${
+                    isPatchNote
+                      ? "text-red-400 hover:text-red-300"
+                      : "text-red-500 hover:text-red-400"
+                  }`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -143,10 +203,22 @@ const BlogCard = ({ post, isGitHubPost = false, isPatchNote = false }: BlogCardP
                 </a>
               ),
               strong: ({ children }) => (
-                <strong className={`font-bold ${isPatchNote ? 'text-red-100' : 'text-white/90'}`}>{children}</strong>
+                <strong
+                  className={`font-bold ${
+                    isPatchNote ? "text-red-100" : "text-white/90"
+                  }`}
+                >
+                  {children}
+                </strong>
               ),
               em: ({ children }) => (
-                <em className={`italic ${isPatchNote ? 'text-red-100' : 'text-white/90'}`}>{children}</em>
+                <em
+                  className={`italic ${
+                    isPatchNote ? "text-red-100" : "text-white/90"
+                  }`}
+                >
+                  {children}
+                </em>
               ),
             }}
           >
@@ -160,55 +232,99 @@ const BlogCard = ({ post, isGitHubPost = false, isPatchNote = false }: BlogCardP
                 remarkPlugins={[remarkGfm]}
                 components={{
                   h1: ({ children }) => (
-                    <h1 className={`text-xl font-bold mb-3 ${isPatchNote ? 'text-red-100' : 'text-white/90'}`}>
+                    <h1
+                      className={`text-xl font-bold mb-3 ${
+                        isPatchNote ? "text-red-100" : "text-white/90"
+                      }`}
+                    >
                       {children}
                     </h1>
                   ),
                   h2: ({ children }) => (
-                    <h2 className={`text-lg font-bold mb-2 ${isPatchNote ? 'text-red-100' : 'text-white/90'}`}>
+                    <h2
+                      className={`text-lg font-bold mb-2 ${
+                        isPatchNote ? "text-red-100" : "text-white/90"
+                      }`}
+                    >
                       {children}
                     </h2>
                   ),
                   h3: ({ children }) => (
-                    <h3 className={`text-md font-bold mb-2 ${isPatchNote ? 'text-red-100' : 'text-white/90'}`}>
+                    <h3
+                      className={`text-md font-bold mb-2 ${
+                        isPatchNote ? "text-red-100" : "text-white/90"
+                      }`}
+                    >
                       {children}
                     </h3>
                   ),
                   p: ({ children }) => (
-                    <p className={`mb-3 leading-relaxed ${isPatchNote ? 'text-red-50' : 'text-white/90'}`}>
+                    <p
+                      className={`mb-3 leading-relaxed ${
+                        isPatchNote ? "text-red-50" : "text-white/90"
+                      }`}
+                    >
                       {children}
                     </p>
                   ),
                   ul: ({ children }) => (
-                    <ul className={`mb-3 ml-4 list-disc ${isPatchNote ? 'text-red-50' : 'text-white/90'}`}>
+                    <ul
+                      className={`mb-3 ml-4 list-disc ${
+                        isPatchNote ? "text-red-50" : "text-white/90"
+                      }`}
+                    >
                       {children}
                     </ul>
                   ),
                   ol: ({ children }) => (
-                    <ol className={`mb-3 ml-4 list-decimal ${isPatchNote ? 'text-red-50' : 'text-white/90'}`}>
+                    <ol
+                      className={`mb-3 ml-4 list-decimal ${
+                        isPatchNote ? "text-red-50" : "text-white/90"
+                      }`}
+                    >
                       {children}
                     </ol>
                   ),
                   li: ({ children }) => <li className="mb-1">{children}</li>,
                   blockquote: ({ children }) => (
-                    <blockquote className={`border-l-4 pl-4 italic mb-3 ${isPatchNote ? 'border-red-500 text-red-300' : 'border-red-500 text-white/40'}`}>
+                    <blockquote
+                      className={`border-l-4 pl-4 italic mb-3 ${
+                        isPatchNote
+                          ? "border-red-500 text-red-300"
+                          : "border-red-500 text-white/40"
+                      }`}
+                    >
                       {children}
                     </blockquote>
                   ),
                   code: ({ children }) => (
-                    <code className={`px-1 py-0.5 rounded text-sm ${isPatchNote ? 'bg-red-950 text-red-100' : 'bg-neutral-950 text-white/90'}`}>
+                    <code
+                      className={`px-1 py-0.5 rounded text-sm ${
+                        isPatchNote
+                          ? "bg-red-950 text-red-100"
+                          : "bg-neutral-950 text-white/90"
+                      }`}
+                    >
                       {children}
                     </code>
                   ),
                   pre: ({ children }) => (
-                    <pre className={`p-4 rounded mb-3 overflow-x-auto ${isPatchNote ? 'bg-red-950' : 'bg-neutral-950'}`}>
+                    <pre
+                      className={`p-4 rounded mb-3 overflow-x-auto ${
+                        isPatchNote ? "bg-red-950" : "bg-neutral-950"
+                      }`}
+                    >
                       {children}
                     </pre>
                   ),
                   a: ({ href, children }) => (
                     <a
                       href={href}
-                      className={`underline transition-colors ${isPatchNote ? 'text-red-400 hover:text-red-300' : 'text-red-500 hover:text-red-400'}`}
+                      className={`underline transition-colors ${
+                        isPatchNote
+                          ? "text-red-400 hover:text-red-300"
+                          : "text-red-500 hover:text-red-400"
+                      }`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -216,10 +332,22 @@ const BlogCard = ({ post, isGitHubPost = false, isPatchNote = false }: BlogCardP
                     </a>
                   ),
                   strong: ({ children }) => (
-                    <strong className={`font-bold ${isPatchNote ? 'text-red-100' : 'text-white'}`}>{children}</strong>
+                    <strong
+                      className={`font-bold ${
+                        isPatchNote ? "text-red-100" : "text-white"
+                      }`}
+                    >
+                      {children}
+                    </strong>
                   ),
                   em: ({ children }) => (
-                    <em className={`italic ${isPatchNote ? 'text-red-100' : 'text-white/90'}`}>{children}</em>
+                    <em
+                      className={`italic ${
+                        isPatchNote ? "text-red-100" : "text-white/90"
+                      }`}
+                    >
+                      {children}
+                    </em>
                   ),
                 }}
               >
@@ -233,7 +361,11 @@ const BlogCard = ({ post, isGitHubPost = false, isPatchNote = false }: BlogCardP
             <div className="flex items-center justify-between mt-4 pt-3">
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className={`font-medium transition-colors flex items-center ${isPatchNote ? 'text-red-400 hover:text-red-300' : 'text-red-500 hover:text-red-400'}`}
+                className={`font-medium transition-colors flex items-center ${
+                  isPatchNote
+                    ? "text-red-400 hover:text-red-300"
+                    : "text-red-500 hover:text-red-400"
+                }`}
               >
                 {isExpanded ? (
                   <>
@@ -264,10 +396,20 @@ const BlogCard = ({ post, isGitHubPost = false, isPatchNote = false }: BlogCardP
         </div>
       ) : (
         <div>
-          <p className={`mb-4 leading-relaxed ${isPatchNote ? 'text-red-50' : 'text-white/90'}`}>{post.excerpt}</p>
+          <p
+            className={`mb-4 leading-relaxed ${
+              isPatchNote ? "text-red-50" : "text-white/90"
+            }`}
+          >
+            {post.excerpt}
+          </p>
 
           {/* Date for non-GitHub posts */}
-          <div className={`flex items-center justify-between text-sm mb-4 ${isPatchNote ? 'text-red-300' : 'text-white/40'}`}>
+          <div
+            className={`flex items-center justify-between text-sm mb-4 ${
+              isPatchNote ? "text-red-300" : "text-white/40"
+            }`}
+          >
             <time dateTime={post.date}>{formatDate(post.date)}</time>
           </div>
 
@@ -275,7 +417,11 @@ const BlogCard = ({ post, isGitHubPost = false, isPatchNote = false }: BlogCardP
           <div className="flex gap-3 mt-4">
             <Link
               href={`/devlog/${post.id}`}
-              className={`inline-block font-medium transition-colors ${isPatchNote ? 'text-red-400 hover:text-red-300' : 'text-red-500 hover:text-red-400'}`}
+              className={`inline-block font-medium transition-colors ${
+                isPatchNote
+                  ? "text-red-400 hover:text-red-300"
+                  : "text-red-500 hover:text-red-400"
+              }`}
             >
               Read more
             </Link>

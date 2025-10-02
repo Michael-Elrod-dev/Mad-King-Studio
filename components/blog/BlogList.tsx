@@ -71,7 +71,7 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
     setIsLoadingMore(true);
     await new Promise((resolve) => setTimeout(resolve, 300));
     setVisiblePosts((prev) =>
-      Math.min(prev + POSTS_PER_PAGE, filteredBlogs.length)
+      Math.min(prev + POSTS_PER_PAGE, filteredBlogs.length),
     );
     setIsLoadingMore(false);
   };
@@ -81,10 +81,10 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
 
   // Count different types for display
   const totalDevLogCount = allBlogs.filter(
-    (blog) => blog.type === "devlog"
+    (blog) => blog.type === "devlog",
   ).length;
   const totalPatchNoteCount = allBlogs.filter(
-    (blog) => blog.type === "patch-note"
+    (blog) => blog.type === "patch-note",
   ).length;
   const filteredCount = filteredBlogs.length;
 
@@ -214,7 +214,7 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
                 getFilterText().slice(1)
               } (${Math.min(
                 POSTS_PER_PAGE,
-                filteredBlogs.length - visiblePosts
+                filteredBlogs.length - visiblePosts,
               )} more)`
             )}
           </button>

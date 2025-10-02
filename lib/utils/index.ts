@@ -1,36 +1,30 @@
 // lib/utils/index.ts
 // Date utilities
-export { formatDate } from './date';
+export { formatDate } from "./date";
 
 // Markdown utilities
-export { 
+export {
   getFirstSection,
   getRemainingContent,
   getCompleteFirstSection,
-} from './markdownParser';
+} from "./markdownParser";
 
 // Validation utilities
-export { 
-  validateEmail,
-  validateContactForm,
-} from './validation';
+export { validateEmail, validateContactForm } from "./validation";
 
 // Patch note utilities
-export { 
-  getChangeTypeColor,
-  getChangeTypeLabel,
-} from './patchNotes';
-export type { ChangeType } from './patchNotes';
+export { getChangeTypeColor, getChangeTypeLabel } from "./patchNotes";
+export type { ChangeType } from "./patchNotes";
 
 // GitHub content processing utilities
-export { 
-  extractDateFromContent, 
-  removeMetadataFromContent, 
+export {
+  extractDateFromContent,
+  removeMetadataFromContent,
   extractDayNumberFromContent,
-  extractAssetsFromContent, 
-  getMediaType, 
+  extractAssetsFromContent,
+  getMediaType,
   extractAndRemoveAssetsSection,
-} from './content';
+} from "./content";
 
 // Dataview utilities
 export {
@@ -43,10 +37,10 @@ export {
   groupTasksByDocument,
   executeTableQuery,
   evaluateTableField,
-} from './dataviewParser';
-export type { 
-  DataviewQuery, 
-  ParsedTask, 
-  DocumentWithTasks, 
-  TableField 
-} from './dataviewParser';
+} from "./dataviewParser";
+export type {
+  DataviewQuery,
+  ParsedTask,
+  DocumentWithTasks,
+  TableField,
+} from "./dataviewParser";

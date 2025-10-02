@@ -8,11 +8,11 @@ const twitchLimiter = rateLimit(10, 60 * 1000);
 
 export async function GET(request: NextRequest) {
   const ip = getClientIP(request);
-  
+
   if (!twitchLimiter(ip)) {
     return NextResponse.json(
       { error: "Too many requests. Please try again later." },
-      { status: 429 }
+      { status: 429 },
     );
   }
 
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
           "Cache-Control": "public, max-age=10",
           "X-Data-Source": "error",
         },
-      }
+      },
     );
   }
 }

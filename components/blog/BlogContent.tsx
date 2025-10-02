@@ -10,10 +10,10 @@ interface BlogContentProps {
   selectedIndex: number;
 }
 
-type FilterType = 'all' | 'devlog' | 'patch-note';
+type FilterType = "all" | "devlog" | "patch-note";
 
 const BlogContent = ({ games, selectedIndex }: BlogContentProps) => {
-  const [filter, setFilter] = useState<FilterType>('all');
+  const [filter, setFilter] = useState<FilterType>("all");
 
   return (
     <div className="relative overflow-hidden">
@@ -29,7 +29,8 @@ const BlogContent = ({ games, selectedIndex }: BlogContentProps) => {
                   {game.title} Development
                 </h1>
                 <p className="text-xl text-white/90 max-w-3xl mx-auto mb-8">
-                  Follow the development journey through detailed logs and patch notes.
+                  Follow the development journey through detailed logs and patch
+                  notes.
                 </p>
 
                 {/* Filter Dropdown */}
@@ -44,7 +45,7 @@ const BlogContent = ({ games, selectedIndex }: BlogContentProps) => {
                       <option value="devlog">Dev Logs</option>
                       <option value="patch-note">Patch Notes</option>
                     </select>
-                    
+
                     {/* Custom dropdown arrow */}
                     <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                       <svg

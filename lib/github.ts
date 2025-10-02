@@ -1,12 +1,12 @@
 // lib/github.ts
-import { DOCS_CONFIG } from './docsData';
-import type { DocFile } from './docsData';
-import { 
+import { DOCS_CONFIG } from "./docsData";
+import type { DocFile } from "./docsData";
+import {
   extractDateFromContent,
   removeMetadataFromContent,
   extractDayNumberFromContent,
-  extractAssetsFromContent
-} from '@/lib/utils';
+  extractAssetsFromContent,
+} from "@/lib/utils";
 
 export interface BlogPost {
   name: string;
@@ -28,7 +28,7 @@ export interface ProcessedBlog {
   assets: string[];
   githubUrl: string;
   downloadUrl: string;
-  type: 'devlog' | 'patch-note';
+  type: "devlog" | "patch-note";
   gameId: string;
 }
 
@@ -50,7 +50,7 @@ export async function fetchBlogs(): Promise<BlogPost[]> {
             Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
           },
           next: { revalidate: 86400 },
-        }
+        },
       ),
       fetch(
         `${GITHUB_API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${PATCH_NOTES_PATH}`,
@@ -60,12 +60,12 @@ export async function fetchBlogs(): Promise<BlogPost[]> {
             Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
           },
           next: { revalidate: 86400 },
-        }
-      )
+        },
+      ),
     ]);
 
     const blogs: BlogPost[] = [];
-    
+
     // Process dev logs
     if (devLogsResponse.ok) {
       const devLogFiles: BlogPost[] = await devLogsResponse.json();
@@ -109,20 +109,20 @@ export async function fetchBlogContent(downloadUrl: string): Promise<string> {
   }
 }
 
-function determineTypeFromPath(path: string): 'devlog' | 'patch-note' {
-  if (path.includes('Patch%20Notes') || path.includes('Patch Notes')) {
-    return 'patch-note';
+function determineTypeFromPath(path: string): "devlog" | "patch-note" {
+  if (path.includes("Patch%20Notes") || path.includes("Patch Notes")) {
+    return "patch-note";
   }
-  return 'devlog';
+  return "devlog";
 }
 
 function determineGameId(path: string, content: string): string {
   // For now, we'll default to 'path-to-valhalla' since that's the only game
-  return 'path-to-valhalla';
+  return "path-to-valhalla";
 }
 
 export async function processBlogs(
-  blogs: BlogPost[]
+  blogs: BlogPost[],
 ): Promise<ProcessedBlog[]> {
   const processed: ProcessedBlog[] = [];
 
@@ -137,9 +137,10 @@ export async function processBlogs(
       const gameId = determineGameId(blog.path, fullContent);
 
       const title = blog.name.replace(/\.md$/, "");
-      const excerpt = type === 'patch-note' 
-        ? 'Game update with bug fixes and new features'
-        : 'Development progress and updates';
+      const excerpt =
+        type === "patch-note"
+          ? "Game update with bug fixes and new features"
+          : "Development progress and updates";
 
       processed.push({
         id: blog.sha,
@@ -160,7 +161,8 @@ export async function processBlogs(
   }
 
   return processed.sort((a, b) => {
-    const dateComparison = new Date(b.date).getTime() - new Date(a.date).getTime();
+    const dateComparison =
+      new Date(b.date).getTime() - new Date(a.date).getTime();
     if (dateComparison !== 0) {
       return dateComparison;
     }
@@ -171,7 +173,9 @@ export async function processBlogs(
 /**
  * Recursively fetch directory tree structure from GitHub
  */
-export async function fetchDocsTree(path: string = DOCS_CONFIG.DOCS_PATH): Promise<DocFile[]> {
+export async function fetchDocsTree(
+  path: string = DOCS_CONFIG.DOCS_PATH,
+): Promise<DocFile[]> {
   try {
     const response = await fetch(
       `${GITHUB_API_BASE}/repos/${DOCS_CONFIG.REPO_OWNER}/${DOCS_CONFIG.REPO_NAME}/contents/${path}`,
@@ -181,7 +185,7 @@ export async function fetchDocsTree(path: string = DOCS_CONFIG.DOCS_PATH): Promi
           Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
         },
         next: { revalidate: 3600 }, // Cache for 1 hour
-      }
+      },
     );
 
     if (!response.ok) {
@@ -189,11 +193,11 @@ export async function fetchDocsTree(path: string = DOCS_CONFIG.DOCS_PATH): Promi
     }
 
     const items: DocFile[] = await response.json();
-    
+
     // Filter out excluded folders at root level
     const excludedFolders: string[] = [...DOCS_CONFIG.EXCLUDED_FOLDERS]; // Convert to string array
-    const filteredItems = items.filter(item => {
-      if (path === DOCS_CONFIG.DOCS_PATH && item.type === 'dir') {
+    const filteredItems = items.filter((item) => {
+      if (path === DOCS_CONFIG.DOCS_PATH && item.type === "dir") {
         return !excludedFolders.includes(item.name);
       }
       return true;
@@ -202,12 +206,12 @@ export async function fetchDocsTree(path: string = DOCS_CONFIG.DOCS_PATH): Promi
     // Recursively fetch children for directories
     const itemsWithChildren = await Promise.all(
       filteredItems.map(async (item) => {
-        if (item.type === 'dir') {
+        if (item.type === "dir") {
           const children = await fetchDocsTree(item.path);
           return { ...item, children };
         }
         return item;
-      })
+      }),
     );
 
     return itemsWithChildren;
@@ -233,7 +237,7 @@ export async function fetchDocByPath(path: string): Promise<{
           Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
         },
         next: { revalidate: 3600 },
-      }
+      },
     );
 
     if (!response.ok) {
@@ -241,10 +245,10 @@ export async function fetchDocByPath(path: string): Promise<{
     }
 
     const data = await response.json();
-    
+
     // GitHub returns base64 encoded content
     if (data.content) {
-      const content = Buffer.from(data.content, 'base64').toString('utf-8');
+      const content = Buffer.from(data.content, "base64").toString("utf-8");
       return {
         content,
         sha: data.sha,
@@ -259,7 +263,7 @@ export async function fetchDocByPath(path: string): Promise<{
         },
         next: { revalidate: 3600 },
       });
-      
+
       if (!contentResponse.ok) {
         return null;
       }
@@ -287,9 +291,9 @@ export function buildDocsNavigation(tree: DocFile[]): DocFile[] {
       if (a.type === b.type) {
         return a.name.localeCompare(b.name);
       }
-      return a.type === 'dir' ? -1 : 1;
+      return a.type === "dir" ? -1 : 1;
     })
-    .map(item => {
+    .map((item) => {
       if (item.children) {
         return {
           ...item,

@@ -16,21 +16,24 @@ const contactLimiter = rateLimit(3, 15 * 60 * 1000);
 export async function POST(request: NextRequest) {
   try {
     const ip = getClientIP(request);
-    
+
     if (!contactLimiter(ip)) {
       return NextResponse.json(
-        { error: "Too many contact form submissions. Please try again in 15 minutes." },
-        { status: 429 }
+        {
+          error:
+            "Too many contact form submissions. Please try again in 15 minutes.",
+        },
+        { status: 429 },
       );
     }
 
     const body: ContactFormData = await request.json();
     const validation = validateContactForm(body);
-    
+
     if (!validation.isValid) {
       return NextResponse.json(
         { error: validation.errors.join(", ") },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -44,13 +47,10 @@ export async function POST(request: NextRequest) {
           timestamp: new Date().toISOString(),
         },
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Contact form validation error:", error);
-    return NextResponse.json(
-      { error: "Invalid form data" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Invalid form data" }, { status: 400 });
   }
 }

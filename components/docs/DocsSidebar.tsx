@@ -19,12 +19,12 @@ interface SidebarItemProps {
   onToggleFolder: (path: string) => void;
 }
 
-const SidebarItem = ({ 
-  item, 
-  level, 
-  currentPath, 
+const SidebarItem = ({
+  item,
+  level,
+  currentPath,
   expandedFolders,
-  onToggleFolder 
+  onToggleFolder,
 }: SidebarItemProps) => {
   const isFolder = item.type === "dir";
   const hasChildren = isFolder && item.children && item.children.length > 0;
@@ -93,8 +93,8 @@ const SidebarItem = ({
 
         {/* Link text */}
         {isFolder ? (
-          <span 
-            className="text-sm flex-1 cursor-pointer" 
+          <span
+            className="text-sm flex-1 cursor-pointer"
             onClick={handleFolderClick}
           >
             {displayName}
@@ -128,40 +128,50 @@ const SidebarItem = ({
 const DocsSidebar = ({ tree }: DocsSidebarProps) => {
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(
+    new Set(),
+  );
 
   // Initialize expanded folders based on current path
   useEffect(() => {
-    const pathParts = pathname.split('/').filter(Boolean);
+    const pathParts = pathname.split("/").filter(Boolean);
     const foldersToExpand = new Set<string>();
 
     // Find all folders in the path and expand them
-    const findAndExpandPath = (items: DocFile[], currentPath: string[] = []) => {
+    const findAndExpandPath = (
+      items: DocFile[],
+      currentPath: string[] = [],
+    ) => {
       for (const item of items) {
-        const itemPathParts = item.path.split('/').filter(Boolean);
-        
+        const itemPathParts = item.path.split("/").filter(Boolean);
+
         // Check if this item is in the current URL path
         const isInPath = pathParts.some((part, index) => {
-          const normalizedPart = part.toLowerCase().replace(/-/g, ' ');
-          const normalizedItemPart = itemPathParts[itemPathParts.length - 1]?.toLowerCase().replace(/-/g, ' ').replace(/\.md$/i, '');
+          const normalizedPart = part.toLowerCase().replace(/-/g, " ");
+          const normalizedItemPart = itemPathParts[itemPathParts.length - 1]
+            ?.toLowerCase()
+            .replace(/-/g, " ")
+            .replace(/\.md$/i, "");
           return normalizedPart === normalizedItemPart;
         });
 
-        if (item.type === 'dir' && isInPath) {
+        if (item.type === "dir" && isInPath) {
           foldersToExpand.add(item.path);
           if (item.children) {
             findAndExpandPath(item.children, [...currentPath, item.path]);
           }
-        } else if (item.type === 'dir' && item.children) {
+        } else if (item.type === "dir" && item.children) {
           findAndExpandPath(item.children, [...currentPath, item.path]);
         }
-        
+
         // If this is a file and matches current path, expand all parent folders
-        if (item.type === 'file') {
+        if (item.type === "file") {
           const itemSlug = pathToSlug(item.path);
           if (pathname === `/docs/${itemSlug}`) {
             // Add all folders in the current path
-            currentPath.forEach(folderPath => foldersToExpand.add(folderPath));
+            currentPath.forEach((folderPath) =>
+              foldersToExpand.add(folderPath),
+            );
           }
         }
       }
@@ -172,7 +182,7 @@ const DocsSidebar = ({ tree }: DocsSidebarProps) => {
   }, [pathname, tree]);
 
   const handleToggleFolder = (path: string) => {
-    setExpandedFolders(prev => {
+    setExpandedFolders((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(path)) {
         newSet.delete(path);
@@ -210,7 +220,11 @@ const DocsSidebar = ({ tree }: DocsSidebarProps) => {
           fixed lg:fixed top-16 left-0 h-[calc(100vh-4rem)]
           w-80 bg-[#0a0a0a] border-r border-white/10
           overflow-y-auto z-30 transition-transform duration-300
-          ${isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+          ${
+            isMobileOpen
+              ? "translate-x-0"
+              : "-translate-x-full lg:translate-x-0"
+          }
         `}
       >
         <div className="p-6">

@@ -32,18 +32,18 @@ export function TasksProvider({ children }: TasksProviderProps) {
     try {
       setIsLoading(true);
       setError(null);
-      
-      const response = await fetch('/api/docs/tasks');
-      
+
+      const response = await fetch("/api/docs/tasks");
+
       if (!response.ok) {
         throw new Error(`Failed to fetch tasks: ${response.status}`);
       }
-      
+
       const data = await response.json();
       setTasks(data.tasks);
     } catch (err) {
-      console.error('Error fetching tasks:', err);
-      setError(err instanceof Error ? err.message : 'Failed to load tasks');
+      console.error("Error fetching tasks:", err);
+      setError(err instanceof Error ? err.message : "Failed to load tasks");
     } finally {
       setIsLoading(false);
     }
@@ -61,9 +61,7 @@ export function TasksProvider({ children }: TasksProviderProps) {
   };
 
   return (
-    <TasksContext.Provider value={value}>
-      {children}
-    </TasksContext.Provider>
+    <TasksContext.Provider value={value}>{children}</TasksContext.Provider>
   );
 }
 
