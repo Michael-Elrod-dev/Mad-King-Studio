@@ -1,8 +1,7 @@
 // app/api/docs/[...path]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchDocByPath, fetchDocsTree } from '@/lib/github';
 import { rateLimit, getClientIP } from '@/lib/rateLimit';
-import { findFilePathInTree } from '@/lib/utils/docsParser';
+import { API_LINKS } from '@/lib/constants';
 
 // 20 requests per minute
 const docContentLimiter = rateLimit(20, 60 * 1000);
@@ -32,31 +31,25 @@ export async function GET(
 
     const slugStr = path.join('/');
     
-    // Fetch the tree to find the exact file path
-    const tree = await fetchDocsTree();
-    const actualFilePath = findFilePathInTree(tree, slugStr);
+    // Fetch from S3 cache instead of GitHub
+    const response = await fetch(
+      `${API_LINKS.S3_CACHE_URL}/docs/${slugStr}.json`,
+      { next: { revalidate: 1800 } } // 30 minute cache
+    );
     
-    if (!actualFilePath) {
-      console.error('Document not found in tree. Slug:', slugStr);
+    if (!response.ok) {
+      console.error('Document not found in S3 cache. Slug:', slugStr);
       return NextResponse.json(
         { error: 'Document not found', slug: slugStr },
         { status: 404 }
       );
     }
     
-    const docData = await fetchDocByPath(actualFilePath);
-    
-    if (!docData) {
-      console.error('Document not found on GitHub. Path:', actualFilePath);
-      return NextResponse.json(
-        { error: 'Document not found', path: actualFilePath },
-        { status: 404 }
-      );
-    }
+    const docData = await response.json();
 
     return NextResponse.json({
       content: docData.content,
-      path: actualFilePath,
+      path: docData.path,
       sha: docData.sha,
     });
   } catch (error) {

@@ -53,8 +53,8 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
           throw new Error("Failed to fetch blog posts");
         }
 
-        const processedBlogs = await response.json();
-        setAllBlogs(processedBlogs);
+        const data = await response.json();
+        setAllBlogs(data.blogs);
         setError(null);
       } catch (err) {
         console.error("Error loading blog posts:", err);

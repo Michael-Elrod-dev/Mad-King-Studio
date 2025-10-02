@@ -1,7 +1,7 @@
 // app/api/blog/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchBlogs, processBlogs } from '@/lib/github';
 import { rateLimit, getClientIP } from '@/lib/rateLimit';
+import { API_LINKS } from '@/lib/constants';
 
 // 10 requests per minute
 const blogsLimiter = rateLimit(10, 60 * 1000);
@@ -20,19 +20,34 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const gameId = searchParams.get('gameId');
 
-    const rawBlogs = await fetchBlogs();
-    const processedBlogs = await processBlogs(rawBlogs);
+    // Fetch from S3 cache instead of GitHub
+    const response = await fetch(
+      `${API_LINKS.S3_CACHE_URL}/blogs.json`,
+      { next: { revalidate: 1800 } } // 30 minute cache
+    );
+    
+    if (!response.ok) {
+      throw new Error(`S3 fetch failed: ${response.status}`);
+    }
+    
+    const processedBlogs = await response.json();
     
     // Filter by gameId if provided
     const filteredBlogs = gameId 
-      ? processedBlogs.filter(blog => blog.gameId === gameId)
+      ? processedBlogs.filter((blog: any) => blog.gameId === gameId)
       : processedBlogs;
     
-    return NextResponse.json(filteredBlogs);
+    return NextResponse.json({
+      blogs: filteredBlogs,
+      count: filteredBlogs.length,
+      cached: true,
+      source: 's3',
+      timestamp: new Date().toISOString(),
+    });
   } catch (error) {
-    console.error('API Error:', error);
+    console.error('Blog API Error:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch blog posts' },
+      { error: 'Failed to fetch blog posts from cache' },
       { status: 500 }
     );
   }
