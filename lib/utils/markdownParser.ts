@@ -1,7 +1,6 @@
 // lib/utils/markdownParser.ts
-/**
- * Extract the first section from markdown content with limited text after headers
- */
+import { MARKDOWN_CONFIG } from "../constants";
+
 export function getFirstSection(content: string): string {
   if (!content) return "";
 
@@ -25,7 +24,10 @@ export function getFirstSection(content: string): string {
         lineCount++;
         charCount += line.length;
 
-        if (lineCount >= 3 || charCount >= 250) {
+        if (
+          lineCount >= MARKDOWN_CONFIG.MAX_FIRST_SECTION_LINES ||
+          charCount >= MARKDOWN_CONFIG.MAX_FIRST_SECTION_CHARS
+        ) {
           break;
         }
       }
@@ -34,12 +36,11 @@ export function getFirstSection(content: string): string {
     return result.trim();
   }
 
-  return content.length > 250 ? content.substring(0, 250) + "..." : content;
+  return content.length > MARKDOWN_CONFIG.MAX_FIRST_SECTION_CHARS
+    ? content.substring(0, MARKDOWN_CONFIG.MAX_FIRST_SECTION_CHARS) + "..."
+    : content;
 }
 
-/**
- * Get the complete first section without truncation
- */
 export function getCompleteFirstSection(content: string): string {
   if (!content) return "";
 
@@ -55,9 +56,6 @@ export function getCompleteFirstSection(content: string): string {
   return content;
 }
 
-/**
- * Get remaining content after the first section, excluding internal sections
- */
 export function getRemainingContent(content: string): string {
   if (!content) return "";
 

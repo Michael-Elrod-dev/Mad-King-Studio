@@ -4,16 +4,17 @@
 import { useState } from "react";
 import { GameData } from "@/lib/gameData";
 import BlogList from "./BlogList";
+import { BLOG_FILTERS } from "@/lib/constants";
 
 interface BlogContentProps {
   games: GameData[];
   selectedIndex: number;
 }
 
-type FilterType = "all" | "devlog" | "patch-note";
+type FilterType = (typeof BLOG_FILTERS)[keyof typeof BLOG_FILTERS];
 
 const BlogContent = ({ games, selectedIndex }: BlogContentProps) => {
-  const [filter, setFilter] = useState<FilterType>("all");
+  const [filter, setFilter] = useState<FilterType>(BLOG_FILTERS.ALL);
 
   return (
     <div className="relative overflow-hidden">
@@ -41,9 +42,11 @@ const BlogContent = ({ games, selectedIndex }: BlogContentProps) => {
                       onChange={(e) => setFilter(e.target.value as FilterType)}
                       className="appearance-none bg-neutral-800 border border-neutral-600 text-white px-6 py-3 pr-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent cursor-pointer hover:bg-neutral-700 transition-colors"
                     >
-                      <option value="all">All Posts</option>
-                      <option value="devlog">Dev Logs</option>
-                      <option value="patch-note">Patch Notes</option>
+                      <option value={BLOG_FILTERS.ALL}>All Posts</option>
+                      <option value={BLOG_FILTERS.DEVLOG}>Dev Logs</option>
+                      <option value={BLOG_FILTERS.PATCH_NOTE}>
+                        Patch Notes
+                      </option>
                     </select>
 
                     {/* Custom dropdown arrow */}

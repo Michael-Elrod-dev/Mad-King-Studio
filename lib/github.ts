@@ -1,5 +1,11 @@
 // lib/github.ts
-import { DOCS_CONFIG } from "./docsData";
+import {
+  DOCS_CONFIG,
+  GITHUB_CONFIG,
+  POLLING_INTERVALS,
+  GAME_IDS,
+  BLOG_TYPES,
+} from "./constants";
 import type { DocFile } from "./docsData";
 import {
   extractDateFromContent,
@@ -32,41 +38,33 @@ export interface ProcessedBlog {
   gameId: string;
 }
 
-const GITHUB_API_BASE = "https://api.github.com";
-const REPO_OWNER = "Michael-Elrod-dev";
-const REPO_NAME = "Path-to-Valhalla";
-const DEV_LOGS_PATH = "docs/00-Development%20Logs/Logs";
-const PATCH_NOTES_PATH = "docs/00-Development%20Logs/Patch%20Notes";
-
 export async function fetchBlogs(): Promise<BlogPost[]> {
   try {
-    // Fetch from both directories
     const [devLogsResponse, patchNotesResponse] = await Promise.all([
       fetch(
-        `${GITHUB_API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${DEV_LOGS_PATH}`,
+        `${GITHUB_CONFIG.API_BASE}/repos/${GITHUB_CONFIG.REPO_OWNER}/${GITHUB_CONFIG.REPO_NAME}/contents/${GITHUB_CONFIG.DEV_LOGS_PATH}`,
         {
           headers: {
             Accept: "application/vnd.github.v3+json",
             Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
           },
-          next: { revalidate: 86400 },
+          next: { revalidate: POLLING_INTERVALS.BLOG_POSTS },
         },
       ),
       fetch(
-        `${GITHUB_API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${PATCH_NOTES_PATH}`,
+        `${GITHUB_CONFIG.API_BASE}/repos/${GITHUB_CONFIG.REPO_OWNER}/${GITHUB_CONFIG.REPO_NAME}/contents/${GITHUB_CONFIG.PATCH_NOTES_PATH}`,
         {
           headers: {
             Accept: "application/vnd.github.v3+json",
             Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
           },
-          next: { revalidate: 86400 },
+          next: { revalidate: POLLING_INTERVALS.BLOG_POSTS },
         },
       ),
     ]);
 
     const blogs: BlogPost[] = [];
 
-    // Process dev logs
     if (devLogsResponse.ok) {
       const devLogFiles: BlogPost[] = await devLogsResponse.json();
       blogs.push(...devLogFiles.filter((file) => file.name.endsWith(".md")));
@@ -74,7 +72,6 @@ export async function fetchBlogs(): Promise<BlogPost[]> {
       console.warn(`Dev logs API error: ${devLogsResponse.status}`);
     }
 
-    // Process patch notes
     if (patchNotesResponse.ok) {
       const patchNoteFiles: BlogPost[] = await patchNotesResponse.json();
       blogs.push(...patchNoteFiles.filter((file) => file.name.endsWith(".md")));
@@ -95,7 +92,7 @@ export async function fetchBlogContent(downloadUrl: string): Promise<string> {
       headers: {
         Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
       },
-      next: { revalidate: 86400 },
+      next: { revalidate: POLLING_INTERVALS.BLOG_POSTS },
     });
 
     if (!response.ok) {
@@ -111,14 +108,13 @@ export async function fetchBlogContent(downloadUrl: string): Promise<string> {
 
 function determineTypeFromPath(path: string): "devlog" | "patch-note" {
   if (path.includes("Patch%20Notes") || path.includes("Patch Notes")) {
-    return "patch-note";
+    return BLOG_TYPES.PATCH_NOTE;
   }
-  return "devlog";
+  return BLOG_TYPES.DEVLOG;
 }
 
 function determineGameId(path: string, content: string): string {
-  // For now, we'll default to 'path-to-valhalla' since that's the only game
-  return "path-to-valhalla";
+  return GAME_IDS.PATH_TO_VALHALLA;
 }
 
 export async function processBlogs(
@@ -138,7 +134,7 @@ export async function processBlogs(
 
       const title = blog.name.replace(/\.md$/, "");
       const excerpt =
-        type === "patch-note"
+        type === BLOG_TYPES.PATCH_NOTE
           ? "Game update with bug fixes and new features"
           : "Development progress and updates";
 
@@ -170,21 +166,18 @@ export async function processBlogs(
   });
 }
 
-/**
- * Recursively fetch directory tree structure from GitHub
- */
 export async function fetchDocsTree(
   path: string = DOCS_CONFIG.DOCS_PATH,
 ): Promise<DocFile[]> {
   try {
     const response = await fetch(
-      `${GITHUB_API_BASE}/repos/${DOCS_CONFIG.REPO_OWNER}/${DOCS_CONFIG.REPO_NAME}/contents/${path}`,
+      `${GITHUB_CONFIG.API_BASE}/repos/${DOCS_CONFIG.REPO_OWNER}/${DOCS_CONFIG.REPO_NAME}/contents/${path}`,
       {
         headers: {
           Accept: "application/vnd.github.v3+json",
           Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
         },
-        next: { revalidate: 3600 }, // Cache for 1 hour
+        next: { revalidate: POLLING_INTERVALS.DOCS_TREE },
       },
     );
 
@@ -194,8 +187,7 @@ export async function fetchDocsTree(
 
     const items: DocFile[] = await response.json();
 
-    // Filter out excluded folders at root level
-    const excludedFolders: string[] = [...DOCS_CONFIG.EXCLUDED_FOLDERS]; // Convert to string array
+    const excludedFolders: string[] = [...DOCS_CONFIG.EXCLUDED_FOLDERS];
     const filteredItems = items.filter((item) => {
       if (path === DOCS_CONFIG.DOCS_PATH && item.type === "dir") {
         return !excludedFolders.includes(item.name);
@@ -203,7 +195,6 @@ export async function fetchDocsTree(
       return true;
     });
 
-    // Recursively fetch children for directories
     const itemsWithChildren = await Promise.all(
       filteredItems.map(async (item) => {
         if (item.type === "dir") {
@@ -221,22 +212,19 @@ export async function fetchDocsTree(
   }
 }
 
-/**
- * Fetch a specific doc file by path
- */
 export async function fetchDocByPath(path: string): Promise<{
   content: string;
   sha: string;
 } | null> {
   try {
     const response = await fetch(
-      `${GITHUB_API_BASE}/repos/${DOCS_CONFIG.REPO_OWNER}/${DOCS_CONFIG.REPO_NAME}/contents/${path}`,
+      `${GITHUB_CONFIG.API_BASE}/repos/${DOCS_CONFIG.REPO_OWNER}/${DOCS_CONFIG.REPO_NAME}/contents/${path}`,
       {
         headers: {
           Accept: "application/vnd.github.v3+json",
           Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
         },
-        next: { revalidate: 3600 },
+        next: { revalidate: POLLING_INTERVALS.DOC_CONTENT },
       },
     );
 
@@ -246,7 +234,6 @@ export async function fetchDocByPath(path: string): Promise<{
 
     const data = await response.json();
 
-    // GitHub returns base64 encoded content
     if (data.content) {
       const content = Buffer.from(data.content, "base64").toString("utf-8");
       return {
@@ -255,13 +242,12 @@ export async function fetchDocByPath(path: string): Promise<{
       };
     }
 
-    // If it's a file object with download_url
     if (data.download_url) {
       const contentResponse = await fetch(data.download_url, {
         headers: {
           Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
         },
-        next: { revalidate: 3600 },
+        next: { revalidate: POLLING_INTERVALS.DOC_CONTENT },
       });
 
       if (!contentResponse.ok) {
@@ -281,11 +267,7 @@ export async function fetchDocByPath(path: string): Promise<{
   }
 }
 
-/**
- * Build navigation structure from doc tree
- */
 export function buildDocsNavigation(tree: DocFile[]): DocFile[] {
-  // Sort: directories first, then files. Within each group, sort alphabetically
   return tree
     .sort((a, b) => {
       if (a.type === b.type) {

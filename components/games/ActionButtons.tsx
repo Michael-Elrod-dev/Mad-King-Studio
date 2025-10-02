@@ -3,7 +3,7 @@
 
 import { GameData } from "@/lib/gameData";
 import { useLiveStatus } from "@/contexts/LiveStatusContext";
-import { SOCIAL_LINKS } from "@/lib/constants";
+import { SOCIAL_LINKS, STEAM_BUTTON_TEXT } from "@/lib/constants";
 
 interface ActionButtonsProps {
   game: GameData;
@@ -14,16 +14,10 @@ const ActionButtons = ({ game }: ActionButtonsProps) => {
   const { isLive, isLoading } = liveStatus;
 
   const getSteamButtonText = (status: string) => {
-    switch (status) {
-      case "In Development":
-        return "Wishlist on Steam";
-      case "Early Access":
-        return "Get Early Access";
-      case "Released":
-        return "Buy on Steam";
-      default:
-        return "View on Steam";
-    }
+    return (
+      STEAM_BUTTON_TEXT[status as keyof typeof STEAM_BUTTON_TEXT] ||
+      "View on Steam"
+    );
   };
 
   return (
@@ -39,7 +33,6 @@ const ActionButtons = ({ game }: ActionButtonsProps) => {
         </a>
       )}
 
-      {/* Twitch button with hardcoded URL */}
       {isLive && !isLoading ? (
         <a
           href={SOCIAL_LINKS.TWITCH}

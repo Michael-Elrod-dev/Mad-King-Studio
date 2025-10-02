@@ -1,10 +1,7 @@
 // app/api/docs/[...path]/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { rateLimit, getClientIP } from "@/lib/rateLimit";
-import { API_LINKS } from "@/lib/constants";
-
-// 20 requests per minute
-const docContentLimiter = rateLimit(20, 60 * 1000);
+import { docContentLimiter, getClientIP } from "@/lib/rateLimit";
+import { API_LINKS, POLLING_INTERVALS, HTTP_STATUS } from "@/lib/constants";
 
 export async function GET(
   request: NextRequest,
@@ -15,7 +12,7 @@ export async function GET(
   if (!docContentLimiter(ip)) {
     return NextResponse.json(
       { error: "Too many requests. Please try again later." },
-      { status: 429 },
+      { status: HTTP_STATUS.TOO_MANY_REQUESTS },
     );
   }
 
@@ -25,23 +22,22 @@ export async function GET(
     if (!path || path.length === 0) {
       return NextResponse.json(
         { error: "Invalid document path" },
-        { status: 400 },
+        { status: HTTP_STATUS.BAD_REQUEST },
       );
     }
 
     const slugStr = path.join("/");
 
-    // Fetch from S3 cache instead of GitHub
     const response = await fetch(
       `${API_LINKS.S3_CACHE_URL}/docs/${slugStr}.json`,
-      { next: { revalidate: 1800 } }, // 30 minute cache
+      { next: { revalidate: POLLING_INTERVALS.DOC_CONTENT } },
     );
 
     if (!response.ok) {
       console.error("Document not found in S3 cache. Slug:", slugStr);
       return NextResponse.json(
         { error: "Document not found", slug: slugStr },
-        { status: 404 },
+        { status: HTTP_STATUS.NOT_FOUND },
       );
     }
 
@@ -56,7 +52,7 @@ export async function GET(
     console.error("Doc content API error:", error);
     return NextResponse.json(
       { error: "Failed to fetch document content" },
-      { status: 500 },
+      { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
     );
   }
 }

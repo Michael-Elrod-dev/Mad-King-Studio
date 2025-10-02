@@ -10,6 +10,7 @@ import React, {
   useRef,
   ReactNode,
 } from "react";
+import { POLLING_INTERVALS } from "@/lib/constants";
 
 interface LiveStatus {
   isLive: boolean;
@@ -50,7 +51,6 @@ export function LiveStatusProvider({ children }: LiveStatusProviderProps) {
 
   const fetchStreamStatus = useCallback(async (): Promise<void> => {
     try {
-      // Only show loading on initial load
       if (isInitialLoad.current) {
         setLiveStatus((prev) => ({ ...prev, isLoading: true, error: null }));
       }
@@ -66,7 +66,6 @@ export function LiveStatusProvider({ children }: LiveStatusProviderProps) {
         const streamInfo = await response.json();
 
         setLiveStatus((prev) => {
-          // Check if anything actually changed
           const hasChanged =
             prev.isLive !== streamInfo.isLive ||
             prev.streamTitle !== streamInfo.streamTitle ||
@@ -85,7 +84,6 @@ export function LiveStatusProvider({ children }: LiveStatusProviderProps) {
             };
           }
 
-          // No changes, just update timestamps
           return {
             ...prev,
             isLoading: false,
@@ -118,12 +116,10 @@ export function LiveStatusProvider({ children }: LiveStatusProviderProps) {
   useEffect(() => {
     fetchStreamStatus();
 
-    // Set up interval to fetch every 1 minute (60,000ms)
     intervalRef.current = setInterval(() => {
       fetchStreamStatus();
-    }, 60000);
+    }, POLLING_INTERVALS.TWITCH_STATUS);
 
-    // Cleanup
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);

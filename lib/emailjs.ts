@@ -1,6 +1,6 @@
 // lib/emailjs.ts
 import emailjs from "@emailjs/browser";
-import { SOCIAL_LINKS } from "@/lib/constants";
+import { SOCIAL_LINKS, MESSAGES } from "@/lib/constants";
 
 const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "";
 const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "";
@@ -24,7 +24,7 @@ export const sendContactEmail = async (
 ): Promise<{ success: boolean; message: string }> => {
   try {
     if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
-      throw new Error("EmailJS configuration is missing");
+      throw new Error(MESSAGES.ERROR.EMAIL_SERVICE_DOWN);
     }
 
     initEmailJS();
@@ -46,7 +46,7 @@ export const sendContactEmail = async (
 
     return {
       success: true,
-      message: "Email sent successfully",
+      message: MESSAGES.SUCCESS.EMAIL_SENT,
     };
   } catch (error) {
     console.error("EmailJS error:", error);

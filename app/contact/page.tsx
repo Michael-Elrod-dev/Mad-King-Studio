@@ -6,7 +6,7 @@ import FloatingNav from "@/components/layout/FloatingNav";
 import { useLiveStatus } from "@/contexts/LiveStatusContext";
 import { sendContactEmail, isEmailJSConfigured } from "@/lib/emailjs";
 import { validateContactForm } from "@/lib/utils";
-import { SOCIAL_LINKS } from "@/lib/constants";
+import { SOCIAL_LINKS, CONTACT_SUBJECTS } from "@/lib/constants";
 
 interface FormData {
   name: string;
@@ -387,13 +387,11 @@ export default function ContactPage() {
                     className="w-full px-4 py-3 bg-neutral-700 text-white rounded-lg focus:ring-2 focus:ring-red-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <option value="">Select a subject</option>
-                    <option value="collaboration">
-                      Collaboration Opportunity
-                    </option>
-                    <option value="feedback">Game Feedback</option>
-                    <option value="technical">Technical Question</option>
-                    <option value="general">General Question</option>
-                    <option value="other">Other</option>
+                    {CONTACT_SUBJECTS.map((subject) => (
+                      <option key={subject.value} value={subject.value}>
+                        {subject.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
 

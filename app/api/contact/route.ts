@@ -1,7 +1,8 @@
 // app/api/contact/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { validateContactForm } from "@/lib/utils";
-import { rateLimit, getClientIP } from "@/lib/rateLimit";
+import { contactLimiter, getClientIP } from "@/lib/rateLimit";
+import { HTTP_STATUS, MESSAGES } from "@/lib/constants";
 
 interface ContactFormData {
   name: string;
@@ -10,20 +11,14 @@ interface ContactFormData {
   message: string;
 }
 
-// 3 submissions per 15 minutes
-const contactLimiter = rateLimit(3, 15 * 60 * 1000);
-
 export async function POST(request: NextRequest) {
   try {
     const ip = getClientIP(request);
 
     if (!contactLimiter(ip)) {
       return NextResponse.json(
-        {
-          error:
-            "Too many contact form submissions. Please try again in 15 minutes.",
-        },
-        { status: 429 },
+        { error: MESSAGES.ERROR.RATE_LIMIT },
+        { status: HTTP_STATUS.TOO_MANY_REQUESTS },
       );
     }
 
@@ -33,13 +28,13 @@ export async function POST(request: NextRequest) {
     if (!validation.isValid) {
       return NextResponse.json(
         { error: validation.errors.join(", ") },
-        { status: 400 },
+        { status: HTTP_STATUS.BAD_REQUEST },
       );
     }
 
     return NextResponse.json(
       {
-        message: "Form validated successfully",
+        message: MESSAGES.SUCCESS.FORM_SUBMITTED,
         data: {
           name: body.name,
           email: body.email,
@@ -47,10 +42,13 @@ export async function POST(request: NextRequest) {
           timestamp: new Date().toISOString(),
         },
       },
-      { status: 200 },
+      { status: HTTP_STATUS.OK },
     );
   } catch (error) {
     console.error("Contact form validation error:", error);
-    return NextResponse.json({ error: "Invalid form data" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Invalid form data" },
+      { status: HTTP_STATUS.BAD_REQUEST },
+    );
   }
 }

@@ -12,6 +12,7 @@ import {
   getCompleteFirstSection,
 } from "@/lib/utils";
 import MediaCarousel from "@/components/shared/MediaCarousel";
+import { BLOG_TYPES } from "@/lib/constants";
 
 interface BlogPost {
   id: string;

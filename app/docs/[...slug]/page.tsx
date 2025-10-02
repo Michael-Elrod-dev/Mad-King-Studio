@@ -7,6 +7,7 @@ import DocsContent from "@/components/docs/DocsContent";
 import DocsBreadcrumbs from "@/components/docs/DocsBreadcrumbs";
 import { buildBreadcrumbs, extractTitle } from "@/lib/utils/docsParser";
 import { useDocs } from "@/contexts/DocsContext";
+import { HTTP_STATUS, MESSAGES } from "@/lib/constants";
 
 export default function DocPage() {
   const params = useParams();
@@ -31,10 +32,10 @@ export default function DocPage() {
         const response = await fetch(`/api/docs/${pathStr}`);
 
         if (!response.ok) {
-          if (response.status === 404) {
+          if (response.status === HTTP_STATUS.NOT_FOUND) {
             throw new Error("Document not found");
           }
-          throw new Error("Failed to fetch document");
+          throw new Error(MESSAGES.ERROR.DOCS_LOAD_ERROR);
         }
 
         const data = await response.json();
@@ -48,7 +49,7 @@ export default function DocPage() {
       } catch (err) {
         console.error("Error loading doc content:", err);
         setError(
-          err instanceof Error ? err.message : "Failed to load document",
+          err instanceof Error ? err.message : MESSAGES.ERROR.DOCS_LOAD_ERROR,
         );
       } finally {
         setIsLoadingContent(false);

@@ -1,4 +1,6 @@
 // lib/twitch.ts
+import { POLLING_INTERVALS } from "./constants";
+
 export interface TwitchStream {
   id: string;
   user_id: string;
@@ -59,7 +61,7 @@ export async function getTwitchStreamInfo(): Promise<{
 } | null> {
   try {
     const response = await fetch("/api/twitch/stream", {
-      next: { revalidate: 60 }, // Cache for 1 minute
+      next: { revalidate: POLLING_INTERVALS.TWITCH_STATUS / 1000 }, // Convert ms to seconds
     });
 
     if (!response.ok) {

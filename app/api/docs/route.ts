@@ -1,9 +1,7 @@
 // app/api/docs/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { rateLimit, getClientIP } from "@/lib/rateLimit";
-import { API_LINKS } from "@/lib/constants";
-
-const docsLimiter = rateLimit(20, 60 * 1000);
+import { docsLimiter, getClientIP } from "@/lib/rateLimit";
+import { API_LINKS, POLLING_INTERVALS, HTTP_STATUS } from "@/lib/constants";
 
 export async function GET(request: NextRequest) {
   const ip = getClientIP(request);
@@ -11,13 +9,13 @@ export async function GET(request: NextRequest) {
   if (!docsLimiter(ip)) {
     return NextResponse.json(
       { error: "Too many requests. Please try again later." },
-      { status: 429 },
+      { status: HTTP_STATUS.TOO_MANY_REQUESTS },
     );
   }
 
   try {
     const response = await fetch(`${API_LINKS.S3_CACHE_URL}/docs-tree.json`, {
-      next: { revalidate: 1800 },
+      next: { revalidate: POLLING_INTERVALS.DOCS_TREE },
     });
 
     if (!response.ok) {
@@ -36,7 +34,7 @@ export async function GET(request: NextRequest) {
     console.error("Docs API Error:", error);
     return NextResponse.json(
       { error: "Failed to fetch documentation structure from cache" },
-      { status: 500 },
+      { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
     );
   }
 }

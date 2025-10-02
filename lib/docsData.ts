@@ -1,4 +1,6 @@
 // lib/docsData.ts
+import { DOCS_CONFIG } from "./constants";
+
 export interface DocFile {
   name: string;
   path: string;
@@ -23,15 +25,4 @@ export interface DocsNavItem {
   isFolder: boolean;
 }
 
-// Configuration
-export const DOCS_CONFIG = {
-  REPO_OWNER: "Michael-Elrod-dev",
-  REPO_NAME: "Path-to-Valhalla",
-  DOCS_PATH: "docs",
-  // Folders to exclude from docs navigation
-  EXCLUDED_FOLDERS: [
-    "00-Templates", // Internal templates
-  ],
-  // Default landing page
-  DEFAULT_DOC: "00-project-management/dashboards/project-overview",
-} as const;
+export { DOCS_CONFIG };

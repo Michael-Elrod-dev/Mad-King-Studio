@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import BlogCard from "./BlogCard";
+import { UI_CONFIG, BLOG_FILTERS, BLOG_TYPES, MESSAGES } from "@/lib/constants";
 
 interface ProcessedBlog {
   id: string;
@@ -19,30 +20,27 @@ interface ProcessedBlog {
 
 interface BlogListProps {
   gameId: string;
-  filter: "all" | "devlog" | "patch-note";
+  filter: (typeof BLOG_FILTERS)[keyof typeof BLOG_FILTERS];
 }
-
-const POSTS_PER_PAGE = 5;
 
 const BlogList = ({ gameId, filter }: BlogListProps) => {
   const [allBlogs, setAllBlogs] = useState<ProcessedBlog[]>([]);
-  const [visiblePosts, setVisiblePosts] = useState(POSTS_PER_PAGE);
+  const [visiblePosts, setVisiblePosts] = useState<number>(
+    UI_CONFIG.POSTS_PER_PAGE,
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Filter the logs based on the selected filter
   const filteredBlogs = allBlogs.filter((blog) => {
-    if (filter === "all") return true;
+    if (filter === BLOG_FILTERS.ALL) return true;
     return blog.type === filter;
   });
 
-  // Reset visible posts when filter changes
   useEffect(() => {
-    setVisiblePosts(POSTS_PER_PAGE);
+    setVisiblePosts(UI_CONFIG.POSTS_PER_PAGE);
   }, [filter]);
 
-  // Fetch blog posts from API route
   useEffect(() => {
     const loadBlogs = async () => {
       try {
@@ -50,7 +48,7 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
         const response = await fetch(`/api/blog?gameId=${gameId}`);
 
         if (!response.ok) {
-          throw new Error("Failed to fetch blog posts");
+          throw new Error(MESSAGES.ERROR.BLOG_LOAD_ERROR);
         }
 
         const data = await response.json();
@@ -58,7 +56,7 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
         setError(null);
       } catch (err) {
         console.error("Error loading blog posts:", err);
-        setError("Failed to load blog posts");
+        setError(MESSAGES.ERROR.BLOG_LOAD_ERROR);
       } finally {
         setIsLoading(false);
       }
@@ -71,7 +69,7 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
     setIsLoadingMore(true);
     await new Promise((resolve) => setTimeout(resolve, 300));
     setVisiblePosts((prev) =>
-      Math.min(prev + POSTS_PER_PAGE, filteredBlogs.length),
+      Math.min(prev + UI_CONFIG.POSTS_PER_PAGE, filteredBlogs.length),
     );
     setIsLoadingMore(false);
   };
@@ -79,28 +77,25 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
   const hasMorePosts = visiblePosts < filteredBlogs.length;
   const displayedPosts = filteredBlogs.slice(0, visiblePosts);
 
-  // Count different types for display
   const totalDevLogCount = allBlogs.filter(
-    (blog) => blog.type === "devlog",
+    (blog) => blog.type === BLOG_TYPES.DEVLOG,
   ).length;
   const totalPatchNoteCount = allBlogs.filter(
-    (blog) => blog.type === "patch-note",
+    (blog) => blog.type === BLOG_TYPES.PATCH_NOTE,
   ).length;
   const filteredCount = filteredBlogs.length;
 
-  // Get filter display text
   const getFilterText = () => {
     switch (filter) {
-      case "devlog":
+      case BLOG_FILTERS.DEVLOG:
         return "dev logs";
-      case "patch-note":
+      case BLOG_FILTERS.PATCH_NOTE:
         return "patch notes";
       default:
         return "entries";
     }
   };
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="space-y-8">
@@ -115,7 +110,6 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <div className="bg-red-600 border border-red-600 rounded-lg p-6 text-center">
@@ -133,7 +127,6 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
     );
   }
 
-  // Empty state - check if no posts at all vs no posts for current filter
   if (allBlogs.length === 0) {
     return (
       <div className="bg-neutral-800 rounded-lg p-8 text-center">
@@ -145,7 +138,6 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
     );
   }
 
-  // No results for current filter
   if (filteredBlogs.length === 0) {
     return (
       <div className="bg-neutral-800 rounded-lg p-8 text-center">
@@ -166,17 +158,15 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
 
   return (
     <div className="space-y-8">
-      {/* Posts List */}
       {displayedPosts.map((post) => (
         <BlogCard
           key={post.id}
           post={post}
           isGitHubPost={true}
-          isPatchNote={post.type === "patch-note"}
+          isPatchNote={post.type === BLOG_TYPES.PATCH_NOTE}
         />
       ))}
 
-      {/* Load More Button */}
       {hasMorePosts && (
         <div className="text-center pt-8">
           <button
@@ -213,7 +203,7 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
                 getFilterText().charAt(0).toUpperCase() +
                 getFilterText().slice(1)
               } (${Math.min(
-                POSTS_PER_PAGE,
+                UI_CONFIG.POSTS_PER_PAGE,
                 filteredBlogs.length - visiblePosts,
               )} more)`
             )}
@@ -221,8 +211,7 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
         </div>
       )}
 
-      {/* End of Posts Message */}
-      {!hasMorePosts && filteredBlogs.length > POSTS_PER_PAGE && (
+      {!hasMorePosts && filteredBlogs.length > UI_CONFIG.POSTS_PER_PAGE && (
         <div className="text-center pt-8">
           <p className="text-neutral-400 text-sm">
             You&apos;ve reached the end. All {filteredCount} {getFilterText()}{" "}
@@ -231,10 +220,9 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
         </div>
       )}
 
-      {/* Posts Counter with type breakdown */}
       <div className="text-center pt-4">
         <p className="text-neutral-500 text-sm">
-          {filter === "all" ? (
+          {filter === BLOG_FILTERS.ALL ? (
             <>
               Showing {Math.min(visiblePosts, filteredCount)} of {filteredCount}{" "}
               entries ({totalDevLogCount} dev logs, {totalPatchNoteCount} patch
