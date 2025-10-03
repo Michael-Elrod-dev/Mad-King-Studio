@@ -3,7 +3,12 @@
 
 import { useState, useEffect } from "react";
 import BlogCard from "./BlogCard";
-import { UI_CONFIG, BLOG_FILTERS, BLOG_TYPES, MESSAGES } from "@/lib/constants";
+import {
+  UI_CONFIG,
+  BLOG_FILTERS,
+  BLOG_TYPES,
+  MESSAGES,
+} from "@/lib/data/constants";
 
 interface ProcessedBlog {
   id: string;

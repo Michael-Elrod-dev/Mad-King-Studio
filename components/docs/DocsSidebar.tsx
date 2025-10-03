@@ -4,8 +4,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cleanDisplayName, pathToSlug } from "@/lib/utils/docsParser";
-import type { DocFile } from "@/lib/docsData";
+import { cleanDisplayName, pathToSlug } from "@/lib/parsers/docs";
+import type { DocFile } from "@/lib/data/docs";
 
 interface DocsSidebarProps {
   tree: DocFile[];
@@ -51,7 +51,12 @@ const SidebarItem = ({
             ? "bg-red-500 text-white font-medium"
             : "text-white/80 hover:bg-white/5 hover:text-white"
         }`}
-        style={{ paddingLeft: `${level * 16 + 12}px` }}
+        style={{
+          paddingLeft:
+            isFolder && hasChildren
+              ? `${level * 16 + 12}px` // Folders with arrows: normal indent
+              : `${level * 16 + 12 + 24}px`, // Files and empty folders: extra 24px
+        }}
       >
         {/* Folder toggle or file icon */}
         {isFolder && hasChildren && (
@@ -94,13 +99,20 @@ const SidebarItem = ({
         {/* Link text */}
         {isFolder ? (
           <span
-            className="text-sm flex-1 cursor-pointer"
+            className={`text-sm flex-1 cursor-pointer font-semibold ${
+              isActive ? "text-white" : "text-white/90"
+            }`}
             onClick={handleFolderClick}
           >
             {displayName}
           </span>
         ) : (
-          <Link href={itemPath} className="text-sm flex-1">
+          <Link
+            href={itemPath}
+            className={`text-sm flex-1 font-normal ${
+              isActive ? "text-white" : "text-white/80"
+            }`}
+          >
             {displayName}
           </Link>
         )}
@@ -135,50 +147,47 @@ const DocsSidebar = ({ tree }: DocsSidebarProps) => {
   // Initialize expanded folders based on current path
   useEffect(() => {
     const pathParts = pathname.split("/").filter(Boolean);
-    const foldersToExpand = new Set<string>();
 
-    // Find all folders in the path and expand them
-    const findAndExpandPath = (
-      items: DocFile[],
-      currentPath: string[] = [],
-    ) => {
-      for (const item of items) {
-        const itemPathParts = item.path.split("/").filter(Boolean);
+    setExpandedFolders((prev) => {
+      const newSet = new Set(prev);
 
-        // Check if this item is in the current URL path
-        const isInPath = pathParts.some((part, index) => {
-          const normalizedPart = part.toLowerCase().replace(/-/g, " ");
-          const normalizedItemPart = itemPathParts[itemPathParts.length - 1]
-            ?.toLowerCase()
-            .replace(/-/g, " ")
-            .replace(/\.md$/i, "");
-          return normalizedPart === normalizedItemPart;
-        });
+      const findAndExpandPath = (
+        items: DocFile[],
+        currentPath: string[] = [],
+      ) => {
+        for (const item of items) {
+          const itemPathParts = item.path.split("/").filter(Boolean);
 
-        if (item.type === "dir" && isInPath) {
-          foldersToExpand.add(item.path);
-          if (item.children) {
+          const isInPath = pathParts.some((part, index) => {
+            const normalizedPart = part.toLowerCase().replace(/-/g, " ");
+            const normalizedItemPart = itemPathParts[itemPathParts.length - 1]
+              ?.toLowerCase()
+              .replace(/-/g, " ")
+              .replace(/\.md$/i, "");
+            return normalizedPart === normalizedItemPart;
+          });
+
+          if (item.type === "dir" && isInPath) {
+            newSet.add(item.path);
+            if (item.children) {
+              findAndExpandPath(item.children, [...currentPath, item.path]);
+            }
+          } else if (item.type === "dir" && item.children) {
             findAndExpandPath(item.children, [...currentPath, item.path]);
           }
-        } else if (item.type === "dir" && item.children) {
-          findAndExpandPath(item.children, [...currentPath, item.path]);
-        }
 
-        // If this is a file and matches current path, expand all parent folders
-        if (item.type === "file") {
-          const itemSlug = pathToSlug(item.path);
-          if (pathname === `/docs/${itemSlug}`) {
-            // Add all folders in the current path
-            currentPath.forEach((folderPath) =>
-              foldersToExpand.add(folderPath),
-            );
+          if (item.type === "file") {
+            const itemSlug = pathToSlug(item.path);
+            if (pathname === `/docs/${itemSlug}`) {
+              currentPath.forEach((folderPath) => newSet.add(folderPath));
+            }
           }
         }
-      }
-    };
+      };
 
-    findAndExpandPath(tree);
-    setExpandedFolders(foldersToExpand);
+      findAndExpandPath(tree);
+      return newSet;
+    });
   }, [pathname, tree]);
 
   const handleToggleFolder = (path: string) => {

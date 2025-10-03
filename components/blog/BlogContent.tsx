@@ -2,9 +2,9 @@
 "use client";
 
 import { useState } from "react";
-import { GameData } from "@/lib/gameData";
+import { GameData } from "@/lib/data/game";
 import BlogList from "./BlogList";
-import { BLOG_FILTERS } from "@/lib/constants";
+import { BLOG_FILTERS } from "@/lib/data/constants";
 
 interface BlogContentProps {
   games: GameData[];

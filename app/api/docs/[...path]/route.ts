@@ -1,7 +1,11 @@
 // app/api/docs/[...path]/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { docContentLimiter, getClientIP } from "@/lib/rateLimit";
-import { API_LINKS, POLLING_INTERVALS, HTTP_STATUS } from "@/lib/constants";
+import { docContentLimiter, getClientIP } from "@/lib/middleware/rateLimit";
+import {
+  API_LINKS,
+  POLLING_INTERVALS,
+  HTTP_STATUS,
+} from "@/lib/data/constants";
 
 export async function GET(
   request: NextRequest,

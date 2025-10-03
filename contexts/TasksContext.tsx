@@ -8,8 +8,8 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import type { ParsedTask } from "@/lib/utils/dataviewParser";
-import { HTTP_STATUS } from "@/lib/constants";
+import type { ParsedTask } from "@/lib/parsers/dataview";
+import { HTTP_STATUS } from "@/lib/data/constants";
 
 interface TasksContextType {
   tasks: ParsedTask[];

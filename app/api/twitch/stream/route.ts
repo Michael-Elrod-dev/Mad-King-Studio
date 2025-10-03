@@ -1,8 +1,8 @@
 // app/api/twitch/stream/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { getTwitchStreamInfoServer } from "@/lib/twitch";
-import { twitchLimiter, getClientIP } from "@/lib/rateLimit";
-import { HTTP_STATUS, CACHE_CONFIG } from "@/lib/constants";
+import { getTwitchStreamInfoServer } from "@/lib/api/twitch";
+import { twitchLimiter, getClientIP } from "@/lib/middleware/rateLimit";
+import { HTTP_STATUS, CACHE_CONFIG } from "@/lib/data/constants";
 
 export async function GET(request: NextRequest) {
   const ip = getClientIP(request);

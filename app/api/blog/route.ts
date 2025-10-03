@@ -1,7 +1,11 @@
 // app/api/blog/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { blogsLimiter, getClientIP } from "@/lib/rateLimit";
-import { API_LINKS, POLLING_INTERVALS, HTTP_STATUS } from "@/lib/constants";
+import { blogsLimiter, getClientIP } from "@/lib/middleware/rateLimit";
+import {
+  API_LINKS,
+  POLLING_INTERVALS,
+  HTTP_STATUS,
+} from "@/lib/data/constants";
 
 export async function GET(request: NextRequest) {
   const ip = getClientIP(request);

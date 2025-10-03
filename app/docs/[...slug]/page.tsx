@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import DocsContent from "@/components/docs/DocsContent";
 import DocsBreadcrumbs from "@/components/docs/DocsBreadcrumbs";
-import { buildBreadcrumbs, extractTitle } from "@/lib/utils/docsParser";
+import { buildBreadcrumbs, extractTitle } from "@/lib/parsers/docs";
 import { useDocs } from "@/contexts/DocsContext";
-import { HTTP_STATUS, MESSAGES } from "@/lib/constants";
+import { HTTP_STATUS, MESSAGES } from "@/lib/data/constants";
 
 export default function DocPage() {
   const params = useParams();

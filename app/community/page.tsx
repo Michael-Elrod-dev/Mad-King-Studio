@@ -4,7 +4,7 @@
 import FloatingNav from "@/components/layout/FloatingNav";
 import LiveStatus from "@/components/community/LiveStatus";
 import { useLiveStatus } from "@/contexts/LiveStatusContext";
-import { SOCIAL_LINKS } from "@/lib/constants";
+import { SOCIAL_LINKS } from "@/lib/data/constants";
 
 export default function CommunityPage() {
   const { liveStatus } = useLiveStatus();

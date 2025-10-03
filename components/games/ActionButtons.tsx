@@ -1,9 +1,9 @@
 // components/games/ActionButtons.tsx
 "use client";
 
-import { GameData } from "@/lib/gameData";
+import { GameData } from "@/lib/data/game";
 import { useLiveStatus } from "@/contexts/LiveStatusContext";
-import { SOCIAL_LINKS, STEAM_BUTTON_TEXT } from "@/lib/constants";
+import { SOCIAL_LINKS, STEAM_BUTTON_TEXT } from "@/lib/data/constants";
 
 interface ActionButtonsProps {
   game: GameData;

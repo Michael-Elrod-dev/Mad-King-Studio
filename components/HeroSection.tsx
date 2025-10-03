@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useLiveStatus } from "@/contexts/LiveStatusContext";
-import { SOCIAL_LINKS } from "@/lib/constants";
+import { SOCIAL_LINKS } from "@/lib/data/constants";
 
 const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);

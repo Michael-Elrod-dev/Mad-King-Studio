@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { getMediaType } from "@/lib/utils";
+import { getMediaType } from "@/lib";
 
 interface MediaCarouselProps {
   assets: string[];

@@ -1,7 +1,7 @@
 // components/games/GameContent.tsx
 "use client";
 
-import { GameData } from "@/lib/gameData";
+import { GameData } from "@/lib/data/game";
 import ActionButtons from "./ActionButtons";
 import MediaCarousel from "@/components/shared/MediaCarousel";
 

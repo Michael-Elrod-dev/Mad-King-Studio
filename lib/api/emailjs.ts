@@ -1,6 +1,6 @@
 // lib/emailjs.ts
 import emailjs from "@emailjs/browser";
-import { SOCIAL_LINKS, MESSAGES } from "@/lib/constants";
+import { SOCIAL_LINKS, MESSAGES } from "@/lib/data/constants";
 
 const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "";
 const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "";

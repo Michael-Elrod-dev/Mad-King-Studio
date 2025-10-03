@@ -1,8 +1,8 @@
 // app/api/contact/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { validateContactForm } from "@/lib/utils";
-import { contactLimiter, getClientIP } from "@/lib/rateLimit";
-import { HTTP_STATUS, MESSAGES } from "@/lib/constants";
+import { validateContactForm } from "@/lib";
+import { contactLimiter, getClientIP } from "@/lib/middleware/rateLimit";
+import { HTTP_STATUS, MESSAGES } from "@/lib/data/constants";
 
 interface ContactFormData {
   name: string;

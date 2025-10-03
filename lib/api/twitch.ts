@@ -1,5 +1,5 @@
 // lib/twitch.ts
-import { POLLING_INTERVALS } from "./constants";
+import { POLLING_INTERVALS } from "../data/constants";
 
 export interface TwitchStream {
   id: string;

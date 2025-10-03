@@ -4,12 +4,12 @@
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { convertWikiLinksToRoutes } from "@/lib/utils/docsParser";
+import { convertWikiLinksToRoutes } from "@/lib/parsers/docs";
 import {
   convertLocalImagesToS3,
   extractAndRemoveAssetsSection,
-} from "@/lib/utils/content";
-import { extractDataviewBlocks } from "@/lib/utils/dataviewParser";
+} from "@/lib/parsers/content";
+import { extractDataviewBlocks } from "@/lib/parsers/dataview";
 import DataviewBlock from "./DataviewBlock";
 import MediaCarousel from "@/components/shared/MediaCarousel";
 import { useTasks } from "@/contexts/TasksContext";

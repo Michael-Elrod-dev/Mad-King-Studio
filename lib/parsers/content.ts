@@ -1,5 +1,5 @@
 // lib/utils/content.ts
-import { API_LINKS, MEDIA_CONFIG } from "../constants";
+import { API_LINKS, MEDIA_CONFIG } from "../data/constants";
 
 export function convertLocalImagesToS3(
   content: string,

@@ -5,7 +5,7 @@ import { useState } from "react";
 import FloatingNav from "@/components/layout/FloatingNav";
 import GameSelector from "@/components/games/GameSelector";
 import GameContent from "@/components/games/GameContent";
-import { games } from "@/lib/gameData";
+import { games } from "@/lib/data/game";
 
 export default function GamesPage() {
   const [selectedGameIndex, setSelectedGameIndex] = useState(0);

@@ -4,9 +4,9 @@
 import { useState, useEffect } from "react";
 import FloatingNav from "@/components/layout/FloatingNav";
 import { useLiveStatus } from "@/contexts/LiveStatusContext";
-import { sendContactEmail, isEmailJSConfigured } from "@/lib/emailjs";
-import { validateContactForm } from "@/lib/utils";
-import { SOCIAL_LINKS, CONTACT_SUBJECTS } from "@/lib/constants";
+import { sendContactEmail, isEmailJSConfigured } from "@/lib/api/emailjs";
+import { validateContactForm } from "@/lib";
+import { SOCIAL_LINKS, CONTACT_SUBJECTS } from "@/lib/data/constants";
 
 interface FormData {
   name: string;

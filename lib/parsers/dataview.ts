@@ -1,5 +1,5 @@
 // lib/utils/dataviewParser.ts
-import { DATAVIEW_CONFIG } from "../constants";
+import { DATAVIEW_CONFIG } from "../data/constants";
 
 export interface TableField {
   expression: string;

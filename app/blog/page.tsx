@@ -5,7 +5,7 @@ import { useState } from "react";
 import FloatingNav from "@/components/layout/FloatingNav";
 import GameSelector from "@/components/games/GameSelector";
 import BlogContent from "@/components/blog/BlogContent";
-import { blogGames } from "@/lib/blogData";
+import { blogGames } from "@/lib/data/blog";
 
 export default function BlogPage() {
   const [selectedGameIndex, setSelectedGameIndex] = useState(0);

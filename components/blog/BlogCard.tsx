@@ -10,9 +10,8 @@ import {
   getRemainingContent,
   getFirstSection,
   getCompleteFirstSection,
-} from "@/lib/utils";
+} from "@/lib";
 import MediaCarousel from "@/components/shared/MediaCarousel";
-import { BLOG_TYPES } from "@/lib/constants";
 
 interface BlogPost {
   id: string;

@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import SocialLinks from "./SocialLinks";
-import { NAV_ITEMS, UI_CONFIG } from "@/lib/constants";
+import { NAV_ITEMS, UI_CONFIG } from "@/lib/data/constants";
 
 const FloatingNav = () => {
   const [isVisible, setIsVisible] = useState(true);

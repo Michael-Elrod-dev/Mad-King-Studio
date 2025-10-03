@@ -10,7 +10,7 @@ import React, {
   useRef,
   ReactNode,
 } from "react";
-import { POLLING_INTERVALS } from "@/lib/constants";
+import { POLLING_INTERVALS } from "@/lib/data/constants";
 
 interface LiveStatus {
   isLive: boolean;

@@ -1,6 +1,6 @@
 // lib/utils/docsParser.ts
-import { DOCS_CONFIG } from "../docsData";
-import type { DocFile } from "../docsData";
+import { DOCS_CONFIG } from "../data/docs";
+import type { DocFile } from "../data/docs";
 
 /**
  * Convert file path to URL slug

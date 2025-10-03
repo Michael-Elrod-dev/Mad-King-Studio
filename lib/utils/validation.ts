@@ -1,5 +1,5 @@
 // lib/utils/validation.ts
-import { VALIDATION, MESSAGES } from "../constants";
+import { VALIDATION, MESSAGES } from "../data/constants";
 
 export function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

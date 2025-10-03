@@ -8,7 +8,7 @@ import {
   evaluateTableField,
   type DataviewQuery,
   type ParsedTask,
-} from "@/lib/utils/dataviewParser";
+} from "@/lib/parsers/dataview";
 
 interface DataviewBlockProps {
   query: DataviewQuery;

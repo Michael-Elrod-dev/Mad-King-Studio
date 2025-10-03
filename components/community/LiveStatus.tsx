@@ -2,7 +2,7 @@
 "use client";
 
 import { useLiveStatus } from "@/contexts/LiveStatusContext";
-import { SOCIAL_LINKS } from "@/lib/constants";
+import { SOCIAL_LINKS } from "@/lib/data/constants";
 
 const LiveStatus = () => {
   const { liveStatus } = useLiveStatus();

@@ -8,7 +8,7 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import type { DocFile } from "@/lib/docsData";
+import type { DocFile } from "@/lib/data/docs";
 
 interface DocsContextType {
   tree: DocFile[];

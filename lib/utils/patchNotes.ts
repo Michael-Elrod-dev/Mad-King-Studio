@@ -1,5 +1,5 @@
 // lib/utils/patchNotes.ts
-import { CHANGE_TYPE_COLORS, CHANGE_TYPE_LABELS } from "../constants";
+import { CHANGE_TYPE_COLORS, CHANGE_TYPE_LABELS } from "../data/constants";
 
 export type ChangeType = "feature" | "bugfix" | "improvement" | "balance";
 

@@ -1,7 +1,7 @@
 // components/games/GameSelector.tsx
 "use client";
 
-import { GameData } from "@/lib/gameData";
+import { GameData } from "@/lib/data/game";
 
 interface GameSelectorProps {
   games: GameData[];

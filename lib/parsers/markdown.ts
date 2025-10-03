@@ -1,5 +1,5 @@
 // lib/utils/markdownParser.ts
-import { MARKDOWN_CONFIG } from "../constants";
+import { MARKDOWN_CONFIG } from "../data/constants";
 
 export function getFirstSection(content: string): string {
   if (!content) return "";

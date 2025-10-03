@@ -1,18 +1,25 @@
-// lib/rateLimit.ts
-import { RATE_LIMITS } from "./constants";
+// lib/middleware/rate-limit.ts
+import { RATE_LIMITS } from "../data/constants";
 
-const requests = new Map<string, number[]>();
+// Separate tracking per route
+const requests = new Map<string, Map<string, number[]>>();
 
-export function rateLimit(limit: number, windowMs: number) {
+export function rateLimit(limit: number, windowMs: number, routeKey: string) {
   return (identifier: string): boolean => {
     const now = Date.now();
     const windowStart = now - windowMs;
 
-    if (!requests.has(identifier)) {
-      requests.set(identifier, []);
+    // Get or create route-specific map
+    if (!requests.has(routeKey)) {
+      requests.set(routeKey, new Map());
+    }
+    const routeMap = requests.get(routeKey)!;
+
+    if (!routeMap.has(identifier)) {
+      routeMap.set(identifier, []);
     }
 
-    const requestTimes = requests.get(identifier)!;
+    const requestTimes = routeMap.get(identifier)!;
     const validRequests = requestTimes.filter((time) => time > windowStart);
 
     if (validRequests.length >= limit) {
@@ -20,7 +27,7 @@ export function rateLimit(limit: number, windowMs: number) {
     }
 
     validRequests.push(now);
-    requests.set(identifier, validRequests);
+    routeMap.set(identifier, validRequests);
 
     return true;
   };
@@ -41,33 +48,39 @@ export function getClientIP(request: Request): string {
   return "unknown";
 }
 
-// Export pre-configured rate limiters
+// Export pre-configured rate limiters with separate tracking
 export const contactLimiter = rateLimit(
   RATE_LIMITS.CONTACT_FORM.MAX_REQUESTS,
   RATE_LIMITS.CONTACT_FORM.WINDOW_MS,
+  "contact",
 );
 
 export const twitchLimiter = rateLimit(
   RATE_LIMITS.TWITCH_API.MAX_REQUESTS,
   RATE_LIMITS.TWITCH_API.WINDOW_MS,
+  "twitch",
 );
 
 export const docsLimiter = rateLimit(
   RATE_LIMITS.DOCS_API.MAX_REQUESTS,
   RATE_LIMITS.DOCS_API.WINDOW_MS,
+  "docs",
 );
 
 export const docContentLimiter = rateLimit(
   RATE_LIMITS.DOC_CONTENT.MAX_REQUESTS,
   RATE_LIMITS.DOC_CONTENT.WINDOW_MS,
+  "doc-content",
 );
 
 export const blogsLimiter = rateLimit(
   RATE_LIMITS.BLOG_API.MAX_REQUESTS,
   RATE_LIMITS.BLOG_API.WINDOW_MS,
+  "blogs",
 );
 
 export const tasksLimiter = rateLimit(
   RATE_LIMITS.TASKS_API.MAX_REQUESTS,
   RATE_LIMITS.TASKS_API.WINDOW_MS,
+  "tasks",
 );

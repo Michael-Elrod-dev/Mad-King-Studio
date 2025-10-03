@@ -17,13 +17,6 @@ export const API_LINKS = {
   S3_CACHE_URL: "https://mad-king-studio.s3.amazonaws.com/cache",
   S3_DOCS_IMAGES: "https://mad-king-studio.s3.amazonaws.com/docs-images",
 } as const;
-export const GITHUB_CONFIG = {
-  API_BASE: "https://api.github.com",
-  REPO_OWNER: "Michael-Elrod-dev",
-  REPO_NAME: "Path-to-Valhalla",
-  DEV_LOGS_PATH: "docs/00-Development%20Logs/Logs",
-  PATCH_NOTES_PATH: "docs/00-Development%20Logs/Patch%20Notes",
-} as const;
 
 // ======================
 // API POLLING & CACHING
@@ -37,32 +30,39 @@ export const POLLING_INTERVALS = {
 } as const;
 
 // ======================
-// RATE LIMITING
+// API RATE LIMITING
 // ======================
 export const RATE_LIMITS = {
-  CONTACT_FORM: {
-    MAX_REQUESTS: 3,
-    WINDOW_MS: 15 * 60 * 1000, // 15 minutes
-  },
+  // ======================
+  // PASSIVE / AUTOMATIC
+  // ======================
   TWITCH_API: {
     MAX_REQUESTS: 10,
-    WINDOW_MS: 60 * 1000, // 1 minute
+    WINDOW_MS: 60 * 1000,
   },
   DOCS_API: {
-    MAX_REQUESTS: 20,
-    WINDOW_MS: 60 * 1000, // 1 minute
+    MAX_REQUESTS: 10,
+    WINDOW_MS: 60 * 1000,
   },
-  DOC_CONTENT: {
-    MAX_REQUESTS: 20,
-    WINDOW_MS: 60 * 1000, // 1 minute
+  TASKS_API: {
+    MAX_REQUESTS: 10,
+    WINDOW_MS: 60 * 1000,
   },
   BLOG_API: {
     MAX_REQUESTS: 10,
-    WINDOW_MS: 60 * 1000, // 1 minute
+    WINDOW_MS: 60 * 1000,
   },
-  TASKS_API: {
-    MAX_REQUESTS: 5,
-    WINDOW_MS: 60 * 1000, // 1 minute
+
+  // ======================
+  // USER-TRIGGERED
+  // ======================
+  CONTACT_FORM: {
+    MAX_REQUESTS: 3,
+    WINDOW_MS: 15 * 60 * 1000,
+  },
+  DOC_CONTENT: {
+    MAX_REQUESTS: 60,
+    WINDOW_MS: 60 * 1000,
   },
 } as const;
 
