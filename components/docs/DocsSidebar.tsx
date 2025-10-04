@@ -9,6 +9,8 @@ import type { DocFile } from "@/lib/data/docs";
 
 interface DocsSidebarProps {
   tree: DocFile[];
+  isOpen: boolean;
+  onToggle: (open: boolean) => void;
 }
 
 interface SidebarItemProps {
@@ -17,6 +19,7 @@ interface SidebarItemProps {
   currentPath: string;
   expandedFolders: Set<string>;
   onToggleFolder: (path: string) => void;
+  onFileClick: () => void;
 }
 
 const SidebarItem = ({
@@ -25,11 +28,11 @@ const SidebarItem = ({
   currentPath,
   expandedFolders,
   onToggleFolder,
+  onFileClick,
 }: SidebarItemProps) => {
   const isFolder = item.type === "dir";
   const hasChildren = isFolder && item.children && item.children.length > 0;
 
-  // Generate the link path for files
   const itemSlug = pathToSlug(item.path);
   const itemPath = isFolder ? "#" : `/docs/${itemSlug}`;
   const isActive = !isFolder && currentPath === `/docs/${itemSlug}`;
@@ -54,11 +57,10 @@ const SidebarItem = ({
         style={{
           paddingLeft:
             isFolder && hasChildren
-              ? `${level * 16 + 12}px` // Folders with arrows: normal indent
-              : `${level * 16 + 12 + 24}px`, // Files and empty folders: extra 24px
+              ? `${level * 16 + 12}px`
+              : `${level * 16 + 12 + 24}px`,
         }}
       >
-        {/* Folder toggle or file icon */}
         {isFolder && hasChildren && (
           <button
             onClick={handleFolderClick}
@@ -96,29 +98,30 @@ const SidebarItem = ({
           </svg>
         )}
 
-        {/* Link text */}
         {isFolder ? (
           <span
-            className={`text-sm flex-1 cursor-pointer font-semibold ${
+            className={`text-sm flex-1 cursor-pointer font-semibold truncate min-w-0 ${
               isActive ? "text-white" : "text-white/90"
             }`}
             onClick={handleFolderClick}
+            title={displayName}
           >
             {displayName}
           </span>
         ) : (
           <Link
             href={itemPath}
-            className={`text-sm flex-1 font-normal ${
+            onClick={onFileClick}
+            className={`text-sm flex-1 font-normal truncate min-w-0 block ${
               isActive ? "text-white" : "text-white/80"
             }`}
+            title={displayName}
           >
             {displayName}
           </Link>
         )}
       </div>
 
-      {/* Render children if expanded */}
       {isFolder && hasChildren && isExpanded && (
         <div>
           {item.children!.map((child) => (
@@ -129,6 +132,7 @@ const SidebarItem = ({
               currentPath={currentPath}
               expandedFolders={expandedFolders}
               onToggleFolder={onToggleFolder}
+              onFileClick={onFileClick}
             />
           ))}
         </div>
@@ -137,14 +141,26 @@ const SidebarItem = ({
   );
 };
 
-const DocsSidebar = ({ tree }: DocsSidebarProps) => {
+const DocsSidebar = ({ tree, isOpen, onToggle }: DocsSidebarProps) => {
   const pathname = usePathname();
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(
     new Set(),
   );
+  const [showOpenButton, setShowOpenButton] = useState(false);
 
-  // Initialize expanded folders based on current path
+  // Handle the fade-in delay for the open button
+  useEffect(() => {
+    if (!isOpen) {
+      // Delay showing the button to allow sidebar close animation to complete
+      const timer = setTimeout(() => {
+        setShowOpenButton(true);
+      }, 150); // Half of the sidebar transition time (300ms)
+      return () => clearTimeout(timer);
+    } else {
+      setShowOpenButton(false);
+    }
+  }, [isOpen]);
+
   useEffect(() => {
     const pathParts = pathname.split("/").filter(Boolean);
 
@@ -202,50 +218,64 @@ const DocsSidebar = ({ tree }: DocsSidebarProps) => {
     });
   };
 
+  const handleOverlayClick = () => {
+    onToggle(false);
+  };
+
+  const toggleSidebar = () => {
+    onToggle(!isOpen);
+  };
+
+  const handleFileClick = () => {
+    if (window.innerWidth < 1024) {
+      onToggle(false);
+    }
+  };
+
   return (
     <>
-      {/* Mobile Toggle Button */}
-      <button
-        onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="lg:hidden fixed top-20 left-4 z-50 bg-red-500 text-white p-3 rounded-lg shadow-lg hover:bg-red-600 transition-colors"
-        aria-label="Toggle documentation menu"
-      >
-        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
-        </svg>
-      </button>
+      {/* Toggle Button - shows when sidebar is closed with fade-in animation */}
+      {!isOpen && showOpenButton && (
+        <button
+          onClick={toggleSidebar}
+          className="fixed top-20 left-4 z-50 bg-red-500 text-white p-2 rounded-lg shadow-lg hover:bg-red-600 transition-all animate-in fade-in duration-200"
+          aria-label="Open documentation sidebar"
+        >
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" />
+          </svg>
+        </button>
+      )}
 
       {/* Overlay for mobile */}
-      {isMobileOpen && (
+      {isOpen && (
         <div
           className="lg:hidden fixed inset-0 bg-black/50 z-40"
-          onClick={() => setIsMobileOpen(false)}
+          onClick={handleOverlayClick}
         />
       )}
 
       {/* Sidebar */}
       <aside
         className={`
-          fixed lg:fixed top-16 left-0 h-[calc(100vh-4rem)]
+          fixed top-16 left-0 h-[calc(100vh-4rem)]
           w-80 bg-[#0a0a0a] border-r border-white/10
-          overflow-y-auto z-30 transition-transform duration-300
-          ${
-            isMobileOpen
-              ? "translate-x-0"
-              : "-translate-x-full lg:translate-x-0"
-          }
+          overflow-y-auto transition-transform duration-300 z-50
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-white">Documentation</h2>
+            <h2 className="text-xl font-bold text-white truncate">
+              Documentation
+            </h2>
             <button
-              onClick={() => setIsMobileOpen(false)}
-              className="lg:hidden text-white/60 hover:text-white"
-              aria-label="Close menu"
+              onClick={toggleSidebar}
+              className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-colors flex-shrink-0"
+              aria-label="Close documentation sidebar"
             >
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
               </svg>
             </button>
           </div>
@@ -259,6 +289,7 @@ const DocsSidebar = ({ tree }: DocsSidebarProps) => {
                 currentPath={pathname}
                 expandedFolders={expandedFolders}
                 onToggleFolder={handleToggleFolder}
+                onFileClick={handleFileClick}
               />
             ))}
           </nav>

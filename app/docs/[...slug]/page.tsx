@@ -19,7 +19,6 @@ export default function DocPage() {
   const [isLoadingContent, setIsLoadingContent] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Load specific doc content
   useEffect(() => {
     const loadDocContent = async () => {
       if (!slug || slug.length === 0) return;
@@ -41,7 +40,6 @@ export default function DocPage() {
         const data = await response.json();
         setContent(data.content);
 
-        // Extract the actual filename from the returned path
         const actualFileName =
           data.path.split("/").pop() || slug[slug.length - 1];
         const extractedTitle = extractTitle(data.content, actualFileName);
@@ -59,14 +57,13 @@ export default function DocPage() {
     loadDocContent();
   }, [slug]);
 
-  // Build breadcrumbs from slug
   const breadcrumbs = slug ? buildBreadcrumbs(`docs/${slug.join("/")}.md`) : [];
 
   const isLoading = isLoadingTree || isLoadingContent;
   const displayError = error || treeError;
 
   return (
-    <main className="flex-1 lg:pl-[340px] pt-20 px-6 lg:px-12 pb-12">
+    <main className="pt-20 px-6 lg:px-12 pb-12">
       <div className="max-w-4xl mx-auto">
         {isLoading ? (
           <div className="text-center py-20">

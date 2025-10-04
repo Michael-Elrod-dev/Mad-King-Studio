@@ -1,7 +1,7 @@
 // components/blog/BlogList.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import BlogCard from "./BlogCard";
 import {
   UI_CONFIG,
@@ -21,6 +21,15 @@ interface ProcessedBlog {
   downloadUrl: string;
   type: "devlog" | "patch-note";
   gameId: string;
+  assets?: string[];
+}
+
+interface PaginationInfo {
+  currentPage: number;
+  totalPages: number;
+  totalPosts: number;
+  hasMore: boolean;
+  postsPerPage: number;
 }
 
 interface BlogListProps {
@@ -30,66 +39,73 @@ interface BlogListProps {
 
 const BlogList = ({ gameId, filter }: BlogListProps) => {
   const [allBlogs, setAllBlogs] = useState<ProcessedBlog[]>([]);
-  const [visiblePosts, setVisiblePosts] = useState<number>(
-    UI_CONFIG.POSTS_PER_PAGE,
-  );
+  const [pagination, setPagination] = useState<PaginationInfo>({
+    currentPage: 0,
+    totalPages: 0,
+    totalPosts: 0,
+    hasMore: false,
+    postsPerPage: UI_CONFIG.POSTS_PER_PAGE,
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const filteredBlogs = allBlogs.filter((blog) => {
-    if (filter === BLOG_FILTERS.ALL) return true;
-    return blog.type === filter;
-  });
-
-  useEffect(() => {
-    setVisiblePosts(UI_CONFIG.POSTS_PER_PAGE);
-  }, [filter]);
-
-  useEffect(() => {
-    const loadBlogs = async () => {
+  // Use useCallback to memoize loadPage and avoid dependency issues
+  const loadPage = useCallback(
+    async (page: number, isReset: boolean = false) => {
       try {
-        setIsLoading(true);
-        const response = await fetch(`/api/blog?gameId=${gameId}`);
+        if (isReset) {
+          setIsLoading(true);
+        } else {
+          setIsLoadingMore(true);
+        }
+        setError(null);
+
+        const response = await fetch(
+          `/api/blog?gameId=${gameId}&page=${page}&filter=${filter}`,
+        );
 
         if (!response.ok) {
           throw new Error(MESSAGES.ERROR.BLOG_LOAD_ERROR);
         }
 
         const data = await response.json();
-        setAllBlogs(data.blogs);
-        setError(null);
+
+        setAllBlogs((prev) =>
+          isReset ? data.blogs : [...prev, ...data.blogs],
+        );
+        setPagination(data.pagination);
       } catch (err) {
         console.error("Error loading blog posts:", err);
         setError(MESSAGES.ERROR.BLOG_LOAD_ERROR);
       } finally {
         setIsLoading(false);
+        setIsLoadingMore(false);
       }
-    };
+    },
+    [gameId, filter],
+  );
 
-    loadBlogs();
-  }, [gameId]);
+  // Reset when filter or gameId changes
+  useEffect(() => {
+    setAllBlogs([]);
+    setPagination({
+      currentPage: 0,
+      totalPages: 0,
+      totalPosts: 0,
+      hasMore: false,
+      postsPerPage: UI_CONFIG.POSTS_PER_PAGE,
+    });
+    loadPage(1, true);
+  }, [gameId, filter, loadPage]);
 
-  const handleLoadMore = async () => {
-    setIsLoadingMore(true);
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    setVisiblePosts((prev) =>
-      Math.min(prev + UI_CONFIG.POSTS_PER_PAGE, filteredBlogs.length),
-    );
-    setIsLoadingMore(false);
+  const handleLoadMore = () => {
+    if (pagination.hasMore && !isLoadingMore) {
+      loadPage(pagination.currentPage + 1, false);
+    }
   };
 
-  const hasMorePosts = visiblePosts < filteredBlogs.length;
-  const displayedPosts = filteredBlogs.slice(0, visiblePosts);
-
-  const totalDevLogCount = allBlogs.filter(
-    (blog) => blog.type === BLOG_TYPES.DEVLOG,
-  ).length;
-  const totalPatchNoteCount = allBlogs.filter(
-    (blog) => blog.type === BLOG_TYPES.PATCH_NOTE,
-  ).length;
-  const filteredCount = filteredBlogs.length;
-
+  // Get filter text for display
   const getFilterText = () => {
     switch (filter) {
       case BLOG_FILTERS.DEVLOG:
@@ -132,18 +148,7 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
     );
   }
 
-  if (allBlogs.length === 0) {
-    return (
-      <div className="bg-neutral-800 rounded-lg p-8 text-center">
-        <h3 className="text-white font-semibold mb-2">No Blog Posts Yet</h3>
-        <p className="text-neutral-50 mb-4">
-          Blog posts will appear here as they&apos;re created for this game.
-        </p>
-      </div>
-    );
-  }
-
-  if (filteredBlogs.length === 0) {
+  if (pagination.totalPosts === 0) {
     return (
       <div className="bg-neutral-800 rounded-lg p-8 text-center">
         <h3 className="text-white font-semibold mb-2">
@@ -153,17 +158,13 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
           No {getFilterText()} available for this game yet. Try changing the
           filter or check back later.
         </p>
-        <div className="text-neutral-400 text-sm">
-          Total available: {totalDevLogCount} dev logs, {totalPatchNoteCount}{" "}
-          patch notes
-        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-8">
-      {displayedPosts.map((post) => (
+      {allBlogs.map((post) => (
         <BlogCard
           key={post.id}
           post={post}
@@ -172,7 +173,7 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
         />
       ))}
 
-      {hasMorePosts && (
+      {pagination.hasMore && (
         <div className="text-center pt-8">
           <button
             onClick={handleLoadMore}
@@ -208,37 +209,26 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
                 getFilterText().charAt(0).toUpperCase() +
                 getFilterText().slice(1)
               } (${Math.min(
-                UI_CONFIG.POSTS_PER_PAGE,
-                filteredBlogs.length - visiblePosts,
+                pagination.postsPerPage,
+                pagination.totalPosts - allBlogs.length,
               )} more)`
             )}
           </button>
         </div>
       )}
 
-      {!hasMorePosts && filteredBlogs.length > UI_CONFIG.POSTS_PER_PAGE && (
+      {!pagination.hasMore && allBlogs.length > pagination.postsPerPage && (
         <div className="text-center pt-8">
           <p className="text-neutral-400 text-sm">
-            You&apos;ve reached the end. All {filteredCount} {getFilterText()}{" "}
-            are now visible.
+            You&apos;ve reached the end. All {pagination.totalPosts}{" "}
+            {getFilterText()} are now visible.
           </p>
         </div>
       )}
 
       <div className="text-center pt-4">
         <p className="text-neutral-500 text-sm">
-          {filter === BLOG_FILTERS.ALL ? (
-            <>
-              Showing {Math.min(visiblePosts, filteredCount)} of {filteredCount}{" "}
-              entries ({totalDevLogCount} dev logs, {totalPatchNoteCount} patch
-              notes)
-            </>
-          ) : (
-            <>
-              Showing {Math.min(visiblePosts, filteredCount)} of {filteredCount}{" "}
-              {getFilterText()}
-            </>
-          )}
+          Showing {allBlogs.length} of {pagination.totalPosts} {getFilterText()}
         </p>
       </div>
     </div>
