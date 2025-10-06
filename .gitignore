@@ -6,6 +6,8 @@
 *.iws
 *.ipr
 *.idea
+.markdownlint.json
+.markdownlint-cli2.jsonc
 
 # dependencies
 /node_modules

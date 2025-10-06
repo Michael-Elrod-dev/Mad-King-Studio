@@ -1,6 +1,7 @@
 # Mad King Studio - Game Development Website
 
-A Next.js-based website for showcasing indie game development, featuring live Twitch integration, development blogs, and comprehensive documentation.
+A Next.js-based website for showcasing indie game development, featuring live
+Twitch integration, development blogs, and comprehensive documentation.
 
 ## Features
 
@@ -22,7 +23,7 @@ A Next.js-based website for showcasing indie game development, featuring live Tw
 
 ## Project Structure
 
-```
+```txt
 mad-king-studio/
 ├── app/              # Next.js app directory
 │   ├── about/        # About page

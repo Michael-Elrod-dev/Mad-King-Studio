@@ -1,7 +1,7 @@
 // app/community/page.tsx
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import FloatingNav from "@/components/layout/FloatingNav";
 import LiveStatus from "@/components/community/LiveStatus";
 import { useLiveStatus } from "@/contexts/LiveStatusContext";
@@ -53,23 +53,44 @@ export default function CommunityPage() {
       success: null,
     });
 
+    // Validate form data
+    const validation = validateContactForm(formData);
+    if (!validation.isValid) {
+      setFormState({
+        isSubmitting: false,
+        isSubmitted: false,
+        error: validation.errors.join(", "),
+        success: null,
+      });
+      return;
+    }
+
+    // Check email configuration
+    if (!emailConfigured) {
+      setFormState({
+        isSubmitting: false,
+        isSubmitted: false,
+        error: "Email service is not configured",
+        success: null,
+      });
+      return;
+    }
+
+    // Attempt to send email
     try {
-      const validation = validateContactForm(formData);
-
-      if (!validation.isValid) {
-        throw new Error(validation.errors.join(", "));
-      }
-
-      if (!emailConfigured) {
-        throw new Error("Email service is not configured");
-      }
-
       const emailResult = await sendContactEmail(formData);
 
       if (!emailResult.success) {
-        throw new Error(emailResult.message);
+        setFormState({
+          isSubmitting: false,
+          isSubmitted: false,
+          error: emailResult.message,
+          success: null,
+        });
+        return;
       }
 
+      // Success!
       setFormState({
         isSubmitting: false,
         isSubmitted: true,
