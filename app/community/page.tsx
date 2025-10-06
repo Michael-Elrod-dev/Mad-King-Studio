@@ -20,15 +20,15 @@ export default function CommunityPage() {
               Community
             </h1>
             <p className="text-xl text-white/90 max-w-3xl mx-auto">
-              Join the community on Twitch. Watch live coding and be part of the
-              development journey.
+              Join the community on Twitch, Discord, and YouTube. Watch live
+              coding and be part of the development journey.
             </p>
           </div>
 
           <LiveStatus />
 
-          {/* Community Links */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 mb-16">
+          {/* Community Links - Changed to 3 columns on large screens */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
             <div className="bg-purple-600 rounded-lg p-6 text-center transition-colors relative">
               <div className="flex justify-center mb-4 relative">
                 {/* Live dot positioned on the icon itself */}
@@ -99,6 +99,33 @@ export default function CommunityPage() {
                 className="border border-white/90 hover:border-indigo-500 hover:bg-indigo-500 text-white/90 hover:text-white font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"
               >
                 Join Discord
+              </a>
+            </div>
+
+            {/* YouTube Panel */}
+            <div className="bg-red-600 rounded-lg p-6 text-center transition-colors">
+              <div className="flex justify-center mb-4">
+                <svg
+                  className="w-12 h-12 text-white"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">
+                YouTube Channel
+              </h3>
+              <p className="text-white/90 mb-4">
+                Watch development updates, tutorials, and highlights
+              </p>
+              <a
+                href={SOCIAL_LINKS.YOUTUBE}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border border-white/90 hover:border-red-500 hover:bg-red-500 text-white/90 hover:text-white font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"
+              >
+                Subscribe on YouTube
               </a>
             </div>
           </div>
