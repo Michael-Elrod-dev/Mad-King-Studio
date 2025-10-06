@@ -48,7 +48,7 @@ export default function AboutPage() {
               artists, and gaming enthusiasts.
             </p>
             <a
-              href="/contact"
+              href="/community"
               className="border border-red-500 hover:border-red-600 hover:bg-red-500 text-red-500 hover:text-white/90 font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"
             >
               Get In Touch

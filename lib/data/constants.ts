@@ -171,7 +171,6 @@ export const NAV_ITEMS = [
   { href: "/docs", label: "Docs" },
   { href: "/community", label: "Community" },
   { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
 ] as const;
 
 // ======================
