@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import SocialLinks from "./SocialLinks";
 import { NAV_ITEMS, UI_CONFIG } from "@/lib/data/constants";
@@ -77,9 +78,13 @@ const FloatingNav = () => {
       >
         <div className="flex items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center space-x-2 z-60">
-            <div className="w-8 h-8 bg-red-600 rounded-md flex items-center justify-center">
-              <span className="text-white text-sm">MKS</span>
-            </div>
+            <Image
+              src="/skull-icon.png"
+              alt="Logo"
+              width={42}
+              height={42}
+              className="rounded-md"
+            />
           </Link>
 
           <div className="hidden md:flex items-center space-x-8">

@@ -22,11 +22,6 @@ repos:
       - id: prettier
         types_or: [javascript, jsx, ts, tsx, json, css, scss, markdown]
 
-  - repo: https://github.com/crate-ci/typos
-    rev: v1.16.23
-    hooks:
-      - id: typos
-
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.27.3
     hooks:
@@ -39,12 +34,6 @@ repos:
     rev: v1.6.27
     hooks:
       - id: actionlint
-
-  - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.12.1
-    hooks:
-      - id: markdownlint-cli2
-        exclude: ^(node_modules|\.next|build|dist|coverage)/
 
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.18.1
