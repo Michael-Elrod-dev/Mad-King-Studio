@@ -132,7 +132,10 @@ export function cleanDisplayName(name: string): string {
     .replace(/^\d+-/, "") // Remove number prefix
     .replace(/-/g, " ") // Replace hyphens with spaces
     .replace(/\.md$/i, "") // Remove .md extension
-    .trim();
+    .trim()
+    .split(" ") // Split into words
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Title case each word
+    .join(" "); // Join back together
 }
 
 /**
