@@ -75,7 +75,7 @@ export const DOCS_CONFIG = {
   REPO_NAME: "Path-to-Valhalla",
   DOCS_PATH: "docs",
   EXCLUDED_FOLDERS: ["00-Templates"],
-  DEFAULT_DOC: "00-project-management/dashboards/project-overview",
+  DEFAULT_DOC: "00-project-development/project-overview",
 } as const;
 
 // ======================
