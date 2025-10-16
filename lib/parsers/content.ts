@@ -72,15 +72,6 @@ export function extractDateFromContent(content: string): string {
   return new Date().toISOString().split("T")[0];
 }
 
-export function removeMetadataFromContent(content: string): string {
-  const withoutMetadata = content
-    .replace(/###\s*Date\s*[\s\S]*?(?=\n###|\n##|$)/gi, "")
-    .replace(/###\s*Assets\s*[\s\S]*?(?=\n###|\n##|$)/gi, "")
-    .trim();
-
-  return replaceObsidianLinks(withoutMetadata);
-}
-
 export function extractDayNumberFromContent(
   content: string,
   filename: string,

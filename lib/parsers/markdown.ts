@@ -65,18 +65,7 @@ export function getRemainingContent(content: string): string {
   );
 
   if (firstHeaderIndex !== -1 && sections.length > firstHeaderIndex + 1) {
-    const filteredSections = sections
-      .slice(firstHeaderIndex + 1)
-      .filter((section) => {
-        const trimmedSection = section.trim();
-        return (
-          !trimmedSection.startsWith("### Active Tasks") &&
-          !trimmedSection.startsWith("## Active Tasks") &&
-          !trimmedSection.includes("```dataview")
-        );
-      });
-
-    return filteredSections.join("");
+    return sections.slice(firstHeaderIndex + 1).join("");
   }
 
   return "";

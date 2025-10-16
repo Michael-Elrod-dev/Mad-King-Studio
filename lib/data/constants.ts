@@ -27,7 +27,6 @@ export const POLLING_INTERVALS = {
   DOCS_TREE: 3600, // 1 hour in seconds (for Next.js revalidate)
   DOC_CONTENT: 1800, // 30 minutes in seconds
   BLOG_POSTS: 1800, // 30 minutes in seconds
-  TASKS: 1800, // 30 minutes in seconds
 } as const;
 
 // ======================
@@ -42,10 +41,6 @@ export const RATE_LIMITS = {
     WINDOW_MS: 60 * 1000,
   },
   DOCS_API: {
-    MAX_REQUESTS: 10,
-    WINDOW_MS: 60 * 1000,
-  },
-  TASKS_API: {
     MAX_REQUESTS: 10,
     WINDOW_MS: 60 * 1000,
   },
@@ -139,18 +134,6 @@ export const BLOG_FILTERS = {
 export const MARKDOWN_CONFIG = {
   MAX_FIRST_SECTION_LINES: 3,
   MAX_FIRST_SECTION_CHARS: 250,
-} as const;
-
-// ======================
-// DATAVIEW QUERY CONFIG
-// ======================
-export const DATAVIEW_CONFIG = {
-  QUERY_TYPES: ["TASK", "TABLE", "LIST"],
-  PRIORITY_ORDER: {
-    high: 0,
-    medium: 1,
-    low: 2,
-  },
 } as const;
 
 // ======================

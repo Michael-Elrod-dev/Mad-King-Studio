@@ -78,9 +78,3 @@ export const blogsLimiter = rateLimit(
   RATE_LIMITS.BLOG_API.WINDOW_MS,
   "blogs",
 );
-
-export const tasksLimiter = rateLimit(
-  RATE_LIMITS.TASKS_API.MAX_REQUESTS,
-  RATE_LIMITS.TASKS_API.WINDOW_MS,
-  "tasks",
-);
