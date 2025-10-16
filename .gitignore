@@ -1,15 +1,27 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# ===================================
+# AI Tools & Assistants
+# ===================================
+.claude/
+CLAUDE.md
+
+# ===================================
+# IDEs & Editors
+# ===================================
 # JetBrains IDEs
 .idea/
 *.iml
 *.iws
 *.ipr
 *.idea
-.markdownlint.json
-.markdownlint-cli2.jsonc
 
-# dependencies
+# VS Code
+.vscode/
+
+# ===================================
+# Dependencies
+# ===================================
 /node_modules
 /.pnp
 .pnp.*
@@ -19,36 +31,63 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
+# ===================================
+# Testing
+# ===================================
 /coverage
 
-# next.js
+# ===================================
+# Next.js
+# ===================================
 /.next/
 /out/
 
-# production
+# ===================================
+# Build Output
+# ===================================
 /build
+/dist
 
-# misc
-.DS_Store
-*.pem
+# ===================================
+# TypeScript
+# ===================================
+*.tsbuildinfo
+next-env.d.ts
 
-# debug
+# ===================================
+# Environment Variables
+# ===================================
+.env*
+
+# ===================================
+# Deployment
+# ===================================
+.vercel
+
+# ===================================
+# Logs
+# ===================================
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
 
-# env files (can opt-in for committing if needed)
-.env*
+# ===================================
+# OS Files
+# ===================================
+.DS_Store
+*.pem
+Thumbs.db
 
-# vercel
-.vercel
+# ===================================
+# Markdown Linting
+# ===================================
+.markdownlint.json
+.markdownlint-cli2.jsonc
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# assets
+# ===================================
+# Project Specific
+# ===================================
 blog-assets/
 upload-assets.py

@@ -4,6 +4,7 @@
 import { GameData } from "@/lib/data/game";
 import { useLiveStatus } from "@/contexts/LiveStatusContext";
 import { SOCIAL_LINKS, STEAM_BUTTON_TEXT } from "@/lib/data/constants";
+import { Tv, Gamepad2 } from "lucide-react";
 
 interface ActionButtonsProps {
   game: GameData;
@@ -27,9 +28,10 @@ const ActionButtons = ({ game }: ActionButtonsProps) => {
           href={game.steamUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="border border-blue-600 hover:border-blue-500 hover:bg-blue-500 hover:text-white/90 text-blue-600 font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg backdrop-blur-sm inline-flex items-center justify-center"
+          className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-blue-500/10 to-blue-600/10 hover:from-blue-500/20 hover:to-blue-600/20 text-blue-400 border-2 border-blue-500/50 hover:border-blue-500/70 font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20"
         >
-          {getSteamButtonText(game.status)}
+          <Gamepad2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
+          <span className="text-lg">{getSteamButtonText(game.status)}</span>
         </a>
       )}
 
@@ -38,21 +40,26 @@ const ActionButtons = ({ game }: ActionButtonsProps) => {
           href={SOCIAL_LINKS.TWITCH}
           target="_blank"
           rel="noopener noreferrer"
-          className="border-2 border-purple-600 text-purple-600 hover:text-purple-500 font-semibold py-3 px-8 rounded-full transition-all duration-200 text-lg backdrop-blur-sm inline-block"
-          style={{
-            animation: "pulse-purple 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-          }}
+          className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-purple-500/20 to-purple-600/20 text-purple-300 border-2 border-purple-500/70 font-semibold px-8 py-4 rounded-full transition-all duration-300 shadow-lg shadow-purple-500/30 animate-pulse-slow"
         >
-          Watch Dev Live
+          <div className="relative">
+            <Tv className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+          </div>
+          <span className="text-lg">Watch Dev Live</span>
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+            LIVE
+          </span>
         </a>
       ) : (
         <a
           href={SOCIAL_LINKS.TWITCH}
           target="_blank"
           rel="noopener noreferrer"
-          className="border border-purple-500 hover:border-purple-500 hover:bg-purple-500 text-purple-500 hover:text-white/90 font-semibold py-3 px-8 rounded-full transition-colors duration-200 text-lg inline-block"
+          className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-purple-500/10 to-purple-600/10 hover:from-purple-500/20 hover:to-purple-600/20 text-purple-400 border-2 border-purple-500/50 hover:border-purple-500/70 font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20"
         >
-          Watch Dev Live
+          <Tv className="w-5 h-5 group-hover:scale-110 transition-transform" />
+          <span className="text-lg">Watch on Twitch</span>
         </a>
       )}
     </div>

@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import BlogCard from "./BlogCard";
+import { Loader2, AlertCircle, ArrowDown, Inbox } from "lucide-react";
 import {
   UI_CONFIG,
   BLOG_FILTERS,
@@ -50,7 +51,6 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Use useCallback to memoize loadPage and avoid dependency issues
   const loadPage = useCallback(
     async (page: number, isReset: boolean = false) => {
       try {
@@ -86,7 +86,6 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
     [gameId, filter],
   );
 
-  // Reset when filter or gameId changes
   useEffect(() => {
     setAllBlogs([]);
     setPagination({
@@ -105,7 +104,6 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
     }
   };
 
-  // Get filter text for display
   const getFilterText = () => {
     switch (filter) {
       case BLOG_FILTERS.DEVLOG:
@@ -113,18 +111,28 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
       case BLOG_FILTERS.PATCH_NOTE:
         return "patch notes";
       default:
-        return "entries";
+        return "posts";
     }
   };
 
   if (isLoading) {
     return (
-      <div className="space-y-8">
+      <div className="space-y-6">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="bg-neutral-800 rounded-lg p-6 animate-pulse">
-            <div className="h-4 bg-neutral-700 rounded w-3/4 mb-4"></div>
-            <div className="h-3 bg-neutral-700 rounded w-full mb-2"></div>
-            <div className="h-3 bg-neutral-700 rounded w-2/3"></div>
+          <div
+            key={i}
+            className="bg-gradient-to-br from-neutral-900 to-neutral-950 border border-neutral-800 rounded-xl p-8 animate-pulse"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div className="h-3 bg-neutral-800 rounded w-24"></div>
+              <div className="h-6 bg-neutral-800 rounded-full w-28"></div>
+            </div>
+            <div className="h-8 bg-neutral-800 rounded w-3/4 mb-6"></div>
+            <div className="space-y-3">
+              <div className="h-4 bg-neutral-800 rounded w-full"></div>
+              <div className="h-4 bg-neutral-800 rounded w-5/6"></div>
+              <div className="h-4 bg-neutral-800 rounded w-4/6"></div>
+            </div>
           </div>
         ))}
       </div>
@@ -133,14 +141,19 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
 
   if (error) {
     return (
-      <div className="bg-red-600 border border-red-600 rounded-lg p-6 text-center">
-        <h3 className="text-white/90 font-semibold mb-2">
+      <div className="bg-gradient-to-br from-red-950/30 to-red-900/20 border border-red-800/50 rounded-xl p-8 text-center">
+        <div className="flex justify-center mb-4">
+          <div className="bg-red-500/10 rounded-full p-3">
+            <AlertCircle className="w-8 h-8 text-red-400" />
+          </div>
+        </div>
+        <h3 className="text-xl font-bold text-white mb-3">
           Error Loading Blog Posts
         </h3>
-        <p className="text-white/90 mb-4">{error}</p>
+        <p className="text-white/80 mb-6 max-w-md mx-auto">{error}</p>
         <button
           onClick={() => window.location.reload()}
-          className="bg-red-600 hover:bg-red-500 text-white font-medium py-2 px-4 rounded transition-colors"
+          className="inline-flex items-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 hover:border-red-500/50 font-semibold px-6 py-3 rounded-full transition-all"
         >
           Try Again
         </button>
@@ -150,13 +163,18 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
 
   if (pagination.totalPosts === 0) {
     return (
-      <div className="bg-neutral-800 rounded-lg p-8 text-center">
-        <h3 className="text-white font-semibold mb-2">
+      <div className="bg-gradient-to-br from-neutral-900 to-neutral-950 border border-neutral-800 rounded-xl p-12 text-center">
+        <div className="flex justify-center mb-4">
+          <div className="bg-neutral-800 rounded-full p-4">
+            <Inbox className="w-10 h-10 text-neutral-500" />
+          </div>
+        </div>
+        <h3 className="text-xl font-bold text-white mb-3">
           No {getFilterText()} Found
         </h3>
-        <p className="text-neutral-50 mb-4">
+        <p className="text-neutral-400 max-w-md mx-auto">
           No {getFilterText()} available for this game yet. Try changing the
-          filter or check back later.
+          filter or check back later for updates.
         </p>
       </div>
     );
@@ -164,73 +182,79 @@ const BlogList = ({ gameId, filter }: BlogListProps) => {
 
   return (
     <div className="space-y-8">
-      {allBlogs.map((post) => (
-        <BlogCard
-          key={post.id}
-          post={post}
-          isGitHubPost={true}
-          isPatchNote={post.type === BLOG_TYPES.PATCH_NOTE}
-        />
-      ))}
+      {/* Stats bar */}
+      <div className="flex items-center justify-between px-1">
+        <p className="text-sm text-neutral-400">
+          Showing{" "}
+          <span className="font-semibold text-white">{allBlogs.length}</span> of{" "}
+          <span className="font-semibold text-white">
+            {pagination.totalPosts}
+          </span>{" "}
+          {getFilterText()}
+        </p>
+      </div>
 
+      {/* Blog cards */}
+      <div className="space-y-6">
+        {allBlogs.map((post, index) => (
+          <div
+            key={post.id}
+            className="animate-in fade-in slide-in-from-bottom-4 duration-500"
+            style={{ animationDelay: `${index * 50}ms` }}
+          >
+            <BlogCard
+              post={post}
+              isGitHubPost={true}
+              isPatchNote={post.type === BLOG_TYPES.PATCH_NOTE}
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Load more button */}
       {pagination.hasMore && (
-        <div className="text-center pt-8">
+        <div className="flex justify-center pt-4">
           <button
             onClick={handleLoadMore}
             disabled={isLoadingMore}
-            className="border border-red-500 hover:border-red-600 hover:bg-red-500 text-red-500 hover:text-white/90 disabled:bg-red-400 disabled:text-white/90 disabled:cursor-not-allowed font-semibold py-3 px-8 rounded-full transition-colors flex items-center justify-center mx-auto"
+            className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-red-500/10 to-red-600/10 hover:from-red-500/20 hover:to-red-600/20 text-red-400 border border-red-500/30 hover:border-red-500/50 disabled:opacity-50 disabled:cursor-not-allowed font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20"
           >
             {isLoadingMore ? (
               <>
-                <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                Loading...
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>Loading...</span>
               </>
             ) : (
-              `Load More ${
-                getFilterText().charAt(0).toUpperCase() +
-                getFilterText().slice(1)
-              } (${Math.min(
-                pagination.postsPerPage,
-                pagination.totalPosts - allBlogs.length,
-              )} more)`
+              <>
+                <ArrowDown className="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
+                <span>
+                  Load{" "}
+                  {Math.min(
+                    pagination.postsPerPage,
+                    pagination.totalPosts - allBlogs.length,
+                  )}{" "}
+                  More{" "}
+                  {getFilterText().charAt(0).toUpperCase() +
+                    getFilterText().slice(1)}
+                </span>
+              </>
             )}
           </button>
         </div>
       )}
 
+      {/* End message */}
       {!pagination.hasMore && allBlogs.length > pagination.postsPerPage && (
-        <div className="text-center pt-8">
-          <p className="text-neutral-400 text-sm">
-            You&apos;ve reached the end. All {pagination.totalPosts}{" "}
-            {getFilterText()} are now visible.
-          </p>
+        <div className="text-center pt-6">
+          <div className="inline-flex items-center gap-2 bg-neutral-900/50 border border-neutral-800 rounded-full px-6 py-3">
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            <p className="text-sm text-neutral-400">
+              You&apos;ve reached the end — all {pagination.totalPosts}{" "}
+              {getFilterText()} loaded
+            </p>
+          </div>
         </div>
       )}
-
-      <div className="text-center pt-4">
-        <p className="text-neutral-500 text-sm">
-          Showing {allBlogs.length} of {pagination.totalPosts} {getFilterText()}
-        </p>
-      </div>
     </div>
   );
 };
